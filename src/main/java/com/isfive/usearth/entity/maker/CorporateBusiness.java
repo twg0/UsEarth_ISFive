@@ -1,13 +1,13 @@
 package com.isfive.usearth.entity.maker;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 
 @Entity
 public class CorporateBusiness extends Maker {
 
-    private String registrationNumber;
-
-    private String corporateName;
+    @Embedded
+    private BusinessInformation businessInformation;
 
 //    private String registration;
 
