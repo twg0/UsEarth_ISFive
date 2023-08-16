@@ -22,7 +22,7 @@ public class Project {
 
     private Integer targetAmount;
 
-    private String repImage;
+    private String repImage; // 대표이미지
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Maker maker;

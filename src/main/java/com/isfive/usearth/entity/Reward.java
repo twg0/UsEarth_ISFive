@@ -1,9 +1,6 @@
 package com.isfive.usearth.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Reward {
@@ -18,16 +15,14 @@ public class Reward {
 
     private Integer price;
 
-    private Integer stock;
-
-    private Integer initStock;
+    private Integer initStock; // 초기 재고
 
     private String expectedSendDate;
 
     private Integer deliveryFee;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Project project;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
 
 //    private List<Option> options;
 }

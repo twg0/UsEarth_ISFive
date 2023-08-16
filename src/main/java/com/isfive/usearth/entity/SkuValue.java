@@ -1,9 +1,6 @@
 package com.isfive.usearth.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class SkuValue {
@@ -12,9 +9,9 @@ public class SkuValue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Option option;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Option option;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private OptionValue optionValue;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private OptionValue optionValue;
 }

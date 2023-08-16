@@ -12,9 +12,9 @@ public class FundingReward {
 
     private Integer totalPrice;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private RewardSku rewardSku;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RewardSku rewardSku;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Funding funding;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Funding funding;
 }

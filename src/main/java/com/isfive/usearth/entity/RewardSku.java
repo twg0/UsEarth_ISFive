@@ -1,9 +1,6 @@
 package com.isfive.usearth.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -14,8 +11,10 @@ public class RewardSku {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Reward reward;
+    private Integer stock;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Reward reward;
 
 //    private List<SkuValue> skuValues;
 }

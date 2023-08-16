@@ -11,6 +11,6 @@ public class Tag {
 
     private String name;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Project project;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
 }

@@ -9,8 +9,9 @@ public class OptionValue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "option_value")
     private String value;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Option option;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Option option;
 }

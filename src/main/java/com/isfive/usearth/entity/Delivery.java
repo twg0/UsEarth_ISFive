@@ -9,14 +9,14 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Enumerated(EnumType.STRING)
-//    private DeliveryStatus status;
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Address address;
+    @Embedded
+    private Address address;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Funding funding;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Funding funding;
 
 
 }
