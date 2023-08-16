@@ -1,9 +1,11 @@
 package com.isfive.usearth;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Embeddable;
 
+import java.time.LocalDateTime;
+@Embeddable
 public class Period {
-    public LocalDateTime start;
-    public LocalDateTime end;
+    private LocalDateTime start;
+    private LocalDateTime end;
 
 }

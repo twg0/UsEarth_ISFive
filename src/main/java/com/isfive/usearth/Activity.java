@@ -16,9 +16,11 @@ public class Activity {
     private String content;
     private String organization;
     private String place;
-    private int maxMember;
-    @Embedded Period appicateDate;
-    @Embedded Period activityDate;
+    private Integer maxMember;
+    @Embedded
+    private Period applicateDate;
+    @Embedded
+    private Period activityDate;
     @Enumerated(EnumType.STRING)
     private Permit status;
 

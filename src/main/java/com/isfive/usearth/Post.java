@@ -15,7 +15,7 @@ public class Post {
     private String title;
 
     private String content;
-    private int views;
+    private Integer views;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "board_id")
