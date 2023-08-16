@@ -1,5 +1,6 @@
 package com.isfive.usearth.entity;
 
+import com.isfive.usearth.Post;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,9 +11,9 @@ public class PostComment {
     private Long id;
     private String content;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Member member;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Post post;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
 }

@@ -10,9 +10,9 @@ public class ProjectComment {
     private Long id;
     private String content;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Member member;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Project project;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
 }
