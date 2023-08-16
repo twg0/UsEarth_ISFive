@@ -13,8 +13,10 @@ public class FundingReward {
     private Integer totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_sku_id")
     private RewardSku rewardSku;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "funding_id")
     private Funding funding;
 }

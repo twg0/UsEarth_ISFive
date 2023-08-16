@@ -1,9 +1,8 @@
 package com.isfive.usearth.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.isfive.usearth.Period;
+import com.isfive.usearth.entity.maker.Maker;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -22,16 +21,28 @@ public class Project {
 
     private Integer targetAmount;
 
-    private String repImage; // 대표이미지
+    @Embedded
+    private FileImage repImage; // 대표이미지
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Maker maker;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maker_id")
+    private Maker maker;
 
-//    private Period fundingDate;
+    @Embedded
+    private Period fundingDate;
 
-//    private List<Tag> searchTags;
-//    private List<Reward> rewards;
-//    private List<FileImage> projectImages;
-//    private List<ProjectComment> comments;
-//    private List<ProjectLike> likes;
+    @OneToMany(mappedBy = "project")
+    private List<Tag> searchTags;
+
+    @OneToMany(mappedBy = "project")
+    private List<Reward> rewards;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectFileImage> projectImages;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectComment> comments;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectLike> likes;
 }

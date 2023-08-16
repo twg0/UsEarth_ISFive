@@ -2,6 +2,8 @@ package com.isfive.usearth.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Funding {
 
@@ -9,11 +11,13 @@ public class Funding {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Enumerated(EnumType.STRING)
     private FundingStatus status;
 
-//    private List<FundingReward> fundingRewards;
+    @OneToMany(mappedBy = "funding")
+    private List<FundingReward> fundingRewards;
 }

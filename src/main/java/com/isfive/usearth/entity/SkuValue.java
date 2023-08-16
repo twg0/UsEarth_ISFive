@@ -10,8 +10,10 @@ public class SkuValue {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_id")
     private Option option;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_value_id")
     private OptionValue optionValue;
 }
