@@ -9,7 +9,5 @@ public class CorporateBusiness extends Maker {
     @Embedded
     private BusinessInformation businessInformation;
 
-//    private String registration;
-
-//    String CorporateSealCertificate;
+    private String CorporateSealCertificate;
 }

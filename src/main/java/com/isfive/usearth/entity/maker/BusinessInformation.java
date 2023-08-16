@@ -8,4 +8,6 @@ public class BusinessInformation {
     private String registrationNumber;
 
     private String corporateName;
+
+    private String registration;
 }

@@ -12,10 +12,14 @@ public class Maker {
     private Long id;
 
     private String name;
-//    private String profileImage;
+
+    private String profileImage;
+
     private String email;
+
     private String phone;
-//    private String submitFile;
+
+    private String submitFile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;

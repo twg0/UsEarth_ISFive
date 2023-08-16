@@ -4,5 +4,5 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Individual extends Maker {
-//    private String IDImage;
+    private String IDImage;
 }

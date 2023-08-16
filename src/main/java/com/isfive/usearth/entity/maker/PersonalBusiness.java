@@ -8,7 +8,5 @@ public class PersonalBusiness extends Maker {
 
     @Embedded
     private BusinessInformation businessInformation;
-
-//    private String registration;
 }
 
