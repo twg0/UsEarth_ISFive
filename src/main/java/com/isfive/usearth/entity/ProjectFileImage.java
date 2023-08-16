@@ -12,6 +12,6 @@ public class ProjectFileImage {
     @Embedded
     private FileImage fileImage;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Project project;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
 }
