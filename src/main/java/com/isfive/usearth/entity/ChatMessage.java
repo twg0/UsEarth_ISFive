@@ -10,18 +10,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoom {
-
+public class ChatMessage {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false)
-	private String roomName;
+	private String nickname;
 
-	@Column(nullable = false)
-	private String description;
+	@Column()
+	private String message;
 
-	private Integer memberCount;
-
-	// private List<ChatRoomAppend> chatRoomAppends;
+	// private ChatRoomAppend chatRoomAppend;
 }
