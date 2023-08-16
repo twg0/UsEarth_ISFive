@@ -3,9 +3,13 @@ package com.isfive.usearth.entity;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("Post")
-public class PostFileImage extends FileImage {
+public class PostFileImage {
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Project project;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Embedded
+    private FileImage fileImage;
+
+
 }
