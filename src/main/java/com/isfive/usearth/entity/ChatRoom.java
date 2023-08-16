@@ -1,5 +1,6 @@
 package com.isfive.usearth.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -28,5 +29,6 @@ public class ChatRoom {
 	private Integer memberCount;
 
 	@OneToMany(mappedBy = "chatRoom")
-	private List<ChatRoomAppend> chatRoomAppends;
+	private List<ChatRoomAppend> chatRoomAppends = new ArrayList<>();
+
 }

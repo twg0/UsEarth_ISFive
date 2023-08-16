@@ -1,5 +1,6 @@
 package com.isfive.usearth.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -29,5 +30,6 @@ public class ChatRoomAppend {
 	private Member member;
 
 	@OneToMany(mappedBy = "chatRoomAppend")
-	private List<ChatMessage> chatMessages;
+	private List<ChatMessage> chatMessages = new ArrayList<>();
+
 }
