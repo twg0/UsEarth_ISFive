@@ -18,10 +18,21 @@ public class Activity {
     private String organization;
     private String place;
     private Integer maxMember;
+
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="startDate",column = @Column(name="applicate_date_start")),
+            @AttributeOverride(name="dueDate",column=@Column(name="applicate_date_end"))
+    })
     private Period applicateDate;
+
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="startDate",column = @Column(name="activity_date_start")),
+            @AttributeOverride(name="dueDate",column=@Column(name="activity_date_end"))
+    })
     private Period activityDate;
+
     @Enumerated(EnumType.STRING)
     private Permit status;
 

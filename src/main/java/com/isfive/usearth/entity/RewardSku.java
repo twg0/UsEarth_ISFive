@@ -17,6 +17,6 @@ public class RewardSku {
     @ManyToOne(fetch = FetchType.LAZY)
     private Reward reward;
 
-    @OneToMany(mappedBy = "reward_sku")
+    @OneToMany(mappedBy = "rewardSku")
     private List<SkuValue> skuValues = new ArrayList<>();
 }
