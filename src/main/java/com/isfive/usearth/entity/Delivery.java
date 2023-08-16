@@ -16,7 +16,7 @@ public class Delivery {
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "funding_id")
     private Funding funding;
-
 
 }

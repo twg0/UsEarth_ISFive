@@ -13,5 +13,6 @@ public class OptionValue {
     private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_id")
     private Option option;
 }

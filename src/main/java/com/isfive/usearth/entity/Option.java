@@ -2,6 +2,9 @@ package com.isfive.usearth.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Option {
 
@@ -12,7 +15,9 @@ public class Option {
     private String name; // 색상, 사이즈
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_id")
     private Reward reward;
 
-//    private List<OptionValue> optionValues;
+    @OneToMany(mappedBy = "option")
+    private List<OptionValue> optionValues = new ArrayList<>();
 }

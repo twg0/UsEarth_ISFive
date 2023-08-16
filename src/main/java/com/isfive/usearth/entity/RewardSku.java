@@ -2,6 +2,7 @@ package com.isfive.usearth.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,5 +17,6 @@ public class RewardSku {
     @ManyToOne(fetch = FetchType.LAZY)
     private Reward reward;
 
-//    private List<SkuValue> skuValues;
+    @OneToMany(mappedBy = "reward_sku")
+    private List<SkuValue> skuValues = new ArrayList<>();
 }
