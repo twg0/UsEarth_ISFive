@@ -1,5 +1,6 @@
 package com.isfive.usearth;
 
+import com.isfive.usearth.entity.ActivityFileImage;
 import com.isfive.usearth.entity.Member;
 import jakarta.persistence.*;
 
@@ -24,7 +25,8 @@ public class Activity {
     @Enumerated(EnumType.STRING)
     private Permit status;
 
-
+    @OneToMany(mappedBy = "activity")
+    private List<ActivityFileImage> activityImages = new ArrayList<>();
     @OneToMany(mappedBy = "activity")
     private List<Member> members = new ArrayList<>();
 

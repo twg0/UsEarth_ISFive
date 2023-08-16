@@ -1,9 +1,6 @@
 package com.isfive.usearth;
 
-import com.isfive.usearth.entity.FileImage;
-import com.isfive.usearth.entity.Member;
-import com.isfive.usearth.entity.PostComment;
-import com.isfive.usearth.entity.PostLike;
+import com.isfive.usearth.entity.*;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -32,6 +29,8 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<PostComment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<PostFileImage> postImages = new ArrayList<>();
     @OneToMany(mappedBy = "post")
     private List<PostLike> likes = new ArrayList<>();
 
