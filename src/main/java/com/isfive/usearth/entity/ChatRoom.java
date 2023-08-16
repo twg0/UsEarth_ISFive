@@ -16,12 +16,12 @@ public class ChatRoom {
 	private Long id;
 
 	@Column(nullable = false)
-	String roomName;
+	private String roomName;
 
 	@Column(nullable = false)
-	String description;
+	private String description;
 
-	Integer memberCount;
+	private Integer memberCount;
 
 	// private List<ChatRoomAppend> chatRoomAppends;
 }
