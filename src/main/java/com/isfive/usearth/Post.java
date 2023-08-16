@@ -1,5 +1,9 @@
 package com.isfive.usearth;
 
+import com.isfive.usearth.entity.FileImage;
+import com.isfive.usearth.entity.Member;
+import com.isfive.usearth.entity.PostComment;
+import com.isfive.usearth.entity.PostLike;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,25 +21,18 @@ public class Post {
     private String content;
     private Integer views;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "board_id")
-//    private Board board;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-//
-//    @OneToMany(mappedBy = "post")
-//    private List<Comment> comments = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "post")
-//    private List<PostLike> likes = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "post")
-//    private List<FileImage> images = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
+    @OneToMany(mappedBy = "post")
+    private List<PostComment> comments = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "post")
+    private List<PostLike> likes = new ArrayList<>();
 
 }
