@@ -2,6 +2,7 @@ package com.isfive.usearth.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,5 +20,5 @@ public class Funding {
     private FundingStatus status;
 
     @OneToMany(mappedBy = "funding")
-    private List<FundingReward> fundingRewards;
+    private List<FundingReward> fundingRewards = new ArrayList<>();
 }

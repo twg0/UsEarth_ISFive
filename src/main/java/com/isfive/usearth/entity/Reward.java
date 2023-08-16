@@ -2,6 +2,7 @@ package com.isfive.usearth.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,5 +30,5 @@ public class Reward {
     private Project project;
 
     @OneToMany(mappedBy = "reward")
-    private List<Option> options;
+    private List<Option> options = new ArrayList<>();
 }

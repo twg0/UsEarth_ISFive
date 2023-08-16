@@ -4,6 +4,7 @@ import com.isfive.usearth.Period;
 import com.isfive.usearth.entity.maker.Maker;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,17 +33,17 @@ public class Project {
     private Period fundingDate;
 
     @OneToMany(mappedBy = "project")
-    private List<Tag> searchTags;
+    private List<Tag> searchTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
-    private List<Reward> rewards;
+    private List<Reward> rewards = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectFileImage> projectImages;
+    private List<ProjectFileImage> projectImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectComment> comments;
+    private List<ProjectComment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectLike> likes;
+    private List<ProjectLike> likes = new ArrayList<>();
 }
