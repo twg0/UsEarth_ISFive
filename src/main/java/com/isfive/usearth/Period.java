@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import java.time.LocalDateTime;
 @Embeddable
 public class Period {
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime startDate;
+    private LocalDateTime dueDate;
 
 }

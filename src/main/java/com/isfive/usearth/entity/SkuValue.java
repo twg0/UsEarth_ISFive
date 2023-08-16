@@ -16,4 +16,8 @@ public class SkuValue {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_value_id")
     private OptionValue optionValue;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_sku_id")
+    private RewardSku rewardSku;
 }
