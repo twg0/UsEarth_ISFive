@@ -7,6 +7,7 @@ import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.domain.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,10 +41,18 @@ class PostControllerTest {
 
     @Autowired PostRepository postRepository;
 
+    @Autowired MemberRepository memberRepository;
+
     @DisplayName("사용자는 게시글을 작성 할 수 있다.")
     @Test
     void writePost() throws Exception {
         //given
+        Member member = Member.builder()
+                .username("temp")
+                .build();
+
+        memberRepository.save(member);
+
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
@@ -53,7 +62,6 @@ class PostControllerTest {
                 .build();
 
         //when   //then
-
         mockMvc.perform(post("/boards/{boardId}/posts", board.getId())
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -69,11 +77,17 @@ class PostControllerTest {
     @Test
     void findPosts() throws Exception {
         //given
+        Member member = Member.builder()
+                .username("temp")
+                .build();
+
+        memberRepository.save(member);
+
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
         for (int i = 1; i <= 20; i++) {
-            Post post = Post.createPost(new Member(), board, "title" + i, "content" + i);
+            Post post = Post.createPost(member, board, "title" + i, "content" + i);
             postRepository.save(post);
         }
 
