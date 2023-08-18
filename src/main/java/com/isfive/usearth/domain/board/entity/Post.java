@@ -4,6 +4,7 @@ import com.isfive.usearth.domain.member.entity.Member;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -12,22 +13,42 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(length = 128)
-    private String title;
-
-    private String content;
-
-    private Integer views;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
+//    private Member member;
+
+    @Column(length = 128)
+    private String title;
+
+    @Lob
+    private String content;
+
+    private Integer views;
+
+    @Builder
+    private Post(Board board, Member member, String title, String content) {
+        this.board = board;
+//        this.member = member;
+        this.title = title;
+        this.content = content;
+        this.views = 0;
+    }
+
+    public static Post createPost(Member member, Board board, String title, String content) {
+        return Post.builder()
+                .member(member)
+                .board(board)
+                .title(title)
+                .content(content)
+                .build();
+    }
 }
