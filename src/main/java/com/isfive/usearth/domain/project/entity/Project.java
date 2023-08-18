@@ -1,17 +1,20 @@
 package com.isfive.usearth.domain.project.entity;
 
 import com.isfive.usearth.domain.common.Period;
+import com.isfive.usearth.domain.funding.entity.FundingReward;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.common.FileImage;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
 
@@ -26,6 +29,8 @@ public class Project {
     private String story;
 
     private Integer targetAmount;
+
+    private Integer totalFundingAmount;
 
     @Embedded
     private FileImage repImage; // 대표이미지
@@ -51,4 +56,5 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<ProjectLike> likes = new ArrayList<>();
+
 }

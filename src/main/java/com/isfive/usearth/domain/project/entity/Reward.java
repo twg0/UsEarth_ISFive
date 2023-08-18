@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.project.entity;
 
+import com.isfive.usearth.domain.funding.entity.FundingReward;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,7 @@ public class Reward {
 
     @OneToMany(mappedBy = "reward")
     private List<Option> options = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reward")
+    private List<RewardSku> rewardSku = new ArrayList<>();
 }
