@@ -25,10 +25,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    //TODO 연관관계 설정
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column(length = 128)
     private String title;
@@ -41,7 +40,7 @@ public class Post extends BaseEntity {
     @Builder
     private Post(Board board, Member member, String title, String content) {
         this.board = board;
-//        this.member = member;
+        this.member = member;
         this.title = title;
         this.content = content;
         this.views = 0;
@@ -54,5 +53,9 @@ public class Post extends BaseEntity {
                 .title(title)
                 .content(content)
                 .build();
+    }
+
+    public String getWriter() {
+        return member.getNickname();
     }
 }

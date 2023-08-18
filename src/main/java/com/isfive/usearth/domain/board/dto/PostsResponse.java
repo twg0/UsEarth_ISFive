@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class PostResponse {
+public class PostsResponse {
 
     private final Long id;
 
@@ -19,11 +19,10 @@ public class PostResponse {
 
     private final LocalDateTime createDate;
 
-    public PostResponse(Post post) {
+    public PostsResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
-        // TODO 추후 수정
-        this.writer = "작성자";
+        this.writer = post.getWriter();
         this.views = post.getViews();
         this.createDate = post.getCreatedDate();
     }

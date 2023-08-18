@@ -1,7 +1,7 @@
 package com.isfive.usearth.domain.board.controller;
 
 import com.isfive.usearth.domain.board.controller.request.PostCreateRequest;
-import com.isfive.usearth.domain.board.dto.PostResponse;
+import com.isfive.usearth.domain.board.dto.PostsResponse;
 import com.isfive.usearth.domain.board.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,8 +19,8 @@ public class PostController {
     }
 
     @GetMapping("/boards/{boardId}/posts")
-    public Page<PostResponse> findPosts(@PathVariable Long boardId,
-                                        @RequestParam Integer page) {
+    public Page<PostsResponse> findPosts(@PathVariable Long boardId,
+                                         @RequestParam Integer page) {
         return postService.readPosts(boardId, page);
     }
 }
