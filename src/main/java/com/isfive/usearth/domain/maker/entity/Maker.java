@@ -2,8 +2,11 @@ package com.isfive.usearth.domain.maker.entity;
 
 import com.isfive.usearth.domain.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 public class Maker {
