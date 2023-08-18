@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.maker.entity.Maker;

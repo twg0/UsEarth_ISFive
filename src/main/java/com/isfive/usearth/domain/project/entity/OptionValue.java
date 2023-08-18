@@ -1,6 +1,4 @@
-package com.isfive.usearth.domain.funding.entity;
-
-import com.isfive.usearth.domain.funding.entity.Project;
+package com.isfive.usearth.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,15 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag {
+public class OptionValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(name = "option_value")
+    private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @JoinColumn(name = "options_id")
+    private Option option;
 }

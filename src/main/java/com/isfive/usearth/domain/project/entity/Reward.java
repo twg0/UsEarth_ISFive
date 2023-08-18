@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

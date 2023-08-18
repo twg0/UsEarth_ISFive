@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,19 +9,17 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "options")
-public class Option {
+public class RewardSku {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name; // 색상, 사이즈
+    private Integer stock;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reward_id")
     private Reward reward;
 
-    @OneToMany(mappedBy = "option")
-    private List<OptionValue> optionValues = new ArrayList<>();
+    @OneToMany(mappedBy = "rewardSku")
+    private List<SkuValue> skuValues = new ArrayList<>();
 }

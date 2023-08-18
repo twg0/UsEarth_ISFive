@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
 import com.isfive.usearth.domain.member.entity.Member;
 
