@@ -20,6 +20,7 @@ public class Post {
     private String title;
 
     private String content;
+
     private Integer views;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,13 +30,4 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @OneToMany(mappedBy = "post")
-    private List<PostComment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post")
-    private List<PostFileImage> postImages = new ArrayList<>();
-    @OneToMany(mappedBy = "post")
-    private List<PostLike> likes = new ArrayList<>();
-
 }

@@ -17,6 +17,4 @@ public class PostFileImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
-
-
 }

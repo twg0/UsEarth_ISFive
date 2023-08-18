@@ -19,8 +19,4 @@ public class Board {
 
     @Column(nullable = false)
     private String summary;
-
-    @OneToMany(mappedBy = "board")
-    private List<Post> posts = new ArrayList<>();
-
 }
