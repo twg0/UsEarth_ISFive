@@ -3,8 +3,11 @@ package com.isfive.usearth.domain.funding.entity;
 import com.isfive.usearth.domain.funding.entity.Project;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
 
     @Id

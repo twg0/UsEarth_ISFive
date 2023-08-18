@@ -3,8 +3,11 @@ package com.isfive.usearth.domain.board.entity;
 import com.isfive.usearth.domain.member.entity.Member;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike {
 
     @Id

@@ -5,11 +5,14 @@ import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.common.Permit;
 import com.isfive.usearth.domain.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,8 @@
 package com.isfive.usearth.domain.funding.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 import com.isfive.usearth.domain.member.entity.Member;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Funding {
 
     @Id
