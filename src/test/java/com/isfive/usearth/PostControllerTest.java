@@ -6,6 +6,7 @@ import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.member.entity.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,5 +63,30 @@ class PostControllerTest {
 
         List<Post> all = postRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
+    }
+
+    @DisplayName("사용자는 게시글을 페이징 조회 할 수 있다.")
+    @Test
+    void findPosts() throws Exception {
+        //given
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        for (int i = 1; i <= 20; i++) {
+            Post post = Post.createPost(new Member(), board, "title" + i, "content" + i);
+            postRepository.save(post);
+        }
+
+        //when //then
+        mockMvc.perform(get("/boards/{boardId}/posts", board.getId())
+                        .contentType(APPLICATION_JSON)
+                        .param("page", "1")
+                )
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.size()").value(10))
+                .andExpect(jsonPath("$.content[0].title").value("title20"))
+                .andExpect(jsonPath("$.content[9].title").value("title11"))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 }
