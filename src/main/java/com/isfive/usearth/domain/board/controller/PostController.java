@@ -14,13 +14,18 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/boards/{boardId}/posts")
-    public void writePost(@PathVariable Long boardId, PostCreateRequest request) {
+    public void writePost(@PathVariable Long boardId, @RequestBody PostCreateRequest request) {
         postService.createPost(boardId, "temp", request.getTitle(), request.getContent());
     }
 
     @GetMapping("/boards/{boardId}/posts")
     public Page<PostsResponse> findPosts(@PathVariable Long boardId,
-                                         @RequestParam Integer page) {
+                                         @RequestParam(defaultValue = "1") Integer page) {
         return postService.readPosts(boardId, page);
+    }
+
+    @GetMapping("/posts/{postId}")
+    public PostsResponse findPost(@PathVariable Long postId) {
+        return null;
     }
 }

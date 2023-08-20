@@ -43,6 +43,11 @@ public class PostService {
         return new PageImpl<>(postsResponses, pageRequest, posts.getTotalElements());
     }
 
+    public void readPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
     private List<PostsResponse> createPostResponses(Page<Post> posts) {
         return posts.stream()
                 .map(PostsResponse::new)

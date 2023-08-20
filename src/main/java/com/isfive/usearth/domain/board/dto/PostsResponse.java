@@ -17,13 +17,13 @@ public class PostsResponse {
 
     private final Integer views;
 
-    private final LocalDateTime createDate;
+    private final LocalDateTime createdDate;
 
     public PostsResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
-        this.writer = post.getWriter();
+        this.writer = post.getWriterNickname();
         this.views = post.getViews();
-        this.createDate = post.getCreatedDate();
+        this.createdDate = post.getCreatedDate();
     }
 }
