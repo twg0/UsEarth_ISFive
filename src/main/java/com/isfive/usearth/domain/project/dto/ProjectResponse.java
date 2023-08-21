@@ -1,8 +1,9 @@
-package com.isfive.usearth.domain.project;
+package com.isfive.usearth.domain.project.dto;
 
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.project.entity.Project;
+
 import lombok.Data;
 
 @Data

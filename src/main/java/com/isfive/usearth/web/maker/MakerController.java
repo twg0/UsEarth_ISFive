@@ -1,13 +1,20 @@
-package com.isfive.usearth.web.maker.controller;
+package com.isfive.usearth.web.maker;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.isfive.usearth.domain.maker.dto.MakerResponse;
 import com.isfive.usearth.domain.maker.service.MakerService;
 import com.isfive.usearth.web.maker.dto.MakerRegister;
 import com.isfive.usearth.web.maker.dto.MakerRegisterRequest;
-import com.isfive.usearth.web.maker.dto.MakerResponse;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/makers")

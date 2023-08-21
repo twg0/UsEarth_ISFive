@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.board.controller.request;
+package com.isfive.usearth.web.board.dto;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,20 +1,26 @@
 package com.isfive.usearth.domain.maker.service;
 
-import com.isfive.usearth.domain.maker.entity.*;
+import java.io.File;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.isfive.usearth.domain.maker.dto.MakerResponse;
+import com.isfive.usearth.domain.maker.entity.BusinessInformation;
+import com.isfive.usearth.domain.maker.entity.CorporateBusiness;
+import com.isfive.usearth.domain.maker.entity.Individual;
+import com.isfive.usearth.domain.maker.entity.Maker;
+import com.isfive.usearth.domain.maker.entity.PersonalBusiness;
 import com.isfive.usearth.domain.maker.repository.CorporateBusinessRepository;
 import com.isfive.usearth.domain.maker.repository.IndividualRepository;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.maker.repository.PersonalBusinessRepository;
 import com.isfive.usearth.web.maker.dto.MakerRegister;
-import com.isfive.usearth.web.maker.dto.MakerResponse;
 import com.isfive.usearth.web.maker.dto.MakerUpdate;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

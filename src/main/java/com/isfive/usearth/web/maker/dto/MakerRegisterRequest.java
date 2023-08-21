@@ -1,11 +1,9 @@
 package com.isfive.usearth.web.maker.dto;
 
-import com.isfive.usearth.domain.maker.entity.Maker;
-import com.isfive.usearth.domain.maker.entity.MakerType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 
 @Getter
 public class MakerRegisterRequest {

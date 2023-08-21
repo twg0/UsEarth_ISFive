@@ -1,17 +1,16 @@
 package com.isfive.usearth.domain.project.dto;
 
+import java.util.List;
+
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.project.entity.Project;
-import com.isfive.usearth.domain.project.entity.ProjectFileImage;
-import com.isfive.usearth.domain.project.entity.Tag;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Builder

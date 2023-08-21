@@ -1,15 +1,25 @@
 package com.isfive.usearth.domain.activity.entity;
 
-import com.isfive.usearth.domain.activity.entity.ActivityFileImage;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.common.Permit;
 import com.isfive.usearth.domain.member.entity.Member;
-import jakarta.persistence.*;
+
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

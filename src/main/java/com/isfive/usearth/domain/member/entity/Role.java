@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.member.entity;
 
+
 public enum Role {
-    ADMIN, USER
+    ROLE_ADMIN, ROLE_USER
 }
