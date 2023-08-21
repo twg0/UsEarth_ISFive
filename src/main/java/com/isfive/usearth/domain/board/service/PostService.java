@@ -3,6 +3,7 @@ package com.isfive.usearth.domain.board.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.isfive.usearth.domain.board.dto.PostResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -44,9 +45,10 @@ public class PostService {
         return new PageImpl<>(postsResponses, pageRequest, posts.getTotalElements());
     }
 
-    public void readPost(Long postId) {
+    public PostResponse readPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(NoSuchElementException::new);
+        return new PostResponse(post);
     }
 
     private List<PostsResponse> createPostResponses(Page<Post> posts) {
