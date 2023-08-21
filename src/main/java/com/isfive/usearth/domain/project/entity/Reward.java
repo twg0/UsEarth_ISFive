@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.project.entity;
 
+import com.isfive.usearth.domain.funding.entity.FundingReward;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,4 +44,5 @@ public class Reward {
         this.project = project;
         project.getRewards().add(this);
     }
+
 }

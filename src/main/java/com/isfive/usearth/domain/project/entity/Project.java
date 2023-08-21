@@ -1,6 +1,7 @@
 package com.isfive.usearth.domain.project.entity;
 
 import com.isfive.usearth.domain.common.Period;
+import com.isfive.usearth.domain.funding.entity.FundingReward;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.common.FileImage;
 
@@ -13,8 +14,8 @@ import java.util.List;
 @Getter
 @Builder
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
 
     @Id
@@ -28,6 +29,8 @@ public class Project {
     private String story;
 
     private Integer targetAmount;
+
+    private Integer totalFundingAmount;
 
     @Embedded
     private FileImage repImage; // 대표이미지
@@ -58,4 +61,5 @@ public class Project {
         this.maker = maker;
         maker.getProjects().add(this);
     }
+
 }
