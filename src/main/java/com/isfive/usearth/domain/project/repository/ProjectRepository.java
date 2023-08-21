@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.project;
+package com.isfive.usearth.domain.project.repository;
 
 import com.isfive.usearth.domain.project.entity.Project;
 import org.springframework.data.domain.Page;

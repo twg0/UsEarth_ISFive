@@ -1,11 +1,16 @@
 package com.isfive.usearth.domain.project.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Builder
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class OptionValue {
 
     @Id
@@ -18,4 +23,12 @@ public class OptionValue {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "options_id")
     private Option option;
+
+    @OneToMany(mappedBy = "optionValue")
+    private List<SkuValue> skuValues = new ArrayList<>();
+
+    public void setOption(Option option) {
+        this.option = option;
+        option.getOptionValues().add(this);
+    }
 }

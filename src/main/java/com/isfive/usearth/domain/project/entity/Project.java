@@ -11,9 +11,9 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
@@ -56,5 +56,10 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<ProjectLike> likes = new ArrayList<>();
+
+    public void setMaker(Maker maker) {
+        this.maker = maker;
+        maker.getProjects().add(this);
+    }
 
 }
