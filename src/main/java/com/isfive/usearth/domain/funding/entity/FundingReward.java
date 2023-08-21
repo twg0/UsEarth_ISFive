@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.funding.entity;
 
+import com.isfive.usearth.domain.project.entity.RewardSku;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

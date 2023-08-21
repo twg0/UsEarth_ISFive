@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
 import com.isfive.usearth.domain.member.entity.Member;
 
@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProjectLike {
+public class ProjectComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;

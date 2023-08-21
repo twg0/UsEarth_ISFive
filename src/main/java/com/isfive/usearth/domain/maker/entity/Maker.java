@@ -1,6 +1,7 @@
 package com.isfive.usearth.domain.maker.entity;
 
 import com.isfive.usearth.domain.member.entity.Member;
+
 import com.isfive.usearth.web.maker.dto.MakerResponse;
 import com.isfive.usearth.web.maker.dto.MakerUpdate;
 import jakarta.persistence.*;
@@ -12,10 +13,21 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
+import com.isfive.usearth.domain.project.entity.Project;
+import com.isfive.usearth.domain.project.entity.Reward;
+
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+@Builder
 @Entity
 @Getter
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 public class Maker {
@@ -55,4 +67,8 @@ public class Maker {
     public void delete() {
         deletedAt = LocalDateTime.now();
     }
+
+    @OneToMany(mappedBy = "maker")
+    List<Project> projects = new ArrayList<>();
+
 }

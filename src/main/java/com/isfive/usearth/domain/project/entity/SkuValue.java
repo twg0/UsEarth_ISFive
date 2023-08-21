@@ -1,11 +1,13 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Builder
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class SkuValue {
 
     @Id
@@ -23,4 +25,14 @@ public class SkuValue {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reward_sku_id")
     private RewardSku rewardSku;
+
+    public void setOption(Option option) {
+        this.option = option;
+        option.getSkuValues().add(this);
+    }
+
+    public void setOptionValue(OptionValue optionValue) {
+        this.optionValue = optionValue;
+        optionValue.getSkuValues().add(this);
+    }
 }

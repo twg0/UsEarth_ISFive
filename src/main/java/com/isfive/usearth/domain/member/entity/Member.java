@@ -4,10 +4,16 @@ import com.isfive.usearth.domain.activity.entity.Activity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@NoArgsConstructor
+@Table(
+    indexes = @Index(name = "idx_member_username", columnList = "username")
+)
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +34,14 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Builder
+    private Member(String email, String username, String nickname, String phone, String provider, Role role) {
+        this.email = email;
+        this.username = username;
+        this.nickname = nickname;
+        this.phone = phone;
+        this.provider = provider;
+        this.role = role;
+    }
 }

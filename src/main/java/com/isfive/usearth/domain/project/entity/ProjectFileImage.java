@@ -1,13 +1,15 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
 import com.isfive.usearth.domain.common.FileImage;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Builder
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ProjectFileImage {
 
     @Id
@@ -19,4 +21,9 @@ public class ProjectFileImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
+
+    public void setProject(Project project) {
+        this.project = project;
+        project.getProjectImages().add(this);
+    }
 }
