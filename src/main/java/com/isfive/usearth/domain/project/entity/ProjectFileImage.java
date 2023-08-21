@@ -1,6 +1,6 @@
-package com.isfive.usearth.domain.funding.entity;
+package com.isfive.usearth.domain.project.entity;
 
-import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.domain.common.FileImage;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,15 +8,14 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProjectComment {
+public class ProjectFileImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    @Embedded
+    private FileImage fileImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
