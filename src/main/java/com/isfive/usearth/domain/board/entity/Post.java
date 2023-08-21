@@ -1,26 +1,22 @@
 package com.isfive.usearth.domain.board.entity;
 
+import com.isfive.usearth.domain.common.BaseEntity;
 import com.isfive.usearth.domain.member.entity.Member;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(length = 128)
-    private String title;
-
-    private String content;
-    private Integer views;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
@@ -30,12 +26,33 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
-    private List<PostComment> comments = new ArrayList<>();
+    @Column(length = 128)
+    private String title;
 
-    @OneToMany(mappedBy = "post")
-    private List<PostFileImage> postImages = new ArrayList<>();
-    @OneToMany(mappedBy = "post")
-    private List<PostLike> likes = new ArrayList<>();
+    @Lob
+    private String content;
 
+    private Integer views;
+
+    @Builder
+    private Post(Board board, Member member, String title, String content) {
+        this.board = board;
+        this.member = member;
+        this.title = title;
+        this.content = content;
+        this.views = 0;
+    }
+
+    public static Post createPost(Member member, Board board, String title, String content) {
+        return Post.builder()
+                .member(member)
+                .board(board)
+                .title(title)
+                .content(content)
+                .build();
+    }
+
+    public String getWriterNickname() {
+        return member.getNickname();
+    }
 }

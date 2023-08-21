@@ -2,12 +2,15 @@ package com.isfive.usearth.domain.board.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
     @Id
@@ -20,7 +23,16 @@ public class Board {
     @Column(nullable = false)
     private String summary;
 
-    @OneToMany(mappedBy = "board")
-    private List<Post> posts = new ArrayList<>();
+    @Builder
+    private Board(String title, String summary) {
+        this.title = title;
+        this.summary = summary;
+    }
 
+    public static Board createBoard(String title, String summary) {
+        return Board.builder()
+                .title(title)
+                .summary(summary)
+                .build();
+    }
 }
