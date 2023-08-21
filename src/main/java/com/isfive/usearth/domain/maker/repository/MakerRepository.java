@@ -13,8 +13,8 @@ public interface MakerRepository extends JpaRepository<Maker,Long> {
                 .orElseThrow(()->new EntityNotFoundException());
     }
 
-//    @Query("SELECT m FROM Maker m JOIN FETCH m. WHERE m.id = :makerId ")
-//    Maker findMakerWithCorporate(@Param("makerId") Long makerId);
+    @Query("SELECT c FROM CorporateBusiness c WHERE c.id = :makerId ")
+    Maker findMakerWithCorporate(@Param("makerId") Long makerId);
 
 
 }
