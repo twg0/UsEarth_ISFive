@@ -1,17 +1,31 @@
 package com.isfive.usearth.domain.maker.entity;
 
 import com.isfive.usearth.domain.member.entity.Member;
+
+import com.isfive.usearth.web.maker.dto.MakerResponse;
+import com.isfive.usearth.web.maker.dto.MakerUpdate;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+
 import com.isfive.usearth.domain.project.entity.Project;
 import com.isfive.usearth.domain.project.entity.Reward;
-import jakarta.persistence.*;
+
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+
 @Builder
 @Entity
+@Getter
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -31,9 +45,30 @@ public class Maker {
 
     private String submitFile;
 
+    private LocalDateTime deletedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+//    @Builder
+//    public Maker(String name, String profileImage, String email, String phone, String submitFile) {
+//        this.name = name;
+//        this.profileImage = profileImage;
+//        this.phone = phone;
+//        this.email = email;
+//        this.submitFile = submitFile;
+//    }
+
+    public void update(MakerUpdate makerUpdate) {
+        this.phone = makerUpdate.getPhone();
+        this.email = makerUpdate.getEmail();
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
+    }
+
     @OneToMany(mappedBy = "maker")
     List<Project> projects = new ArrayList<>();
+
 }
