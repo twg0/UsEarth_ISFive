@@ -1,6 +1,6 @@
 package com.isfive.usearth.domain.funding.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Address {

@@ -1,5 +1,14 @@
 package com.isfive.usearth.domain.board.service;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.isfive.usearth.domain.board.dto.PostsResponse;
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
@@ -7,15 +16,8 @@ import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +29,8 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void createPost(Long boardId, String username, String title, String content) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(NoSuchElementException::new);
+    public void createPost(Long boardId, String email, String title, String content) {
+        Member member = memberRepository.findByEmailOrThrow(email);
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(NoSuchElementException::new);
         Post post = Post.createPost(member, board, title, content);

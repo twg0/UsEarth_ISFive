@@ -1,8 +1,8 @@
 package com.isfive.usearth.web.maker.dto;
 
-import com.isfive.usearth.domain.maker.entity.MakerType;
-import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.Getter;
 
 @Getter
 public class MakerRegister {

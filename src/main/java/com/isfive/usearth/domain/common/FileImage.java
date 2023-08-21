@@ -1,6 +1,6 @@
 package com.isfive.usearth.domain.common;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,13 +1,4 @@
-package com.isfive.usearth.domain.project.service;
-
-import com.isfive.usearth.domain.common.FileImage;
-import com.isfive.usearth.domain.project.entity.Project;
-import com.isfive.usearth.domain.project.entity.ProjectFileImage;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
+package com.isfive.usearth.domain.common;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,6 +6,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.isfive.usearth.domain.common.FileImage;
+import com.isfive.usearth.domain.project.entity.Project;
+import com.isfive.usearth.domain.project.entity.ProjectFileImage;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -49,21 +51,9 @@ public class FileImageService {
         return fileImage;
     }
 
-    public ProjectFileImage createProjectFileImage(FileImage fileImage, Project project) {
-        ProjectFileImage projectFileImage = ProjectFileImage.builder()
-                .fileImage(fileImage)
-                .build();
-        projectFileImage.setProject(project);
-        return projectFileImage;
+    public List<FileImage> createFileImage(List<MultipartFile> fileList) {
+        return fileList.stream().map(this::createFileImage).toList();
     }
 
-    public List<ProjectFileImage> createProjectFileImageList(List<MultipartFile> fileList, Project project) {
-        List<ProjectFileImage> projectFileImageList = new ArrayList<>();
-        for (MultipartFile file : fileList) {
-            ProjectFileImage image = createProjectFileImage(createFileImage(file), project);
-            projectFileImageList.add(image);
-        }
-        return projectFileImageList;
-    }
 
 }

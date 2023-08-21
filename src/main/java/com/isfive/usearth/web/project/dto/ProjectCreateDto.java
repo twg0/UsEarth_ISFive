@@ -1,17 +1,17 @@
-package com.isfive.usearth.domain.project.webDto;
+package com.isfive.usearth.web.project.dto;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
-import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.project.dto.ProjectRegisterDto;
-import com.isfive.usearth.domain.project.service.FileImageService;
+import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.domain.project.service.TagService;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.lang.reflect.Field;
-import java.util.List;
 
 @Data
 @RequiredArgsConstructor

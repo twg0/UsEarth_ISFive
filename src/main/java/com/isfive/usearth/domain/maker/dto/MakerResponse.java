@@ -1,6 +1,7 @@
-package com.isfive.usearth.web.maker.dto;
+package com.isfive.usearth.domain.maker.dto;
 
 import com.isfive.usearth.domain.maker.entity.Maker;
+
 import lombok.Builder;
 
 
