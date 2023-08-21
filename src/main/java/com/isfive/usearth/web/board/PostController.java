@@ -29,9 +29,10 @@ public class PostController {
     }
 
     @GetMapping("/boards/{boardId}/posts")
-    public Page<PostsResponse> findPosts(@PathVariable Long boardId,
+    public ResponseEntity<Page<PostsResponse>> findPosts(@PathVariable Long boardId,
                                          @RequestParam(defaultValue = "1") Integer page) {
-        return postService.readPosts(boardId, page);
+        Page<PostsResponse> postsResponses = postService.readPosts(boardId, page);
+        return new ResponseEntity<>(postsResponses, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
