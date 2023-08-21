@@ -1,6 +1,7 @@
 package com.isfive.usearth.web.maker.dto.register;
 
 import com.isfive.usearth.domain.common.FileImage;
+import com.isfive.usearth.domain.maker.entity.Individual;
 import com.isfive.usearth.web.maker.dto.register_request.IndividualRegisterRequest;
 import lombok.Builder;
 
@@ -20,5 +21,9 @@ public class IndividualRegister extends MakerRegister {
                                                               FileImage submitFile,
                                                               FileImage idCard) {
         return new IndividualRegister(request, profileImage, submitFile, idCard);
+    }
+
+    public Individual toEntity() {
+       return  null;
     }
 }

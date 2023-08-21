@@ -3,6 +3,9 @@ package com.isfive.usearth.domain.maker.service;
 import java.io.File;
 import java.util.UUID;
 
+import com.isfive.usearth.web.maker.dto.register.CorporateRegister;
+import com.isfive.usearth.web.maker.dto.register.IndividualRegister;
+import com.isfive.usearth.web.maker.dto.register.PersonalRegister;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,70 +29,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MakerService {
     private final MakerRepository makerRepository;
-    private final IndividualRepository individualRepository;
-    private final CorporateBusinessRepository corporateBusinessRepository;
-    private final PersonalBusinessRepository personalBusinessRepository;
 
-    @Value("${file.upload-dir}")
-    private String uploadPath;
+    public void createIndividualBy(
+            IndividualRegister individualRegister) {
 
-    public void createMakerBy(
-            MakerRegister makerRegister) {
-        String profileImg = saveImage(makerRegister.getProfileImage());
-        String submitFile = saveImage(makerRegister.getSubmitFile());
-        String idImg = saveImage(makerRegister.getIdCard());
-        String registration = saveImage(makerRegister.getRegistration());
-        String corporateSealCertificate = saveImage(makerRegister.getCorporateSealCertificate());
+        makerRepository.save(individualRegister.toEntity());
+    }
 
+    public void createCorporateBusinessBy(
+            CorporateRegister corporateRegister) {
 
-        if (makerRegister.getMakerType().equals("개인")) {
-            Individual individual = Individual.builder()
-                    .name(makerRegister.getName())
-                    .email(makerRegister.getEmail())
-                    .profileImage(profileImg)
-                    .phone(makerRegister.getPhone())
-                    .submitFile(submitFile)
-                    .idCard(idImg)
-                    .build();
-            individualRepository.save(individual);
-        } else if (makerRegister.getMakerType().equals("개인사업자")) {
-            BusinessInformation businessInformation =
-                    BusinessInformation.builder()
-                            .registrationNumber(makerRegister.getRegistrationNumber())
-                            .corporateName(makerRegister.getCorporateName())
-                            .registration(registration)
-                            .build();
-            PersonalBusiness personalBusiness =
-                    PersonalBusiness.builder()
-                            .name(makerRegister.getName())
-                            .email(makerRegister.getEmail())
-                            .profileImage(profileImg)
-                            .phone(makerRegister.getPhone())
-                            .submitFile(submitFile)
-                            .businessInformation(businessInformation)
-                            .build();
-            personalBusinessRepository.save(personalBusiness);
+        makerRepository.save(corporateRegister.toEntity());
+    }
 
-        } else if (makerRegister.getMakerType().equals("법인사업자")) {
-            BusinessInformation businessInformation =
-                    BusinessInformation.builder()
-                            .registrationNumber(makerRegister.getRegistrationNumber())
-                            .corporateName(makerRegister.getCorporateName())
-                            .registration(registration)
-                            .build();
-            CorporateBusiness corporateBusiness =
-                    CorporateBusiness.builder()
-                            .name(makerRegister.getName())
-                            .email(makerRegister.getEmail())
-                            .profileImage(profileImg)
-                            .phone(makerRegister.getPhone())
-                            .submitFile(submitFile)
-                            .businessInformation(businessInformation)
-                            .corporateSealCertificate(corporateSealCertificate)
-                            .build();
-            corporateBusinessRepository.save(corporateBusiness);
+    public void createPersonalBusinessBy(
+            PersonalRegister personalRegister) {
 
-        }
+        makerRepository.save(personalRegister.toEntity());
     }
 
     public MakerResponse readMakerById(Long id) {
@@ -105,23 +61,6 @@ public class MakerService {
     public void removeMakerById(Long id) {
         Maker maker = makerRepository.findByIdOrThrow(id);
         maker.delete();
-    }
-
-
-
-
-
-    public String saveImage(MultipartFile multipartFile) {
-        String uuid = UUID.randomUUID().toString();
-        String uploadFileName = uuid + "_" + multipartFile.getOriginalFilename();
-        File file = new File(uploadPath + uploadFileName);
-        String filePath = file.getPath();
-        try {
-            multipartFile.transferTo(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return filePath;
     }
 
 

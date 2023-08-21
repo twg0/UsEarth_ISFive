@@ -44,6 +44,8 @@ public class MakerController {
                 submitFile,
                 idCard);
 
+        makerService.createIndividualBy(register);
+
         return ResponseEntity.ok("Success");
     }
 
@@ -58,6 +60,7 @@ public class MakerController {
                 profileImage,
                 submitFile,
                 registration);
+        makerService.createPersonalBusinessBy(register);
 
         return ResponseEntity.ok("Success");
     }
@@ -75,6 +78,7 @@ public class MakerController {
                 submitFile,
                 registration,
                 corporateSealCertificate);
+        makerService.createCorporateBusinessBy(register);
 
         return ResponseEntity.ok("Success");
     }
