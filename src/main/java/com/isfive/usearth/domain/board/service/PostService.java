@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.isfive.usearth.domain.board.dto.PostResponse;
+import com.isfive.usearth.exception.EntityNotFoundException;
+import com.isfive.usearth.exception.ErrorCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +34,7 @@ public class PostService {
     @Transactional
     public void createPost(Long boardId, String email, String title, String content) {
         Member member = memberRepository.findByEmailOrThrow(email);
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(NoSuchElementException::new);
+        Board board = boardRepository.findByIdOrThrow(boardId);
         Post post = Post.createPost(member, board, title, content);
         postRepository.save(post);
     }
@@ -45,9 +46,10 @@ public class PostService {
         return new PageImpl<>(postsResponses, pageRequest, posts.getTotalElements());
     }
 
+    @Transactional
     public PostResponse readPost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(NoSuchElementException::new);
+        Post post = postRepository.findByIdOrThrow(postId);
+        post.increaseView();
         return new PostResponse(post);
     }
 
