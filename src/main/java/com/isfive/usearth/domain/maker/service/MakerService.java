@@ -17,7 +17,7 @@ import com.isfive.usearth.domain.maker.repository.CorporateBusinessRepository;
 import com.isfive.usearth.domain.maker.repository.IndividualRepository;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.maker.repository.PersonalBusinessRepository;
-import com.isfive.usearth.web.maker.dto.MakerRegister;
+import com.isfive.usearth.web.maker.dto.register.MakerRegister;
 import com.isfive.usearth.web.maker.dto.MakerUpdate;
 
 import lombok.RequiredArgsConstructor;
