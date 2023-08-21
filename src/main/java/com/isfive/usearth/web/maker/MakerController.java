@@ -1,13 +1,10 @@
 package com.isfive.usearth.web.maker;
 
+import com.isfive.usearth.domain.common.FileImageService;
+import com.isfive.usearth.web.maker.dto.IndividualRegisterRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.isfive.usearth.domain.maker.dto.MakerResponse;
 import com.isfive.usearth.domain.maker.service.MakerService;
@@ -22,12 +19,12 @@ import lombok.RequiredArgsConstructor;
 public class MakerController {
 
     private final MakerService makerService;
-
+    private final FileImageService fileImageService;
     @PostMapping
     public ResponseEntity<String> createMaker(
-            @RequestBody MakerRegisterRequest makerRegisterRequest) {
+            @ModelAttribute IndividualRegisterRequest individualRegisterRequest) {
 
-        MakerRegister makerRegister = new MakerRegister(makerRegisterRequest);
+        MakerRegister makerRegister = new MakerRegister(individualRegisterRequest);
         makerService.createMakerBy(makerRegister);
         return ResponseEntity.ok("Success");
     }
@@ -39,6 +36,8 @@ public class MakerController {
         MakerResponse response = makerService.readMakerById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 
 
 
