@@ -1,14 +1,16 @@
 package com.isfive.usearth.domain.project.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Builder
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Reward {
 
     @Id
@@ -33,4 +35,12 @@ public class Reward {
 
     @OneToMany(mappedBy = "reward")
     private List<Option> options = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reward")
+    private List<RewardSku> rewardSkus = new ArrayList<>();
+
+    public void setProject(Project project) {
+        this.project = project;
+        project.getRewards().add(this);
+    }
 }

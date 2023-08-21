@@ -5,14 +5,16 @@ import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.common.FileImage;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Builder
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Project {
 
     @Id
@@ -51,4 +53,9 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<ProjectLike> likes = new ArrayList<>();
+
+    public void setMaker(Maker maker) {
+        this.maker = maker;
+        maker.getProjects().add(this);
+    }
 }
