@@ -40,6 +40,6 @@ public class PostController {
 
     @PostMapping("/posts/{postId}/like")
     public void like(@PathVariable Long postId) {
-        postLikeService.clickLike(postId, "temp");
+        postLikeService.clickLike(postId, "other");
     }
 }

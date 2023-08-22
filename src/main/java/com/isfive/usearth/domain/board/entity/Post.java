@@ -45,6 +45,7 @@ public class Post extends BaseEntity {
         this.title = title;
         this.content = content;
         this.views = 0;
+        this.likeCount = 0;
     }
 
     public static Post createPost(Member member, Board board, String title, String content) {
