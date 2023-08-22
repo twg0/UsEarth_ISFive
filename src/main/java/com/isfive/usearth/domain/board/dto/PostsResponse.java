@@ -19,7 +19,7 @@ public class PostsResponse {
 
     private final LocalDateTime createdDate;
 
-    private boolean likedByUser;
+    private Boolean likedByUser;
 
     public PostsResponse(Post post) {
         this.id = post.getId();

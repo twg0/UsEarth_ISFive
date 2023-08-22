@@ -37,13 +37,12 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public Page<PostsResponse> readPosts(Long boardId, Integer page) {
+    public Page<PostsResponse> readPosts(Long boardId, Integer page, String email) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         Page<Post> posts = postRepository.findAllByBoard_IdOrderByIdDesc(boardId, pageRequest);
         List<PostsResponse> postsResponses = createPostResponses(posts);
 
-        // TODO 이메일 추후 수정
-        List<PostLike> postLikes = postLikeRepository.findByMember_EmailAndPostIn("other", posts.getContent());
+        List<PostLike> postLikes = postLikeRepository.findByMember_EmailAndPostIn(email, posts.getContent());
 
         Set<Long> postIdSet = createPostIdSetBy(postLikes);
         setLikedByUser(postsResponses, postIdSet);

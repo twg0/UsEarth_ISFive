@@ -25,7 +25,9 @@ public class PostController {
     @GetMapping("/boards/{boardId}/posts")
     public ResponseEntity<Page<PostsResponse>> findPosts(@PathVariable Long boardId,
                                          @RequestParam(defaultValue = "1") Integer page) {
-        Page<PostsResponse> postsResponses = postService.readPosts(boardId, page);
+
+        // TODO 이메일 추후 수정
+        Page<PostsResponse> postsResponses = postService.readPosts(boardId, page, "other");
         return new ResponseEntity<>(postsResponses, HttpStatus.OK);
     }
 
