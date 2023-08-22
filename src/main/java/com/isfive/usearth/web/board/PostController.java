@@ -1,27 +1,24 @@
 package com.isfive.usearth.web.board;
 
 import com.isfive.usearth.domain.board.dto.PostResponse;
-import com.isfive.usearth.domain.board.service.PostLikeService;
+import com.isfive.usearth.domain.board.dto.PostsResponse;
+import com.isfive.usearth.domain.board.service.PostService;
+import com.isfive.usearth.web.board.dto.PostCreateRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.isfive.usearth.domain.board.dto.PostsResponse;
-import com.isfive.usearth.domain.board.service.PostService;
-import com.isfive.usearth.web.board.dto.PostCreateRequest;
-
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
-    private final PostLikeService postLikeService;
 
     @PostMapping("/boards/{boardId}/posts")
     public void writePost(@PathVariable Long boardId, @RequestBody PostCreateRequest request) {
+        // TODO 이메일 파라미터 추후 수정
         postService.createPost(boardId, "temp", request.getTitle(), request.getContent());
     }
 
@@ -35,13 +32,12 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostResponse> findPost(@PathVariable Long postId) {
         PostResponse response = postService.readPost(postId);
-        boolean likedByUser = postLikeService.isPostLikedByUser(postId, "other");
-        response.setLikedByUser(likedByUser);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/posts/{postId}/like")
     public void like(@PathVariable Long postId) {
-        postLikeService.clickLike(postId, "other");
+        // TODO 이메일 파라미터 추후 수정
+        postService.like(postId, "other");
     }
 }

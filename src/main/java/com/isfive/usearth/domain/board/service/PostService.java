@@ -4,7 +4,9 @@ import com.isfive.usearth.domain.board.dto.PostResponse;
 import com.isfive.usearth.domain.board.dto.PostsResponse;
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
+import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
+import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class PostService {
     private final BoardRepository boardRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Transactional
     public void createPost(Long boardId, String email, String title, String content) {
@@ -45,12 +49,49 @@ public class PostService {
     public PostResponse readPost(Long postId) {
         Post post = postRepository.findByIdOrThrow(postId);
         post.increaseView();
-        return new PostResponse(post);
+
+        PostResponse postResponse = new PostResponse(post);
+
+        // TODO 이메일 파라미터 추후 수정
+        boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, null);
+        postResponse.setLikedByUser(likedByUser);
+
+        return postResponse;
+    }
+
+    @Transactional
+    public void like(Long postId, String email) {
+        Post post = postRepository.findByIdOrThrow(postId);
+        post.verifyNotWriter(email);
+
+        Member member = memberRepository.findByEmailOrThrow(email);
+        Optional<PostLike> optionalPostLike = postLikeRepository.findByPostAndMember(post, member);
+
+        if (optionalPostLike.isPresent()) {
+            cancelLike(post, optionalPostLike.get());
+        } else {
+            like(post, member);
+        }
     }
 
     private List<PostsResponse> createPostResponses(Page<Post> posts) {
         return posts.stream()
                 .map(PostsResponse::new)
                 .toList();
+    }
+
+    public boolean isPostLikedByUser(Long postId, String email) {
+        return postLikeRepository.existsByPost_IdAndMember_Email(postId, email);
+    }
+
+    private void cancelLike(Post post, PostLike postLike) {
+        postLikeRepository.delete(postLike);
+        post.cancelLike();
+    }
+
+    private void like(Post post, Member member) {
+        PostLike postLike = new PostLike(member, post);
+        postLikeRepository.save(postLike);
+        post.like();
     }
 }
