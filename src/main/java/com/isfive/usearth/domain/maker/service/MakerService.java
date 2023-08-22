@@ -30,7 +30,7 @@ public class MakerService {
     private final CorporateBusinessRepository corporateBusinessRepository;
     private final PersonalBusinessRepository personalBusinessRepository;
 
-    @Value("${file.upload-dir}")
+//    @Value("${file.upload-dir}")
     private String uploadPath;
 
     public void createMakerBy(

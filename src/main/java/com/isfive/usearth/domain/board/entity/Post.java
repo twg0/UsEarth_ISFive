@@ -63,4 +63,8 @@ public class Post extends BaseEntity {
     public String getWriterNickname() {
         return member.getNickname();
     }
+
+    public void increaseView() {
+        views++;
+    }
 }
