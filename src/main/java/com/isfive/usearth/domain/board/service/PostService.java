@@ -4,7 +4,6 @@ import com.isfive.usearth.domain.board.dto.PostResponse;
 import com.isfive.usearth.domain.board.dto.PostsResponse;
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
-import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;

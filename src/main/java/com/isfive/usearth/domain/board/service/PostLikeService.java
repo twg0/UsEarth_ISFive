@@ -36,6 +36,10 @@ public class PostLikeService {
         }
     }
 
+    public boolean isPostLikedByUser(Long postId, String email) {
+        return postLikeRepository.existsByPost_IdAndMember_Email(postId, email);
+    }
+
     private void cancelLike(Post post, PostLike postLike) {
         postLikeRepository.delete(postLike);
         post.cancelLike();

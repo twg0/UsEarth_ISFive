@@ -35,6 +35,8 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostResponse> findPost(@PathVariable Long postId) {
         PostResponse response = postService.readPost(postId);
+        boolean likedByUser = postLikeService.isPostLikedByUser(postId, "other");
+        response.setLikedByUser(likedByUser);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
