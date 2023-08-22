@@ -1,15 +1,11 @@
 package com.isfive.usearth.web.board;
 
 import com.isfive.usearth.domain.board.dto.PostResponse;
+import com.isfive.usearth.domain.board.service.PostLikeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.isfive.usearth.domain.board.dto.PostsResponse;
 import com.isfive.usearth.domain.board.service.PostService;
@@ -22,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
 
     @PostMapping("/boards/{boardId}/posts")
     public void writePost(@PathVariable Long boardId, @RequestBody PostCreateRequest request) {
@@ -37,6 +34,12 @@ public class PostController {
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostResponse> findPost(@PathVariable Long postId) {
-        return new ResponseEntity<>(postService.readPost(postId), HttpStatus.OK);
+        PostResponse response = postService.readPost(postId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/posts/{postId}/like")
+    public void like(@PathVariable Long postId) {
+        postLikeService.clickLike(postId, "temp");
     }
 }

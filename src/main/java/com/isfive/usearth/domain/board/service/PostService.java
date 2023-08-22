@@ -1,26 +1,22 @@
 package com.isfive.usearth.domain.board.service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import com.isfive.usearth.domain.board.dto.PostResponse;
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
+import com.isfive.usearth.domain.board.dto.PostsResponse;
+import com.isfive.usearth.domain.board.entity.Board;
+import com.isfive.usearth.domain.board.entity.Post;
+import com.isfive.usearth.domain.board.entity.PostLike;
+import com.isfive.usearth.domain.board.repository.BoardRepository;
+import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.domain.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.isfive.usearth.domain.board.dto.PostsResponse;
-import com.isfive.usearth.domain.board.entity.Board;
-import com.isfive.usearth.domain.board.entity.Post;
-import com.isfive.usearth.domain.board.repository.BoardRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
-import com.isfive.usearth.domain.member.entity.Member;
-import com.isfive.usearth.domain.member.repository.MemberRepository;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
