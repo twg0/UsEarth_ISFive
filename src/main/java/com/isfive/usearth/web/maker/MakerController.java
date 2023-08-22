@@ -2,27 +2,20 @@ package com.isfive.usearth.web.maker;
 
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.FileImageService;
+import com.isfive.usearth.domain.maker.dto.MakerResponse;
+import com.isfive.usearth.domain.maker.service.MakerService;
+import com.isfive.usearth.web.maker.dto.MakerUpdate;
+import com.isfive.usearth.web.maker.dto.MakerUpdateRequest;
 import com.isfive.usearth.web.maker.dto.register.CorporateRegister;
 import com.isfive.usearth.web.maker.dto.register.IndividualRegister;
-import com.isfive.usearth.web.maker.dto.register.MakerRegister;
 import com.isfive.usearth.web.maker.dto.register.PersonalRegister;
 import com.isfive.usearth.web.maker.dto.register_request.CorporateRegisterRequest;
 import com.isfive.usearth.web.maker.dto.register_request.IndividualRegisterRequest;
 import com.isfive.usearth.web.maker.dto.register_request.PersonalRegisterRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.isfive.usearth.domain.maker.dto.MakerResponse;
-import com.isfive.usearth.domain.maker.service.MakerService;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/makers")
@@ -89,6 +82,23 @@ public class MakerController {
     ) {
         MakerResponse response = makerService.readMakerById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{makerId}")
+    public ResponseEntity<MakerResponse> updateMaker(
+            @PathVariable("makerId") Long id,
+            @RequestBody MakerUpdateRequest request
+            ) {
+        MakerUpdate makerUpdate = MakerUpdate.toMakerUpdate(request);
+        MakerResponse response = makerService.updateMakerById(id,makerUpdate);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{makerId}")
+    public void deleteMaker(
+            @PathVariable("makerId") Long id
+    ) {
+        makerService.removeMakerById(id);
     }
 
 }

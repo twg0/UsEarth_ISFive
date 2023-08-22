@@ -1,6 +1,5 @@
 package com.isfive.usearth.web.maker.dto.register_request;
 
-import com.isfive.usearth.web.maker.dto.register_request.MakerRegisterRequest;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 @Getter

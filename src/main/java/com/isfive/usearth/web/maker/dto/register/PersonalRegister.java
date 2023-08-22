@@ -1,7 +1,7 @@
 package com.isfive.usearth.web.maker.dto.register;
 
 import com.isfive.usearth.domain.common.FileImage;
-import com.isfive.usearth.domain.maker.entity.Individual;
+import com.isfive.usearth.domain.maker.entity.BusinessInformation;
 import com.isfive.usearth.domain.maker.entity.PersonalBusiness;
 import com.isfive.usearth.web.maker.dto.register_request.PersonalRegisterRequest;
 
@@ -26,6 +26,19 @@ public class PersonalRegister extends MakerRegister {
     }
 
     public PersonalBusiness toEntity() {
-        return  null;
+        return PersonalBusiness.builder()
+                .name(this.getName())
+                .profileImage(this.getProfileImage().getStoredName())
+                .phone(this.getPhone())
+                .email(this.getEmail())
+                .submitFile(this.getSubmitFile().getStoredName())
+                .businessInformation(
+                        BusinessInformation.builder()
+                                .corporateName(this.corporateName)
+                                .registrationNumber(this.registrationNumber)
+                                .registration(this.registration.getStoredName())
+                                .build()
+                )
+                .build();
     }
 }

@@ -16,7 +16,13 @@ public interface MakerRepository extends JpaRepository<Maker,Long> {
     }
 
     @Query("SELECT c FROM CorporateBusiness c WHERE c.id = :makerId ")
-    Maker findMakerWithCorporate(@Param("makerId") Long makerId);
+    Maker findMakerWithCorporateBusiness(@Param("makerId") Long makerId);
+
+    @Query("SELECT d FROM Individual d WHERE d.id = :makerId ")
+    Maker findMakerWithIndividual(@Param("makerId") Long makerId);
+
+    @Query("SELECT p FROM PersonalBusiness p WHERE p.id = :makerId ")
+    Maker findMakerWithPersonalBusiness(@Param("makerId") Long makerId);
 
 
 }
