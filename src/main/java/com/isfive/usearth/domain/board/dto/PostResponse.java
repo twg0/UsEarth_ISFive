@@ -32,5 +32,6 @@ public class PostResponse {
         this.views = post.getViews();
         this.likeCount = post.getLikeCount();
         this.createdDate = post.getCreatedDate();
+        this.likedByUser = false;
     }
 }

@@ -17,8 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +41,13 @@ public class PostService {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         Page<Post> posts = postRepository.findAllByBoard_IdOrderByIdDesc(boardId, pageRequest);
         List<PostsResponse> postsResponses = createPostResponses(posts);
+
+        // TODO 이메일 추후 수정
+        List<PostLike> postLikes = postLikeRepository.findByMember_EmailAndPostIn("other", posts.getContent());
+
+        Set<Long> postIdSet = createPostIdSetBy(postLikes);
+        setLikedByUser(postsResponses, postIdSet);
+
         return new PageImpl<>(postsResponses, pageRequest, posts.getTotalElements());
     }
 
@@ -80,8 +86,20 @@ public class PostService {
                 .toList();
     }
 
-    public boolean isPostLikedByUser(Long postId, String email) {
-        return postLikeRepository.existsByPost_IdAndMember_Email(postId, email);
+
+    private  Set<Long> createPostIdSetBy(List<PostLike> postLikes) {
+        Set<Long> postIdSet = new HashSet<>();
+        postLikes.forEach(postLike ->
+                postIdSet.add(postLike.getPostId()));
+        return postIdSet;
+    }
+
+    private void setLikedByUser(List<PostsResponse> postsResponses, Set<Long> postIdSet) {
+        postsResponses.forEach(postsResponse -> {
+            if (postIdSet.contains(postsResponse.getId())) {
+                postsResponse.setLikedByUser(true);
+            }
+        });
     }
 
     private void cancelLike(Post post, PostLike postLike) {

@@ -31,4 +31,8 @@ public class PostLike {
         this.member = member;
         this.post = post;
     }
+
+    public Long getPostId() {
+        return post.getId();
+    }
 }
