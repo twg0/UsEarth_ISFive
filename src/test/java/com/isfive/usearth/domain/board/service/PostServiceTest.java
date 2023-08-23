@@ -124,7 +124,6 @@ class PostServiceTest {
 
         // when
 
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         for (int i = 0; i < count; i++) {
             String email = "member" + i;
             executorService.submit(() -> {
@@ -141,13 +140,10 @@ class PostServiceTest {
         }
 
         latch.await();
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
         // then
         List<PostLike> all = postLikeRepository.findAll();
         Post findPost = postRepository.findById(post.getId()).get();
-
-        System.out.println("all.size() = " + all.size());
-        System.out.println("findPost.getLikeCount() = " + findPost.getLikeCount());
 
         assertThat(findPost.getLikeCount()).isEqualTo(all.size());
     }
