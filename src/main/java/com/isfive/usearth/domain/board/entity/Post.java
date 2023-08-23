@@ -38,6 +38,9 @@ public class Post extends BaseEntity {
 
     private Integer likeCount;
 
+    @Version
+    private Long version;
+
     @Builder
     private Post(Board board, Member member, String title, String content) {
         this.board = board;

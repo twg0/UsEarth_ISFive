@@ -9,23 +9,23 @@ import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import static com.isfive.usearth.domain.board.entity.Post.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.isfive.usearth.domain.board.entity.Post.createPost;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 @ActiveProfiles("test")
 class PostServiceTest {
 
@@ -38,6 +38,14 @@ class PostServiceTest {
     @Autowired PostLikeRepository postLikeRepository;
 
     @Autowired PostService postService;
+
+    @BeforeEach
+    void clear() {
+        postLikeRepository.deleteAll();
+        postRepository.deleteAll();
+        memberRepository.deleteAll();
+        boardRepository.deleteAll();
+    }
 
     @DisplayName("사용자는 게시글을 페이징 조회하여 좋아요 한 게시글들을 확인 할 수 있다.")
     @Test
@@ -79,15 +87,68 @@ class PostServiceTest {
 
         assertThat(content1.get(1))
                 .extracting("id", "likedByUser")
-                .contains(2L, false);
+                .contains(post2.getId(), false);
         assertThat(content1.get(2))
                 .extracting("id", "likedByUser")
-                .contains(1L, true);
+                .contains(post1.getId(), true);
         assertThat(content2.get(1))
                 .extracting("id", "likedByUser")
-                .contains(2L, true);
+                .contains(post2.getId(), true);
         assertThat(content2.get(2))
                 .extracting("id", "likedByUser")
-                .contains(1L, false);
+                .contains(post1.getId(), false);
+    }
+
+    @DisplayName("동시에 100개 의 좋아요 요청이 왔을 때 데이터 정합성을 유지해야 한다.")
+    @Test
+    void request100LikeConcurrence() throws InterruptedException {
+
+        // given
+        int count = 1;
+
+        Member writer = Member.builder().email("writer").build();
+        memberRepository.save(writer);
+        for (int i = 0; i < count; i++) {
+            Member member = Member.builder().email("member" + i).build();
+            memberRepository.save(member);
+        }
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = createPost(writer, board, "제목1", "내용1");
+        postRepository.save(post);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        CountDownLatch latch = new CountDownLatch(count);
+
+        // when
+
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        for (int i = 0; i < count; i++) {
+            String email = "member" + i;
+            executorService.submit(() -> {
+                    try {
+                        postService.like(post.getId(), email);
+                    } catch (Exception e) {
+                        System.out.println("error!!: " + email);
+                    }
+                    finally {
+                        latch.countDown();
+                    }
+                }
+            );
+        }
+
+        latch.await();
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        // then
+        List<PostLike> all = postLikeRepository.findAll();
+        Post findPost = postRepository.findById(post.getId()).get();
+
+        System.out.println("all.size() = " + all.size());
+        System.out.println("findPost.getLikeCount() = " + findPost.getLikeCount());
+
+        assertThat(findPost.getLikeCount()).isEqualTo(all.size());
     }
 }

@@ -10,14 +10,21 @@ import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import com.isfive.usearth.exception.EntityNotFoundException;
+import com.isfive.usearth.exception.ErrorCode;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +44,11 @@ public class PostService {
         postRepository.save(post);
     }
 
+    /**
+     * Page<Post>를 조회 한 후 List<PostsResponse> 로 만든다.
+     * 로그인 한 사용자가 좋아요를 누른 Post에 일치하는 PostsResponse에는
+     * 좋아요 표시를 할 수 있도록 true 값을 설정해주고 Page<> 타입으로 변환 후 반환한다.
+     */
     public Page<PostsResponse> readPosts(Long boardId, Integer page, String email) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         Page<Post> posts = postRepository.findAllByBoard_IdOrderByIdDesc(boardId, pageRequest);
@@ -64,9 +76,11 @@ public class PostService {
         return postResponse;
     }
 
+
     @Transactional
     public void like(Long postId, String email) {
-        Post post = postRepository.findByIdOrThrow(postId);
+        Post post = postRepository.findByIdWithMember(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
         post.verifyNotWriter(email);
 
         Member member = memberRepository.findByEmailOrThrow(email);
@@ -84,7 +98,6 @@ public class PostService {
                 .map(PostsResponse::new)
                 .toList();
     }
-
 
     private  Set<Long> createPostIdSetBy(List<PostLike> postLikes) {
         Set<Long> postIdSet = new HashSet<>();
