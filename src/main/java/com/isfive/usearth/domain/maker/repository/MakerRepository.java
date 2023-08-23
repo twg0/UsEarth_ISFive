@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 public interface MakerRepository extends JpaRepository<Maker,Long> {
 
+
     default Maker findByIdOrThrow(Long makerId) {
         return findById(makerId)
                 .orElseThrow(()->new EntityNotFoundException());
@@ -18,5 +19,6 @@ public interface MakerRepository extends JpaRepository<Maker,Long> {
     @Query("SELECT c FROM CorporateBusiness c WHERE c.id = :makerId ")
     Maker findMakerWithCorporate(@Param("makerId") Long makerId);
 
+    Maker findByName(String name);
 
 }

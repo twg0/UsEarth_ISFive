@@ -1,5 +1,12 @@
 package com.isfive.usearth.domain.common;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,35 +14,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.isfive.usearth.domain.common.FileImage;
-import com.isfive.usearth.domain.project.entity.Project;
-import com.isfive.usearth.domain.project.entity.ProjectFileImage;
-
-import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FileImageService {
 
-    public FileImage createFileImage(MultipartFile file) {
-        String profileDir = String.format("/src/main/resources/projectImg/");
-        try {
-            Files.createDirectories(Path.of(profileDir));
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @Transactional
+    public FileImage createFileImage(MultipartFile file) throws IOException {
+        String profileDir = String.format("./src/main/resources/projectImg/");
+//        try {
+//
+//        } catch (IOException e) {
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+        Files.createDirectories(Path.of(profileDir));
 
         String originalName = file.getOriginalFilename();
         String[] fileNameSplit = originalName.split("\\.");
         String extension = fileNameSplit[fileNameSplit.length - 1]; // 확장자
 
         UUID uuid = UUID.randomUUID();
-        String storedName = uuid + extension;
+        String storedName = uuid + "." + extension;
         String profilePath = profileDir + storedName;
 
         try {
@@ -51,8 +50,14 @@ public class FileImageService {
         return fileImage;
     }
 
-    public List<FileImage> createFileImage(List<MultipartFile> fileList) {
-        return fileList.stream().map(this::createFileImage).toList();
+    @Transactional
+    public List<FileImage> createFileImageList(List<MultipartFile> fileList) throws IOException  {
+        List<FileImage> fileImageList = new ArrayList<>();
+        for (MultipartFile file : fileList) {
+            FileImage fileImage = createFileImage(file);
+            fileImageList.add(fileImage);
+        }
+        return fileImageList;
     }
 
 

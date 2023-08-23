@@ -1,31 +1,32 @@
 package com.isfive.usearth.domain.project.dto;
 
-import java.util.List;
-
-import com.isfive.usearth.domain.project.entity.Option;
-import com.isfive.usearth.domain.project.entity.Project;
 import com.isfive.usearth.domain.project.entity.Reward;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class RewardRegisterDto {
-    private Project project;
+import java.util.Map;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RewardCreate {
     private String title;
     private String description;
     private Integer price;
-    private Integer initStock;
     private String expectedSendDate;
     private Integer deliveryFee;
-    private List<Option> optionList;
+    private Map<String, String> options;
 
     public Reward toEntity() {
         return Reward.builder()
-                .project(project)
                 .title(title)
                 .description(description)
                 .price(price)
-                .initStock(initStock)
                 .expectedSendDate(expectedSendDate)
                 .deliveryFee(deliveryFee)
-                .options(optionList)
                 .build();
     }
 

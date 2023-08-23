@@ -1,6 +1,6 @@
 package com.isfive.usearth.domain.member.entity;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.isfive.usearth.domain.activity.entity.Activity;
 import com.isfive.usearth.domain.common.BaseEntity;
@@ -62,10 +62,10 @@ public class Member extends BaseEntity {
         return this;
     }
 
-    @PostConstruct
-    public void encodePassword(PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(password);
-    }
+//    @PostConstruct
+//    public void encodePassword(PasswordEncoder passwordEncoder) {
+//        this.password = passwordEncoder.encode(password);
+//    }
 
     /* 연관관계 */
 

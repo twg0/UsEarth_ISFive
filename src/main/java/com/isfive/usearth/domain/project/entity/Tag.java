@@ -32,6 +32,7 @@ public class Tag {
 
     public void setProject(Project project) {
         this.project = project;
-        project.getSearchTags().add(this);
+        if (!project.getSearchTags().contains(this))
+            project.getSearchTags().add(this);
     }
 }
