@@ -4,10 +4,11 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-// @SuperBuilder
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PersonalBusiness extends Maker {
     @Embedded

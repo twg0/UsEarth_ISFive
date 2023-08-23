@@ -1,33 +1,20 @@
 package com.isfive.usearth.domain.maker.entity;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.project.entity.Project;
 import com.isfive.usearth.web.maker.dto.MakerUpdate;
-
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-// @Builder
 @Entity
 @Getter
-// @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -49,6 +36,8 @@ public class Maker {
 
     private LocalDateTime deletedAt;
 
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -61,8 +50,12 @@ public class Maker {
    }
 
     public void update(MakerUpdate makerUpdate) {
-        this.phone = makerUpdate.getPhone();
-        this.email = makerUpdate.getEmail();
+       if (makerUpdate.getPhone() != null) {
+           this.phone = makerUpdate.getPhone();
+       }
+       if (makerUpdate.getEmail() != null) {
+           this.email = makerUpdate.getEmail();
+       }
     }
 
     public void delete() {

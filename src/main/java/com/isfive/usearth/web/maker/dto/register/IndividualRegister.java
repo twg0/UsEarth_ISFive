@@ -2,20 +2,20 @@ package com.isfive.usearth.web.maker.dto.register;
 
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.maker.entity.Individual;
-import com.isfive.usearth.web.maker.dto.register_request.IndividualRegisterRequest;
+import com.isfive.usearth.web.maker.dto.register_request.MakerRegisterRequest;
 
 public class IndividualRegister extends MakerRegister {
     private FileImage idCard;
 
-    private IndividualRegister(IndividualRegisterRequest request,
-                              FileImage profileImage,
-                              FileImage submitFile,
-                              FileImage idCard) {
+    private IndividualRegister(MakerRegisterRequest request,
+                               FileImage profileImage,
+                               FileImage submitFile,
+                               FileImage idCard) {
         super(request, profileImage, submitFile);
         this.idCard = idCard;
     }
 
-    public static IndividualRegister createIndividualRegister(IndividualRegisterRequest request,
+    public static IndividualRegister createIndividualRegister(MakerRegisterRequest request,
                                                               FileImage profileImage,
                                                               FileImage submitFile,
                                                               FileImage idCard) {

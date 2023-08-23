@@ -1,30 +1,16 @@
 package com.isfive.usearth.domain.maker.service;
 
-import java.io.File;
-import java.util.UUID;
-
+import com.isfive.usearth.domain.maker.dto.MakerResponse;
+import com.isfive.usearth.domain.maker.entity.Maker;
+import com.isfive.usearth.domain.maker.repository.MakerRepository;
+import com.isfive.usearth.web.maker.dto.MakerUpdate;
 import com.isfive.usearth.web.maker.dto.register.CorporateRegister;
 import com.isfive.usearth.web.maker.dto.register.IndividualRegister;
 import com.isfive.usearth.web.maker.dto.register.PersonalRegister;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.isfive.usearth.domain.maker.dto.MakerResponse;
-import com.isfive.usearth.domain.maker.entity.BusinessInformation;
-import com.isfive.usearth.domain.maker.entity.CorporateBusiness;
-import com.isfive.usearth.domain.maker.entity.Individual;
-import com.isfive.usearth.domain.maker.entity.Maker;
-import com.isfive.usearth.domain.maker.entity.PersonalBusiness;
-import com.isfive.usearth.domain.maker.repository.CorporateBusinessRepository;
-import com.isfive.usearth.domain.maker.repository.IndividualRepository;
-import com.isfive.usearth.domain.maker.repository.MakerRepository;
-import com.isfive.usearth.domain.maker.repository.PersonalBusinessRepository;
-import com.isfive.usearth.web.maker.dto.register.MakerRegister;
-import com.isfive.usearth.web.maker.dto.MakerUpdate;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +34,11 @@ public class MakerService {
     }
 
     public MakerResponse readMakerById(Long id) {
-        return MakerResponse.fromEntity(makerRepository.findByIdOrThrow(id));
+        Maker maker = makerRepository.findByIdOrThrow(id);
+        if (maker.getDeletedAt() != null) {
+            throw new RuntimeException();
+        }
+        return MakerResponse.fromEntity(maker);
     }
 
     @Transactional
@@ -63,6 +53,4 @@ public class MakerService {
         Maker maker = makerRepository.findByIdOrThrow(id);
         maker.delete();
     }
-
-
 }

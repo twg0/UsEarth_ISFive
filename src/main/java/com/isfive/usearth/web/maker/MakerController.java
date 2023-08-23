@@ -9,13 +9,13 @@ import com.isfive.usearth.web.maker.dto.MakerUpdateRequest;
 import com.isfive.usearth.web.maker.dto.register.CorporateRegister;
 import com.isfive.usearth.web.maker.dto.register.IndividualRegister;
 import com.isfive.usearth.web.maker.dto.register.PersonalRegister;
-import com.isfive.usearth.web.maker.dto.register_request.CorporateRegisterRequest;
-import com.isfive.usearth.web.maker.dto.register_request.IndividualRegisterRequest;
-import com.isfive.usearth.web.maker.dto.register_request.PersonalRegisterRequest;
+import com.isfive.usearth.web.maker.dto.register_request.BusinessMakerRequest;
+import com.isfive.usearth.web.maker.dto.register_request.MakerRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/makers")
@@ -26,54 +26,70 @@ public class MakerController {
     private final FileImageService fileImageService;
 
     @PostMapping("/individual")
-    public ResponseEntity<String> createIndividual(@ModelAttribute IndividualRegisterRequest request) {
-        FileImage profileImage = fileImageService.createFileImage(request.getProfileImage());
-        FileImage submitFile = fileImageService.createFileImage(request.getSubmitFile());
-        FileImage idCard = fileImageService.createFileImage(request.getIdCard());
+    public ResponseEntity<String> createIndividual(
+            @RequestPart("MakerRegisterRequest") MakerRegisterRequest request,
+            @RequestPart("profileImage") MultipartFile profileImage,
+            @RequestPart("submitFile") MultipartFile submitFile,
+            @RequestPart("idCard") MultipartFile idCard
+            ) {
+        FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
+        FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
+        FileImage savedIdCard = fileImageService.createFileImage(idCard);
 
         IndividualRegister register = IndividualRegister.createIndividualRegister(
                 request,
-                profileImage,
-                submitFile,
-                idCard);
+                savedprofileImage,
+                savedSubmitFile,
+                savedIdCard);
 
         makerService.createIndividualBy(register);
 
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
     }
 
     @PostMapping("/personal-business")
-    public ResponseEntity<String> createPersonalBusiness(@ModelAttribute PersonalRegisterRequest request) {
-        FileImage profileImage = fileImageService.createFileImage(request.getProfileImage());
-        FileImage submitFile = fileImageService.createFileImage(request.getSubmitFile());
-        FileImage registration = fileImageService.createFileImage(request.getRegistration());
+    public ResponseEntity<String> createPersonalBusiness(
+            @RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
+            @RequestPart("profileImage") MultipartFile profileImage,
+            @RequestPart("submitFile") MultipartFile submitFile,
+            @RequestPart("registration") MultipartFile registration
+    ) {
+        FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
+        FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
+        FileImage savedRegistration = fileImageService.createFileImage(registration);
 
         PersonalRegister register = PersonalRegister.createPersonalRegister(
                 request,
-                profileImage,
-                submitFile,
-                registration);
+                savedprofileImage,
+                savedSubmitFile,
+                savedRegistration);
         makerService.createPersonalBusinessBy(register);
 
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
     }
 
     @PostMapping("/corporate-business")
-    public ResponseEntity<String> createCorporateBusiness(@ModelAttribute CorporateRegisterRequest request) {
-        FileImage profileImage = fileImageService.createFileImage(request.getProfileImage());
-        FileImage submitFile = fileImageService.createFileImage(request.getSubmitFile());
-        FileImage registration = fileImageService.createFileImage(request.getRegistration());
-        FileImage corporateSealCertificate = fileImageService.createFileImage(request.getCorporateSealCertificate());
+    public ResponseEntity<String> createCorporateBusiness(
+            @RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
+            @RequestPart("profileImage") MultipartFile profileImage,
+            @RequestPart("submitFile") MultipartFile submitFile,
+            @RequestPart("registration") MultipartFile registration,
+            @RequestPart("corporateSealCertificate") MultipartFile corporateSealCertificate
+    ) {
+        FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
+        FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
+        FileImage savedRegistration = fileImageService.createFileImage(registration);
+        FileImage savedCorporateSealCertificate = fileImageService.createFileImage(corporateSealCertificate);
 
         CorporateRegister register = CorporateRegister.createCorporateRegister(
                 request,
-                profileImage,
-                submitFile,
-                registration,
-                corporateSealCertificate);
+                savedprofileImage,
+                savedSubmitFile,
+                savedRegistration,
+                savedCorporateSealCertificate);
         makerService.createCorporateBusinessBy(register);
 
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
     }
 
     @GetMapping("/{makerId}")
@@ -90,15 +106,16 @@ public class MakerController {
             @RequestBody MakerUpdateRequest request
             ) {
         MakerUpdate makerUpdate = MakerUpdate.toMakerUpdate(request);
-        MakerResponse response = makerService.updateMakerById(id,makerUpdate);
+       MakerResponse response = makerService.updateMakerById(id,makerUpdate);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{makerId}")
-    public void deleteMaker(
+    public ResponseEntity<String> deleteMaker(
             @PathVariable("makerId") Long id
     ) {
         makerService.removeMakerById(id);
+        return ResponseEntity.ok("메이커가 삭제되었습니다.");
     }
 
 }

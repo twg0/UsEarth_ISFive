@@ -3,14 +3,15 @@ package com.isfive.usearth.web.maker.dto.register;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.maker.entity.BusinessInformation;
 import com.isfive.usearth.domain.maker.entity.PersonalBusiness;
-import com.isfive.usearth.web.maker.dto.register_request.PersonalRegisterRequest;
+import com.isfive.usearth.web.maker.dto.register_request.BusinessMakerRequest;
+
 
 public class PersonalRegister extends MakerRegister {
     private String registrationNumber;
     private String corporateName;
     private FileImage registration;
 
-    public PersonalRegister(PersonalRegisterRequest request, FileImage profileImage, FileImage submitFile, FileImage registration) {
+    public PersonalRegister(BusinessMakerRequest request, FileImage profileImage, FileImage submitFile, FileImage registration) {
         super(request, profileImage, submitFile);
         this.registrationNumber = request.getRegistrationNumber();
         this.corporateName = request.getCorporateName();
@@ -18,7 +19,7 @@ public class PersonalRegister extends MakerRegister {
     }
 
     public static PersonalRegister createPersonalRegister(
-            PersonalRegisterRequest request,
+            BusinessMakerRequest request,
             FileImage profileImage,
             FileImage submitFile,
             FileImage registration) {
