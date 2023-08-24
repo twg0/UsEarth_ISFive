@@ -3,15 +3,9 @@ package com.isfive.usearth.domain.board.entity;
 import com.isfive.usearth.domain.common.BaseEntity;
 import com.isfive.usearth.domain.member.entity.Member;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
+import com.isfive.usearth.exception.BusinessException;
+import com.isfive.usearth.exception.ErrorCode;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +36,11 @@ public class Post extends BaseEntity {
 
     private Integer views;
 
+    private Integer likeCount;
+
+    @Version
+    private Long version;
+
     @Builder
     private Post(Board board, Member member, String title, String content) {
         this.board = board;
@@ -49,6 +48,7 @@ public class Post extends BaseEntity {
         this.title = title;
         this.content = content;
         this.views = 0;
+        this.likeCount = 0;
     }
 
     public static Post createPost(Member member, Board board, String title, String content) {
@@ -64,7 +64,23 @@ public class Post extends BaseEntity {
         return member.getNickname();
     }
 
+    public void verifyNotWriter(String email) {
+        if (member.isEqualsEmail(email)) {
+            throw new BusinessException(ErrorCode.POST_WRITER_NOT_ALLOW);
+        }
+    }
+
     public void increaseView() {
         views++;
+    }
+
+    public void like() {
+        likeCount ++;
+    }
+
+    public void cancelLike() {
+        if (likeCount > 0) {
+            likeCount--;
+        }
     }
 }

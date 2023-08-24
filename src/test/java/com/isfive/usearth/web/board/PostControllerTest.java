@@ -10,6 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.isfive.usearth.domain.board.entity.PostLike;
+import com.isfive.usearth.domain.board.repository.PostLikeRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ class PostControllerTest {
 	@Autowired BoardRepository boardRepository;
 
 	@Autowired PostRepository postRepository;
+
+	@Autowired PostLikeRepository postLikeRepository;
 
 	@Autowired MemberRepository memberRepository;
 
@@ -133,5 +138,72 @@ class PostControllerTest {
 				.andExpect(jsonPath("$.views").value(post.getViews()))
 				.andExpect(status().isOk())
 				.andDo(print());
+	}
+
+	@DisplayName("사용자는 게시글을 좋아요 할 수 있다.")
+	@Test
+	void like() throws Exception {
+		//given
+		Member member1 = Member.builder()
+				.email("temp")
+				.build();
+
+		Member member2 = Member.builder()
+				.email("other")
+				.build();
+
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		Board board = Board.createBoard("게시판 제목", "게시판 요약");
+		boardRepository.save(board);
+
+		Post post = Post.createPost(member1, board, "title", "content");
+		postRepository.save(post);
+
+		//when //then
+		mockMvc.perform(post("/posts/{postId}/like", post.getId()))
+				.andExpect(status().isOk())
+				.andDo(print());
+
+		List<PostLike> all = postLikeRepository.findAll();
+		assertThat(all).isNotEmpty();
+
+		PostLike postLike = all.get(0);
+		assertThat(postLike.getPost()).isEqualTo(post);
+		assertThat(postLike.getMember()).isEqualTo(member2);
+	}
+
+	@DisplayName("사용자는 게시글을 좋아요를 취소 할 수 있다.")
+	@Test
+	void cancelLike() throws Exception {
+		//given
+		Member member1 = Member.builder()
+				.email("temp")
+				.build();
+
+		Member member2 = Member.builder()
+				.email("other")
+				.build();
+
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		Board board = Board.createBoard("게시판 제목", "게시판 요약");
+		boardRepository.save(board);
+
+		Post post = Post.createPost(member1, board, "title", "content");
+		postRepository.save(post);
+
+		PostLike postLike = new PostLike(member2, post);
+		postLikeRepository.save(postLike);
+
+		//when //then
+		mockMvc.perform(post("/posts/{postId}/like", post.getId()))
+				.andExpect(status().isOk())
+				.andDo(print());
+
+		List<PostLike> all = postLikeRepository.findAll();
+		assertThat(all).isEmpty();
 	}
 }

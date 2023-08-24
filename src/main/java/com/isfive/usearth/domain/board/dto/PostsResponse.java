@@ -19,11 +19,14 @@ public class PostsResponse {
 
     private final LocalDateTime createdDate;
 
+    private Boolean likedByUser;
+
     public PostsResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.writer = post.getWriterNickname();
         this.views = post.getViews();
         this.createdDate = post.getCreatedDate();
+        this.likedByUser = false;
     }
 }
