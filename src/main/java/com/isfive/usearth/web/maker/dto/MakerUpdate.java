@@ -8,8 +8,12 @@ public class MakerUpdate {
     private String phone;
     private String email;
 
-    MakerUpdate(MakerUpdateRequest makerUpdateRequest) {
+    private MakerUpdate(MakerUpdateRequest makerUpdateRequest) {
         this.phone = makerUpdateRequest.getPhone();
         this.email = makerUpdateRequest.getEmail();
+    }
+
+    public static MakerUpdate toMakerUpdate(MakerUpdateRequest makerUpdateRequest) {
+        return new MakerUpdate(makerUpdateRequest);
     }
 }
