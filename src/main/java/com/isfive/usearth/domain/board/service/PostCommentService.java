@@ -1,6 +1,6 @@
 package com.isfive.usearth.domain.board.service;
 
-import com.isfive.usearth.domain.board.Retry;
+import com.isfive.usearth.domain.board.annotation.Retry;
 import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostComment;
 import com.isfive.usearth.domain.board.repository.PostCommentRepository;

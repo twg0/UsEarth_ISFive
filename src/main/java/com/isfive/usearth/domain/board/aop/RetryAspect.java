@@ -1,5 +1,6 @@
-package com.isfive.usearth.domain.board;
+package com.isfive.usearth.domain.board.aop;
 
+import com.isfive.usearth.domain.board.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

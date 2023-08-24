@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.board;
+package com.isfive.usearth.domain.board.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
