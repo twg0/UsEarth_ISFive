@@ -9,4 +9,8 @@ import org.springframework.stereotype.Service;
 public class PostCommentService {
 
     private final PostCommentRepository postCommentRepository;
+
+    public void createComment(Long postId, String content) {
+
+    }
 }
