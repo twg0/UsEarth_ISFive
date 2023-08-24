@@ -8,10 +8,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.isfive.usearth.domain.common.FileImage;
-import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.domain.project.dto.ProjectRegisterDto;
 import com.isfive.usearth.domain.project.dto.ProjectResponse;
 import com.isfive.usearth.domain.project.entity.Project;
