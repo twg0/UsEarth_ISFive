@@ -51,7 +51,7 @@ public class PostService {
      */
     public Page<PostsResponse> readPosts(Long boardId, Integer page, String email) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
-        Page<Post> posts = postRepository.findAllByBoard_IdOrderByIdDesc(boardId, pageRequest);
+        Page<Post> posts = postRepository.findPosts(boardId, pageRequest);
         List<PostsResponse> postsResponses = createPostResponses(posts);
 
         List<PostLike> postLikes = postLikeRepository.findByMember_EmailAndPostIn(email, posts.getContent());
@@ -79,8 +79,7 @@ public class PostService {
 
     @Transactional
     public void like(Long postId, String email) {
-        Post post = postRepository.findByIdWithMember(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+        Post post = postRepository.findByIdWithMember(postId);
         post.verifyNotWriter(email);
 
         Member member = memberRepository.findByEmailOrThrow(email);
