@@ -19,6 +19,7 @@ public class RewardCreate {
     private String expectedSendDate;
     private Integer deliveryFee;
     private Map<String, String> options;
+    private Map<String, Integer> optionStocks;
 
     public Reward toEntity() {
         return Reward.builder()

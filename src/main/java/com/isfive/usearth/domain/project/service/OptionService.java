@@ -1,12 +1,7 @@
 package com.isfive.usearth.domain.project.service;
 
-import com.isfive.usearth.domain.project.entity.Option;
-import com.isfive.usearth.domain.project.entity.OptionValue;
-import com.isfive.usearth.domain.project.entity.Reward;
-import com.isfive.usearth.domain.project.repository.OptionRepository;
-import com.isfive.usearth.domain.project.repository.OptionValueRepository;
-import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
-import com.isfive.usearth.domain.project.repository.SkuValueRespository;
+import com.isfive.usearth.domain.project.entity.*;
+import com.isfive.usearth.domain.project.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +21,23 @@ public class OptionService {
     private final SkuValueRespository skuValueRespository;
     private final OptionRepository optionRepository;
     private final OptionValueRepository optionValueRepository;
+    private final RewardRepository rewardRepository;
 
     public List<Option> convertOption(Map<String, String> options, Reward reward) {
         List<Option> optionList = new ArrayList<>();
-
         for (Map.Entry<String, String> pair : options.entrySet()) {
             // 옵션 이름 저장
             Option option = createOption(pair.getKey());
             optionRepository.save(option);
 
             // 옵션 값 리스트 저장
-            List<OptionValue> optionValueList = createOptionValue(convertOptionValueStrToList(pair.getValue()));
-            for (OptionValue optionValue : optionValueList)
+            List<OptionValue> optionValueList = createOptionValue(convertValueStrToList(pair.getValue()));
+            for (OptionValue optionValue : optionValueList) {
                 option.addOptionValue(optionValue);
+                reward.addOptionValue(optionValue);
+            }
             optionList.add(option);
+            rewardRepository.save(reward);
             optionRepository.save(option);
         }
         optionRepository.saveAll(optionList);
@@ -47,16 +45,14 @@ public class OptionService {
         return optionList;
     }
 
-    public List<String> convertOptionValueStrToList(String optionStr) {
-        optionStr = optionStr.replace("\"", "");
-        List<String> optionList = Arrays.stream(optionStr.split(","))
-                .map(String::trim)
-                .filter(s -> s.length() > 0)
-                .collect(Collectors.toList());
-        return optionList;
+    public Option createOption(String name) {
+        Option option = Option.builder()
+                .name(name)
+                .build();
+        optionRepository.save(option);
+        return option;
     }
 
-    @Transactional
     public List<OptionValue> createOptionValue(List<String> optionValues) {
         List<OptionValue> optionValueList = new ArrayList<>();
         for (String value : optionValues) {
@@ -69,13 +65,38 @@ public class OptionService {
         return optionValueList;
     }
 
-    @Transactional
-    public Option createOption(String name) {
-        Option option = Option.builder()
-                .name(name)
-                .build();
-        optionRepository.save(option);
-        return option;
+    public List<String> convertValueStrToList(String str) {
+        str = str.replace("\"", "");
+        List<String> strList = Arrays.stream(str.split(","))
+                .map(String::trim)
+                .filter(s -> s.length() > 0)
+                .collect(Collectors.toList());
+        return strList;
+    }
+
+    public List<RewardSku> createRewardSku(Map<String, Integer> optionStocks, Reward reward) {
+        List<RewardSku> rewardSkuList = new ArrayList<>();
+        for (Map.Entry<String, Integer> pair : optionStocks.entrySet()) {
+            RewardSku rewardSku = RewardSku.builder()
+                    .initStock(pair.getValue())
+                    .build();
+            rewardSkuRepository.save(rewardSku);
+            reward.addRewardSku(rewardSku);
+            rewardSkuList.add(rewardSku);
+
+            List<String> options = convertValueStrToList(pair.getKey());
+            for (String option : options) {
+                OptionValue optionValue = optionValueRepository.findByValueAndReward_Id(option, reward.getId());
+                SkuValue skuValue = SkuValue
+                        .builder()
+                        .rewardSku(rewardSku)
+                        .optionValue(optionValue)
+                        .build();
+                skuValueRespository.save(skuValue);
+            }
+        }
+        rewardSkuRepository.saveAll(rewardSkuList);
+        return rewardSkuList;
     }
 
 }

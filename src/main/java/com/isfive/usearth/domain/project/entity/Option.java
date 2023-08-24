@@ -28,10 +28,6 @@ public class Option {
     @Builder.Default
     private List<OptionValue> optionValues = new ArrayList<>();
 
-    @OneToMany(mappedBy = "option")
-    @Builder.Default
-    private List<SkuValue> skuValues = new ArrayList<>();
-
     public void setReward(Reward reward) {
         this.reward = reward;
         if (!reward.getOptions().contains(this))

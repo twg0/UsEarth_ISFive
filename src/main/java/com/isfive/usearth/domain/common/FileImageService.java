@@ -23,7 +23,7 @@ public class FileImageService {
     public FileImage createFileImage(MultipartFile file) throws IOException {
         String profileDir = String.format("./src/main/resources/projectImg/");
 //        try {
-//
+//             Files.createDirectories(Path.of(profileDir));
 //        } catch (IOException e) {
 //            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
 //        }

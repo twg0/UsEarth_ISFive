@@ -24,12 +24,6 @@ public class SkuValue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer initStock;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_id")
-    private Option option;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_value_id")
     private OptionValue optionValue;
@@ -38,13 +32,4 @@ public class SkuValue {
     @JoinColumn(name = "reward_sku_id")
     private RewardSku rewardSku;
 
-    public void setOption(Option option) {
-        this.option = option;
-        option.getSkuValues().add(this);
-    }
-
-    public void setOptionValue(OptionValue optionValue) {
-        this.optionValue = optionValue;
-        optionValue.getSkuValues().add(this);
-    }
 }

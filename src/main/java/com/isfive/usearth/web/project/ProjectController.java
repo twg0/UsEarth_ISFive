@@ -5,9 +5,7 @@ import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.domain.project.dto.ProjectCreate;
 import com.isfive.usearth.domain.project.dto.ProjectResponse;
 import com.isfive.usearth.domain.project.dto.RewardCreate;
-import com.isfive.usearth.domain.project.repository.ProjectRepository;
 import com.isfive.usearth.domain.project.service.ProjectService;
-import com.isfive.usearth.domain.project.service.RewardService;
 import com.isfive.usearth.web.project.dto.ProjectRegister;
 import com.isfive.usearth.web.project.dto.RewardRegister;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +25,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/projects")
 public class ProjectController {
 
-    private final ProjectRepository projectRepository;
     private final ProjectService projectService;
     private final FileImageService fileImageService;
-    private final RewardService rewardService;
 
     @PostMapping
     public ResponseEntity<Void> createProject(

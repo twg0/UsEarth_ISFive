@@ -3,6 +3,7 @@ package com.isfive.usearth.domain.project.service;
 import com.isfive.usearth.domain.project.dto.RewardCreate;
 import com.isfive.usearth.domain.project.entity.Option;
 import com.isfive.usearth.domain.project.entity.Reward;
+import com.isfive.usearth.domain.project.entity.RewardSku;
 import com.isfive.usearth.domain.project.repository.RewardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class RewardService {
             List<Option> options = optionService.convertOption(rewardCreate.getOptions(), reward);
             for (Option option : options)
                 reward.addOption(option);
+
+            List<RewardSku> rewardSkus = optionService.createRewardSku(rewardCreate.getOptionStocks(), reward);
+            for (RewardSku rewardSku : rewardSkus)
+                reward.addRewardSku(rewardSku);
+
             rewards.add(reward);
         }
         rewardRepository.saveAll(rewards);

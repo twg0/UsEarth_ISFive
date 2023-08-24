@@ -33,9 +33,14 @@ public class Reward {
 
     @OneToMany(mappedBy = "reward")
     @Builder.Default
+    private List<OptionValue> optionValues = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reward")
+    @Builder.Default
     private List<Option> options = new ArrayList<>();
 
     @OneToMany(mappedBy = "reward")
+    @Builder.Default
     private List<RewardSku> rewardSkus = new ArrayList<>();
 
     public void setProject(Project project) {
@@ -50,4 +55,15 @@ public class Reward {
             option.setReward(this);
     }
 
+    public void addOptionValue(OptionValue optionValue) {
+        this.getOptionValues().add(optionValue);
+        if (optionValue.getReward() != this)
+            optionValue.setReward(this);
+    }
+
+    public void addRewardSku(RewardSku rewardSku) {
+        this.getRewardSkus().add(rewardSku);
+        if (rewardSku.getReward() != this)
+            rewardSku.setReward(this);
+    }
 }

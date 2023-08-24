@@ -30,7 +30,6 @@ public class TagService {
         return hashList;
     }
 
-    @Transactional
     public List<Tag> convertTagStrToEntity(List<String> hashList) {
         List<Tag> tagList = new ArrayList<>();
         for (String hash : hashList) {
