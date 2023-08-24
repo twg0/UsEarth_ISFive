@@ -1,6 +1,9 @@
 package com.isfive.usearth.web.board;
 
+import com.isfive.usearth.domain.board.dto.PostResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,13 +29,14 @@ public class PostController {
     }
 
     @GetMapping("/boards/{boardId}/posts")
-    public Page<PostsResponse> findPosts(@PathVariable Long boardId,
+    public ResponseEntity<Page<PostsResponse>> findPosts(@PathVariable Long boardId,
                                          @RequestParam(defaultValue = "1") Integer page) {
-        return postService.readPosts(boardId, page);
+        Page<PostsResponse> postsResponses = postService.readPosts(boardId, page);
+        return new ResponseEntity<>(postsResponses, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
-    public PostsResponse findPost(@PathVariable Long postId) {
-        return null;
+    public ResponseEntity<PostResponse> findPost(@PathVariable Long postId) {
+        return new ResponseEntity<>(postService.readPost(postId), HttpStatus.OK);
     }
 }

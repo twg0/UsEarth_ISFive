@@ -2,6 +2,7 @@ package com.isfive.usearth.web.project;
 
 import java.util.List;
 
+import com.isfive.usearth.domain.board.dto.PostsResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,8 +43,9 @@ public class ProjectController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping
-    public Page<ProjectResponse> findProjects(Pageable pageable) {
-        return projectService.readAllProject(pageable);
+    public ResponseEntity<Page<ProjectResponse>> findProjects(Pageable pageable) {
+        Page<ProjectResponse> projectResponses = projectService.readAllProject(pageable);
+        return new ResponseEntity<>(projectResponses, HttpStatus.OK);
     }
 
 }
