@@ -16,6 +16,6 @@ public class PostCommentController {
 
     @PostMapping("/posts/{postId}/comments")
     public void writeComment(@PathVariable Long postId, @RequestBody PostCommentCreateRequest request) {
-        postCommentService.createComment(postId, request.getContent());
+        postCommentService.createComment(postId, request.getContent(), "other");
     }
 }

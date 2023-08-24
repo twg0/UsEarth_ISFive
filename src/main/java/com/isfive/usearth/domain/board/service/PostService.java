@@ -10,11 +10,7 @@ import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -121,6 +117,6 @@ public class PostService {
     private void like(Post post, Member member) {
         PostLike postLike = new PostLike(member, post);
         postLikeRepository.save(postLike);
-        post.like();
+        post.increaseLikeCount();
     }
 }

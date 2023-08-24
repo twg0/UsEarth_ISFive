@@ -38,6 +38,8 @@ public class Post extends BaseEntity {
 
     private Integer likeCount;
 
+    private Integer commentCount;
+
     @Version
     private Long version;
 
@@ -49,6 +51,7 @@ public class Post extends BaseEntity {
         this.content = content;
         this.views = 0;
         this.likeCount = 0;
+        this.commentCount = 0;
     }
 
     public static Post createPost(Member member, Board board, String title, String content) {
@@ -74,8 +77,12 @@ public class Post extends BaseEntity {
         views++;
     }
 
-    public void like() {
+    public void increaseLikeCount() {
         likeCount ++;
+    }
+
+    public void increaseCommentCount() {
+        commentCount ++;
     }
 
     public void cancelLike() {
