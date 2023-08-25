@@ -34,8 +34,6 @@ public class Reward {
 
     private Integer price;
 
-    private Integer initStock; // 초기 재고
-
     private String expectedSendDate;
 
     private Integer deliveryFee;
@@ -45,14 +43,38 @@ public class Reward {
     private Project project;
 
     @OneToMany(mappedBy = "reward")
+    @Builder.Default
+    private List<OptionValue> optionValues = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reward")
+    @Builder.Default
     private List<Option> options = new ArrayList<>();
 
     @OneToMany(mappedBy = "reward")
+    @Builder.Default
     private List<RewardSku> rewardSkus = new ArrayList<>();
 
     public void setProject(Project project) {
         this.project = project;
-        project.getRewards().add(this);
+        if (!project.getRewards().contains(this))
+            project.getRewards().add(this);
     }
 
+    public void addOption(Option option) {
+        this.getOptions().add(option);
+        if (option.getReward() != this)
+            option.setReward(this);
+    }
+
+    public void addOptionValue(OptionValue optionValue) {
+        this.getOptionValues().add(optionValue);
+        if (optionValue.getReward() != this)
+            optionValue.setReward(this);
+    }
+
+    public void addRewardSku(RewardSku rewardSku) {
+        this.getRewardSkus().add(rewardSku);
+        if (rewardSku.getReward() != this)
+            rewardSku.setReward(this);
+    }
 }

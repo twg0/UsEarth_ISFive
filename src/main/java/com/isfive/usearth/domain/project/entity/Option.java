@@ -37,13 +37,18 @@ public class Option {
     private Reward reward;
 
     @OneToMany(mappedBy = "option")
+    @Builder.Default
     private List<OptionValue> optionValues = new ArrayList<>();
-
-    @OneToMany(mappedBy = "option")
-    private List<SkuValue> skuValues = new ArrayList<>();
 
     public void setReward(Reward reward) {
         this.reward = reward;
-        reward.getOptions().add(this);
+        if (!reward.getOptions().contains(this))
+            reward.getOptions().add(this);
+    }
+
+    public void addOptionValue(OptionValue optionValue) {
+        this.getOptionValues().add(optionValue);
+        if (optionValue.getOption() != this)
+            optionValue.setOption(this);
     }
 }

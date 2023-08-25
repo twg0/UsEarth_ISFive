@@ -1,27 +1,22 @@
 package com.isfive.usearth.domain.utils.jwt;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.utils.cookie.CookieUtils;
 import com.isfive.usearth.exception.AuthException;
-import com.isfive.usearth.exception.CookieProcessingException;
 import com.isfive.usearth.exception.ErrorCode;
 import com.isfive.usearth.exception.InvalidValueException;
 
-import io.netty.util.internal.StringUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

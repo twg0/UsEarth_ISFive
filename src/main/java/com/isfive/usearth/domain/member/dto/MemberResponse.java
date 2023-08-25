@@ -3,7 +3,6 @@ package com.isfive.usearth.domain.member.dto;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

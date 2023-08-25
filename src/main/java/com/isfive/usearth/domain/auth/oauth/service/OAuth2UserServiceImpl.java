@@ -3,7 +3,6 @@ package com.isfive.usearth.domain.auth.oauth.service;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -13,8 +12,6 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.isfive.usearth.domain.member.entity.Member;
-import com.isfive.usearth.domain.member.entity.Role;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;

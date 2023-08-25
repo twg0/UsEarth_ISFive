@@ -7,7 +7,6 @@ import com.isfive.usearth.domain.activity.entity.Activity;
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.common.BaseEntity;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
