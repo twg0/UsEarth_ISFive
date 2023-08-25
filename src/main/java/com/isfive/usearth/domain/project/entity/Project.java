@@ -54,12 +54,15 @@ public class Project {
     private Period fundingDate;
 
     @OneToMany(mappedBy = "project")
+    @Builder.Default
     private List<Tag> searchTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
+    @Builder.Default
     private List<Reward> rewards = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
+    @Builder.Default
     private List<ProjectFileImage> projectImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
@@ -71,6 +74,28 @@ public class Project {
     public void setMaker(Maker maker) {
         this.maker = maker;
         maker.getProjects().add(this);
+    }
+
+    public void setRepImage(FileImage fileImage) {
+        this.repImage = fileImage;
+    }
+
+    public void addTag(Tag tag) {
+        this.getSearchTags().add(tag);
+        if (tag.getProject() != this)
+            tag.setProject(this);
+    }
+
+    public void addReward(Reward reward) {
+        this.getRewards().add(reward);
+        if (reward.getProject() != this)
+            reward.setProject(this);
+    }
+
+    public void addProjectFileImage(ProjectFileImage image) {
+        this.getProjectImages().add(image);
+        if (image.getProject() != this)
+            image.setProject(this);
     }
 
 }

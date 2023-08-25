@@ -34,6 +34,7 @@ public class ProjectFileImage {
 
     public void setProject(Project project) {
         this.project = project;
-        project.getProjectImages().add(this);
+        if (!project.getProjectImages().contains(this))
+            project.getProjectImages().add(this);
     }
 }

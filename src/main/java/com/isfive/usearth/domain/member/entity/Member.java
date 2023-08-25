@@ -1,11 +1,12 @@
 package com.isfive.usearth.domain.member.entity;
 
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.isfive.usearth.domain.activity.entity.Activity;
+import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.common.BaseEntity;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,24 +37,33 @@ public class Member extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false)
-    private String email;
-
+    @Column(name = "username", nullable = false)
     private String username;
-
     private String nickname;
-
     private String password;
-
     private String phone;
-
+    private String email;
     private String refreshToken;
-
-    // @Column(name = "provider", nullable = false)
     private String provider;
+    private String providerId;
 
-    public Member updateToken(String refreshToken) {
+    public Member updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+        return this;
+    }
+
+    public Member updatePassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public Member updateInfo(UserDetails userDetails) {
+        CustomUserDetails customUserDetails = (CustomUserDetails)userDetails;
+        this.password = customUserDetails.getPassword();
+        this.phone = customUserDetails.getPassword();
+        this.email = customUserDetails.getEmail();
+        this.provider = customUserDetails.getProvider();
+        this.providerId = customUserDetails.getProviderId();
         return this;
     }
 
@@ -61,11 +71,9 @@ public class Member extends BaseEntity {
         this.role = role;
         return this;
     }
-
-//    @PostConstruct
-//    public void encodePassword(PasswordEncoder passwordEncoder) {
-//        this.password = passwordEncoder.encode(password);
-//    }
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
+    }
 
     /* 연관관계 */
 

@@ -33,14 +33,26 @@ public class OptionValue {
     private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_id")
+    private Reward reward;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "options_id")
     private Option option;
 
     @OneToMany(mappedBy = "optionValue")
+    @Builder.Default
     private List<SkuValue> skuValues = new ArrayList<>();
 
     public void setOption(Option option) {
         this.option = option;
-        option.getOptionValues().add(this);
+        if (!option.getOptionValues().contains(this))
+            option.getOptionValues().add(this);
+    }
+
+    public void setReward(Reward reward) {
+        this.reward = reward;
+        if (!reward.getOptionValues().contains(this))
+            reward.getOptionValues().add(this);
     }
 }

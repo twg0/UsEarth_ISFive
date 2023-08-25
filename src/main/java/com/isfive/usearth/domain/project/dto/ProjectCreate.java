@@ -1,30 +1,28 @@
 package com.isfive.usearth.domain.project.dto;
 
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
-import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.project.entity.Project;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectRegisterDto {
+public class ProjectCreate {
     private String title;
     private String summary;
     private String story;
     private Integer targetAmount;
     private Period fundingDate;
-    private List<String> tagList;
-    private Maker maker;
-    private FileImage repImage;
+    private String hashTag;
+    private String makerName;
+    private MultipartFile repImage;
 
     public Project toEntity() {
         return Project.builder()
@@ -32,8 +30,6 @@ public class ProjectRegisterDto {
                 .summary(summary)
                 .story(story)
                 .targetAmount(targetAmount)
-                .repImage(repImage)
-                .maker(maker)
                 .fundingDate(fundingDate)
                 .build();
     }

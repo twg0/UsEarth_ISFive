@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
@@ -31,18 +32,24 @@ public class RewardSku {
 
     private Integer stock;
 
+    private Integer initStock;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_id")
     private Reward reward;
 
-    @OneToMany(mappedBy = "rewardSku")
+    @OneToMany
+    @Builder.Default
     private List<SkuValue> skuValues = new ArrayList<>();
 
     @OneToMany(mappedBy = "rewardSku")
+    @Builder.Default
     private List<FundingReward> fundingRewards = new ArrayList<>();
 
     public void setReward(Reward reward) {
         this.reward = reward;
-        reward.getRewardSkus().add(this);
+        if (!reward.getRewardSkus().contains(this))
+            reward.getRewardSkus().add(this);
     }
 
 }
