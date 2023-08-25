@@ -14,16 +14,7 @@ import com.isfive.usearth.exception.EntityNotFoundException;
 import com.isfive.usearth.exception.ErrorCode;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long> {
-
-    @Query("select p from Post p " +
-            "join fetch p.member m " +
-            "where p.board.id = :boardId " +
-            "order by p.id desc ")
-    Page<Post> findAllByBoard_IdOrderByIdDesc(@Param("boardId") Long boardId, Pageable pageable);
-
-    @Query("select p from Post p where p.id = :postId")
-    Optional<Post> findByIdWithMember(@Param("postId") Long postId);
+public interface PostRepository extends JpaRepository<Post, Long>, PostQueryRepository {
 
     default Post findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(

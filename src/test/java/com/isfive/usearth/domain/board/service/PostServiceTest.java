@@ -71,8 +71,8 @@ class PostServiceTest {
 
         postLikeRepository.save(new PostLike(member1, post1));
         postLikeRepository.save(new PostLike(member2, post2));
-        post1.like();
-        post2.like();
+        post1.increaseLikeCount();
+        post2.increaseLikeCount();
 
 
         //when
@@ -104,7 +104,7 @@ class PostServiceTest {
     void request100LikeConcurrence() throws InterruptedException {
 
         // given
-        int count = 1;
+        int count = 100;
 
         Member writer = Member.builder().email("writer").build();
         memberRepository.save(writer);
@@ -129,8 +129,6 @@ class PostServiceTest {
             executorService.submit(() -> {
                     try {
                         postService.like(post.getId(), email);
-                    } catch (Exception e) {
-                        System.out.println("error!!: " + email);
                     }
                     finally {
                         latch.countDown();

@@ -21,6 +21,12 @@ import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.isfive.usearth.exception.EntityNotFoundException;
 import com.isfive.usearth.exception.ErrorCode;
 
@@ -51,7 +57,7 @@ public class PostService {
      */
     public Page<PostsResponse> readPosts(Long boardId, Integer page, String email) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
-        Page<Post> posts = postRepository.findAllByBoard_IdOrderByIdDesc(boardId, pageRequest);
+        Page<Post> posts = postRepository.findPosts(boardId, pageRequest);
         List<PostsResponse> postsResponses = createPostResponses(posts);
 
         List<PostLike> postLikes = postLikeRepository.findByMember_EmailAndPostIn(email, posts.getContent());
@@ -79,8 +85,7 @@ public class PostService {
 
     @Transactional
     public void like(Long postId, String email) {
-        Post post = postRepository.findByIdWithMember(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+        Post post = postRepository.findByIdWithMember(postId);
         post.verifyNotWriter(email);
 
         Member member = memberRepository.findByEmailOrThrow(email);
@@ -122,6 +127,6 @@ public class PostService {
     private void like(Post post, Member member) {
         PostLike postLike = new PostLike(member, post);
         postLikeRepository.save(postLike);
-        post.like();
+        post.increaseLikeCount();
     }
 }

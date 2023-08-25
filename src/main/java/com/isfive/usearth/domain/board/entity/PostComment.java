@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -26,4 +27,19 @@ public class PostComment {
     private Post post;
 
     private String content;
+
+    @Builder
+    private PostComment(Member member, Post post, String content) {
+        this.member = member;
+        this.post = post;
+        this.content = content;
+    }
+
+    public static PostComment createPostComment(Member member, Post post, String content) {
+        return PostComment.builder()
+                .member(member)
+                .post(post)
+                .content(content)
+                .build();
+    }
 }

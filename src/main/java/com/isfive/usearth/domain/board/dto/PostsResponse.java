@@ -17,6 +17,10 @@ public class PostsResponse {
 
     private final Integer views;
 
+    private final Integer likeCount;
+
+    private final Integer commentCount;
+
     private final LocalDateTime createdDate;
 
     private Boolean likedByUser;
@@ -26,6 +30,8 @@ public class PostsResponse {
         this.title = post.getTitle();
         this.writer = post.getWriterNickname();
         this.views = post.getViews();
+        this.likeCount = post.getLikeCount();
+        this.commentCount = post.getCommentCount();
         this.createdDate = post.getCreatedDate();
         this.likedByUser = false;
     }
