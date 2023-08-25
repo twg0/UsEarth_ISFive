@@ -76,8 +76,8 @@ public class Post extends BaseEntity {
         return member.getNickname();
     }
 
-    public void verifyNotWriter(String email) {
-        if (member.isEqualsEmail(email)) {
+    public void verifyNotWriter(String username) {
+        if (member.isEqualsUsername(username)) {
             throw new BusinessException(ErrorCode.POST_WRITER_NOT_ALLOW);
         }
     }

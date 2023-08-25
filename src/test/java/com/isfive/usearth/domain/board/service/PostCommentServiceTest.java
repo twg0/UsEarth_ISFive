@@ -2,7 +2,10 @@ package com.isfive.usearth.domain.board.service;
 
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
+import com.isfive.usearth.domain.board.entity.PostComment;
+import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
+import com.isfive.usearth.domain.board.repository.PostCommentRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
@@ -13,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.isfive.usearth.domain.board.entity.Post.createPost;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -34,15 +39,17 @@ class PostCommentServiceTest {
 
     @Autowired PostCommentService postCommentService;
 
+    @Autowired PostCommentRepository postCommentRepository;
+
     @DisplayName("댓글 작성 동시성 문제 발생 시 재시도한다.(로그 확인용)")
     @Test
     void retryLogCheck() throws InterruptedException {
 
         int count = 5;
-        Member writer = Member.builder().email("writer").build();
+        Member writer = Member.builder().username("writer").build();
         memberRepository.save(writer);
         for (int i = 0; i < count; i++) {
-            Member member = Member.builder().email("member" + i).build();
+            Member member = Member.builder().username("member" + i).build();
             memberRepository.save(member);
         }
 
@@ -73,6 +80,9 @@ class PostCommentServiceTest {
 
         latch.await();
 
+        List<PostComment> all = postCommentRepository.findAll();
+        Post findPost = postRepository.findById(post.getId()).get();
 
+        assertThat(findPost.getCommentCount()).isEqualTo(all.size());
     }
 }

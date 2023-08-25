@@ -21,11 +21,11 @@ public class PostCommentService {
 
     @Retry
     @Transactional
-    public void createComment(Long postId, String content, String email) {
+    public void createComment(Long postId, String content, String username) {
         Post post = postRepository.findByIdWithMember(postId);
-        post.verifyNotWriter(email);
+        post.verifyNotWriter(username);
 
-        Member member = memberRepository.findByEmailOrThrow(email);
+        Member member = memberRepository.findByUsernameOrThrow(username);
 
         PostComment postComment = PostComment.createPostComment(member, post, content);
         postCommentRepository.save(postComment);

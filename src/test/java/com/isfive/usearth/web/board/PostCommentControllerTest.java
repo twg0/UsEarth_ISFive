@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -49,16 +50,17 @@ class PostCommentControllerTest {
 
     @Autowired PostCommentRepository postCommentRepository;
 
+    @WithMockUser(username = "comment writer")
     @DisplayName("사용자는 댓글을 작성할 수 있다.")
     @Test
     void writeComment() throws Exception {
         //given
         Member writer = Member.builder()
-                .email("post writer")
+                .username("post writer")
                 .build();
 
         Member other = Member.builder()
-                .email("other")
+                .username("comment writer")
                 .build();
 
         memberRepository.save(writer);

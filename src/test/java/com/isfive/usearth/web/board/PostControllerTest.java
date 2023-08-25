@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,12 +50,13 @@ class PostControllerTest {
 
 	@Autowired MemberRepository memberRepository;
 
+	@WithMockUser(username = "writer")
 	@DisplayName("사용자는 게시글을 작성 할 수 있다.")
 	@Test
 	void writePost() throws Exception {
 		//given
 		Member member = Member.builder()
-			.email("temp")
+			.username("writer")
 			.build();
 
 		memberRepository.save(member);
@@ -79,12 +81,13 @@ class PostControllerTest {
 		assertThat(all.size()).isEqualTo(1);
 	}
 
+	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 페이징 조회 할 수 있다.")
 	@Test
 	void findPosts() throws Exception {
 		//given
 		Member member = Member.builder()
-			.email("temp")
+			.username("member")
 			.build();
 
 		memberRepository.save(member);
@@ -110,12 +113,13 @@ class PostControllerTest {
 			.andDo(print());
 	}
 
+	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 조회 할 수 있다.")
 	@Test
 	void findPost() throws Exception {
 		//given
 		Member member = Member.builder()
-				.email("temp")
+				.username("member")
 				.nickname("nickname")
 				.build();
 
@@ -140,25 +144,26 @@ class PostControllerTest {
 				.andDo(print());
 	}
 
+	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 좋아요 할 수 있다.")
 	@Test
 	void like() throws Exception {
 		//given
-		Member member1 = Member.builder()
-				.email("temp")
+		Member writer = Member.builder()
+				.username("writer")
 				.build();
 
 		Member member2 = Member.builder()
-				.email("other")
+				.username("member")
 				.build();
 
-		memberRepository.save(member1);
+		memberRepository.save(writer);
 		memberRepository.save(member2);
 
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(member1, board, "title", "content");
+		Post post = Post.createPost(writer, board, "title", "content");
 		postRepository.save(post);
 
 		//when //then
@@ -174,28 +179,29 @@ class PostControllerTest {
 		assertThat(postLike.getMember()).isEqualTo(member2);
 	}
 
+	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 좋아요를 취소 할 수 있다.")
 	@Test
 	void cancelLike() throws Exception {
 		//given
-		Member member1 = Member.builder()
-				.email("temp")
+		Member writer = Member.builder()
+				.username("writer")
 				.build();
 
-		Member member2 = Member.builder()
-				.email("other")
+		Member member = Member.builder()
+				.username("member")
 				.build();
 
-		memberRepository.save(member1);
-		memberRepository.save(member2);
+		memberRepository.save(writer);
+		memberRepository.save(member);
 
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(member1, board, "title", "content");
+		Post post = Post.createPost(writer, board, "title", "content");
 		postRepository.save(post);
 
-		PostLike postLike = new PostLike(member2, post);
+		PostLike postLike = new PostLike(member, post);
 		postLikeRepository.save(postLike);
 
 		//when //then

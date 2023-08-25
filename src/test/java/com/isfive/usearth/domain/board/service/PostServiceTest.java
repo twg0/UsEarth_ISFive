@@ -51,9 +51,9 @@ class PostServiceTest {
     @Test
     void readPosts() {
         //given
-        Member writer = Member.builder().email("writer").build();
-        Member member1 = Member.builder().email("member1").build();
-        Member member2 = Member.builder().email("member2").build();
+        Member writer = Member.builder().username("writer").build();
+        Member member1 = Member.builder().username("member1").build();
+        Member member2 = Member.builder().username("member2").build();
         memberRepository.save(writer);
         memberRepository.save(member1);
         memberRepository.save(member2);
@@ -76,8 +76,8 @@ class PostServiceTest {
 
 
         //when
-        Page<PostsResponse> responses1 = postService.readPosts(board.getId(), 1, member1.getEmail());
-        Page<PostsResponse> responses2 = postService.readPosts(board.getId(), 1, member2.getEmail());
+        Page<PostsResponse> responses1 = postService.readPosts(board.getId(), 1, member1.getUsername());
+        Page<PostsResponse> responses2 = postService.readPosts(board.getId(), 1, member2.getUsername());
 
         //then
 
@@ -106,10 +106,10 @@ class PostServiceTest {
         // given
         int count = 100;
 
-        Member writer = Member.builder().email("writer").build();
+        Member writer = Member.builder().username("writer").build();
         memberRepository.save(writer);
         for (int i = 0; i < count; i++) {
-            Member member = Member.builder().email("member" + i).build();
+            Member member = Member.builder().username("member" + i).build();
             memberRepository.save(member);
         }
 

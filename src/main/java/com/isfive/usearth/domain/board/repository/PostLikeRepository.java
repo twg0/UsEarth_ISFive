@@ -11,7 +11,7 @@ import com.isfive.usearth.domain.member.entity.Member;
 
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
 
-    List<PostLike> findByMember_EmailAndPostIn(String email, List<Post> posts);
+    List<PostLike> findByMember_UsernameAndPostIn(String username, List<Post> posts);
 
     Optional<PostLike> findByPostAndMember(Post post, Member member);
 

@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class FileImageService {
 
-    public FileImage createFileImage(MultipartFile file) throws IOException {
+    public FileImage createFileImage(MultipartFile file) {
         String profileDir = String.format("./src/main/resources/projectImg/");
         try {
              Files.createDirectories(Path.of(profileDir));

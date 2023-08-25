@@ -43,8 +43,8 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
 
     @Transactional
-    public void createPost(Long boardId, String email, String title, String content) {
-        Member member = memberRepository.findByEmailOrThrow(email);
+    public void createPost(Long boardId, String username, String title, String content) {
+        Member member = memberRepository.findByUsernameOrThrow(username);
         Board board = boardRepository.findByIdOrThrow(boardId);
         Post post = Post.createPost(member, board, title, content);
         postRepository.save(post);
@@ -55,12 +55,12 @@ public class PostService {
      * 로그인 한 사용자가 좋아요를 누른 Post에 일치하는 PostsResponse에는
      * 좋아요 표시를 할 수 있도록 true 값을 설정해주고 Page<> 타입으로 변환 후 반환한다.
      */
-    public Page<PostsResponse> readPosts(Long boardId, Integer page, String email) {
+    public Page<PostsResponse> readPosts(Long boardId, Integer page, String username) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         Page<Post> posts = postRepository.findPosts(boardId, pageRequest);
         List<PostsResponse> postsResponses = createPostResponses(posts);
 
-        List<PostLike> postLikes = postLikeRepository.findByMember_EmailAndPostIn(email, posts.getContent());
+        List<PostLike> postLikes = postLikeRepository.findByMember_UsernameAndPostIn(username, posts.getContent());
 
         Set<Long> postIdSet = createPostIdSetBy(postLikes);
         setLikedByUser(postsResponses, postIdSet);
@@ -69,14 +69,13 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse readPost(Long postId) {
+    public PostResponse readPost(Long postId, String username) {
         Post post = postRepository.findByIdOrThrow(postId);
         post.increaseView();
 
         PostResponse postResponse = new PostResponse(post);
 
-        // TODO 이메일 파라미터 추후 수정
-        boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, null);
+        boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, username);
         postResponse.setLikedByUser(likedByUser);
 
         return postResponse;
@@ -84,11 +83,11 @@ public class PostService {
 
 
     @Transactional
-    public void like(Long postId, String email) {
+    public void like(Long postId, String username) {
         Post post = postRepository.findByIdWithMember(postId);
-        post.verifyNotWriter(email);
+        post.verifyNotWriter(username);
 
-        Member member = memberRepository.findByEmailOrThrow(email);
+        Member member = memberRepository.findByUsernameOrThrow(username);
         Optional<PostLike> optionalPostLike = postLikeRepository.findByPostAndMember(post, member);
 
         if (optionalPostLike.isPresent()) {

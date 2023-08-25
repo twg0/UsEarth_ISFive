@@ -3,6 +3,7 @@ package com.isfive.usearth.domain.utils.jwt;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -38,16 +39,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		FilterChain filterChain
 	) throws ServletException, IOException {
 		// 모든 사용자 가능 URI 처리
-		if (PermitAllURI.getList().contains(request.getRequestURI())) {
+//		if (PermitAllURI.getList().contains(request.getRequestURI())) {
+//			log.info("uri {}", request.getRequestURI());
+//			filterChain.doFilter(request, response);
+//			return;
+//		}
+//
+//		log.info("uri {}", request.getRequestURI());
+
+		Optional<Cookie> serialAT = CookieUtils.getCookie(request, "serialAT");
+		Optional<Cookie> serialRT = CookieUtils.getCookie(request, "serialRT");
+
+		if (serialAT.isEmpty() && serialRT.isEmpty()) {
 			log.info("uri {}", request.getRequestURI());
 			filterChain.doFilter(request, response);
 			return;
 		}
-
-		log.info("uri {}", request.getRequestURI());
-
-		Optional<Cookie> serialAT = CookieUtils.getCookie(request, "serialAT");
-		Optional<Cookie> serialRT = CookieUtils.getCookie(request, "serialRT");
 
 		if (serialAT.isEmpty())
 			throw new AuthException(ErrorCode.BAD_REQUEST_COOKIE);
