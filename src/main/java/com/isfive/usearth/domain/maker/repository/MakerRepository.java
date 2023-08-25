@@ -1,8 +1,10 @@
 package com.isfive.usearth.domain.maker.repository;
 
-import com.isfive.usearth.domain.maker.entity.Maker;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.isfive.usearth.domain.maker.entity.Maker;
+
+import jakarta.persistence.EntityNotFoundException;
 
 public interface MakerRepository extends JpaRepository<Maker,Long> {
 
