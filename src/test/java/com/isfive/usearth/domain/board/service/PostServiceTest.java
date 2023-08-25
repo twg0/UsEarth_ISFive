@@ -15,7 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -27,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class PostServiceTest {
 
     @Autowired MemberRepository memberRepository;
@@ -38,14 +41,6 @@ class PostServiceTest {
     @Autowired PostLikeRepository postLikeRepository;
 
     @Autowired PostService postService;
-
-    @BeforeEach
-    void clear() {
-        postLikeRepository.deleteAll();
-        postRepository.deleteAll();
-        memberRepository.deleteAll();
-        boardRepository.deleteAll();
-    }
 
     @DisplayName("사용자는 게시글을 페이징 조회하여 좋아요 한 게시글들을 확인 할 수 있다.")
     @Test
@@ -98,6 +93,7 @@ class PostServiceTest {
                 .extracting("id", "likedByUser")
                 .contains(post1.getId(), false);
     }
+
 
     @DisplayName("동시에 100개 의 좋아요 요청이 왔을 때 데이터 정합성을 유지해야 한다.")
     @Test

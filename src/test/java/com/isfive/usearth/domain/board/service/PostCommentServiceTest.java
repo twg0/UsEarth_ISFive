@@ -10,11 +10,14 @@ import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -22,11 +25,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.isfive.usearth.domain.board.entity.Post.createPost;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class PostCommentServiceTest {
 
     @Autowired MemberRepository memberRepository;
@@ -35,13 +40,11 @@ class PostCommentServiceTest {
 
     @Autowired PostRepository postRepository;
 
-    @Autowired PostLikeRepository postLikeRepository;
-
     @Autowired PostCommentService postCommentService;
 
     @Autowired PostCommentRepository postCommentRepository;
 
-    @DisplayName("댓글 작성 동시성 문제 발생 시 재시도한다.(로그 확인용)")
+    @DisplayName("댓글 작성 동시성 문제 발생 시 재시도한다.")
     @Test
     void retryLogCheck() throws InterruptedException {
 
@@ -84,5 +87,88 @@ class PostCommentServiceTest {
         Post findPost = postRepository.findById(post.getId()).get();
 
         assertThat(findPost.getCommentCount()).isEqualTo(all.size());
+    }
+
+    @Transactional
+    @DisplayName("사용자는 댓글에 대댓글을 작성 할 수 있다.")
+    @Test
+    void createReply() {
+        //given
+        Member writer = Member.builder().username("writer").build();
+        memberRepository.save(writer);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = createPost(writer, board, "제목1", "내용1");
+        postRepository.save(post);
+
+        PostComment postComment = PostComment.createPostComment(writer, post, "댓글입니다.");
+        postCommentRepository.save(postComment);
+        //when
+
+        postCommentService.createReply(postComment.getId(), "대댓글입니다.", "writer");
+        //then
+
+        PostComment findComment = postCommentRepository.findById(postComment.getId()).orElseThrow();
+        List<PostComment> postComments = findComment.getPostComments();
+
+        assertThat(postComments.size()).isEqualTo(1);
+        PostComment reply = postComments.get(0);
+        assertThat(reply.getPostComment()).isEqualTo(findComment);
+        assertThat(reply.getContent()).isEqualTo("대댓글입니다.");
+    }
+
+    @DisplayName("사용자는 대댓글에 대댓글을 작성 할 수 없다.")
+    @Test
+    void notAllowWriteReplyAtReply() {
+        //given
+        Member writer = Member.builder().username("writer").build();
+        memberRepository.save(writer);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = createPost(writer, board, "제목1", "내용1");
+        postRepository.save(post);
+
+        PostComment postComment = PostComment.createPostComment(writer, post, "댓글입니다.");
+        postCommentRepository.save(postComment);
+        PostComment reply = PostComment.createPostComment(writer, post, "댓글입니다.");
+        postComment.addReply(reply);
+        postCommentRepository.save(reply);
+
+        //when//then
+        assertThatThrownBy(() -> postCommentService.createReply(reply.getId(), "대댓글입니다.", "writer"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("대댓글에는 대댓글을 작성 할 수 없습니다.");
+
+    }
+
+    @DisplayName("사용자는 삭제된 댓글에 대댓글을 작성 할 수 없다.")
+    @Test
+    void notAllowWriteReplyAtDeletedComment() {
+        //given
+        Member writer = Member.builder().username("writer").build();
+        memberRepository.save(writer);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = createPost(writer, board, "제목1", "내용1");
+        postRepository.save(post);
+
+        PostComment postComment = PostComment.builder()
+                .member(writer)
+                .post(post)
+                .content("댓글입니다.")
+                .delete(true)
+                .build();
+        postCommentRepository.save(postComment);
+
+        //when//then
+        assertThatThrownBy(() -> postCommentService.createReply(postComment.getId(), "대댓글입니다.", "writer"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("삭제된 댓글에는 댓글을 작성 할 수 없습니다.");
     }
 }
