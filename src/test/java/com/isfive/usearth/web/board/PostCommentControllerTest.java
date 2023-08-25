@@ -87,4 +87,45 @@ class PostCommentControllerTest {
         assertThat(all.size()).isEqualTo(1);
     }
 
+    @WithMockUser(username = "comment writer")
+    @DisplayName("사용자는 댓글을 작성할 수 있다.")
+    @Test
+    void writeReply() throws Exception {
+        //given
+        Member writer = Member.builder()
+                .username("post writer")
+                .build();
+
+        Member other = Member.builder()
+                .username("comment writer")
+                .build();
+
+        memberRepository.save(writer);
+        memberRepository.save(other);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = Post.createPost(writer, board, "title", "content");
+        postRepository.save(post);
+
+        PostComment postComment = PostComment.createPostComment(writer, post, "댓글입니다.");
+        postCommentRepository.save(postComment);
+
+        PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
+        //when //then
+
+        mockMvc.perform(post("/comments/{commentId}/reply", postComment.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(MockMvcResultHandlers.print());
+
+
+        PostComment comment = postCommentRepository.findById(postComment.getId()).orElseThrow();
+        PostComment reply = postCommentRepository.findById(postComment.getId() + 1).orElseThrow();
+
+        assertThat(reply.getPostComment()).isEqualTo(comment);
+    }
+
 }
