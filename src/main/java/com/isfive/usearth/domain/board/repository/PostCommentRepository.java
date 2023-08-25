@@ -13,5 +13,5 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long> 
     Optional<PostComment> findByIdWithPost(@Param("id") Long id);
 
     @Query("select pc from PostComment pc join fetch pc.member where pc.id = :id")
-    Optional<PostComment> findByIdWithMember(String commentId);
+    Optional<PostComment> findByIdWithMember(@Param("id") Long commentId);
 }

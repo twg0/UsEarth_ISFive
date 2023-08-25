@@ -55,21 +55,21 @@ class PostCommentControllerTest {
     @Test
     void writeComment() throws Exception {
         //given
-        Member writer = Member.builder()
+        Member postWriter = Member.builder()
                 .username("post writer")
                 .build();
 
-        Member other = Member.builder()
+        Member commentWriter = Member.builder()
                 .username("comment writer")
                 .build();
 
-        memberRepository.save(writer);
-        memberRepository.save(other);
+        memberRepository.save(postWriter);
+        memberRepository.save(commentWriter);
 
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = Post.createPost(writer, board, "title", "content");
+        Post post = Post.createPost(postWriter, board, "title", "content");
         postRepository.save(post);
         PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
         //when //then
@@ -92,24 +92,24 @@ class PostCommentControllerTest {
     @Test
     void writeReply() throws Exception {
         //given
-        Member writer = Member.builder()
+        Member postWriter = Member.builder()
                 .username("post writer")
                 .build();
 
-        Member other = Member.builder()
+        Member commentWriter = Member.builder()
                 .username("comment writer")
                 .build();
 
-        memberRepository.save(writer);
-        memberRepository.save(other);
+        memberRepository.save(postWriter);
+        memberRepository.save(commentWriter);
 
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = Post.createPost(writer, board, "title", "content");
+        Post post = Post.createPost(postWriter, board, "title", "content");
         postRepository.save(post);
 
-        PostComment postComment = PostComment.createPostComment(writer, post, "댓글입니다.");
+        PostComment postComment = PostComment.createPostComment(postWriter, post, "댓글입니다.");
         postCommentRepository.save(postComment);
 
         PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
@@ -126,6 +126,46 @@ class PostCommentControllerTest {
         PostComment reply = postCommentRepository.findById(postComment.getId() + 1).orElseThrow();
 
         assertThat(reply.getPostComment()).isEqualTo(comment);
+    }
+
+    @WithMockUser(username = "comment writer")
+    @DisplayName("사용자는 댓글을 삭제할 수 있다.")
+    @Test
+    void deleteReply() throws Exception {
+        //given
+        Member postWriter = Member.builder()
+                .username("post writer")
+                .build();
+
+        Member commentWriter = Member.builder()
+                .username("comment writer")
+                .build();
+
+        memberRepository.save(postWriter);
+        memberRepository.save(commentWriter);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = Post.createPost(postWriter, board, "title", "content");
+        postRepository.save(post);
+
+        PostComment postComment = PostComment.createPostComment(commentWriter, post, "댓글입니다.");
+        postCommentRepository.save(postComment);
+
+        PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
+        //when //then
+
+        mockMvc.perform(delete("/comments/{commentId}", postComment.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(MockMvcResultHandlers.print());
+
+
+        PostComment comment = postCommentRepository.findById(postComment.getId()).orElseThrow();
+
+        assertThat(comment.isDelete()).isTrue();
     }
 
 }

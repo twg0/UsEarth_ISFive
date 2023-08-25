@@ -23,7 +23,7 @@ public class PostCommentController {
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public void deleteComment(Authentication auth, @PathVariable String commentId) {
+    public void deleteComment(Authentication auth, @PathVariable Long commentId) {
         postCommentService.deleteComment(commentId, auth.getName());
     }
 }

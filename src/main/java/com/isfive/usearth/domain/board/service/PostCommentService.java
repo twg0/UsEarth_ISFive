@@ -45,7 +45,7 @@ public class PostCommentService {
     }
 
     @Transactional
-    public void deleteComment(String commentId, String username) {
+    public void deleteComment(Long commentId, String username) {
         PostComment postComment = postCommentRepository.findByIdWithMember(commentId).orElseThrow();
         postComment.verifyWriter(username);
         postComment.delete();
