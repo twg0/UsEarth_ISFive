@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostCommentService {
 
@@ -30,5 +31,16 @@ public class PostCommentService {
         PostComment postComment = PostComment.createPostComment(member, post, content);
         postCommentRepository.save(postComment);
         post.increaseCommentCount();
+    }
+
+    @Retry
+    @Transactional
+    public void createReply(Long commentId, String content, String username) {
+        PostComment postComment = postCommentRepository.findByIdWithPost(commentId).orElseThrow();
+
+        Member member = memberRepository.findByUsernameOrThrow(username);
+        PostComment reply = PostComment.createPostComment(member, postComment.getPost(), content);
+        postComment.addReply(reply);
+        postCommentRepository.save(reply);
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.isfive.usearth.domain.board.annotation.Retry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -81,7 +82,7 @@ public class PostService {
         return postResponse;
     }
 
-
+    @Retry
     @Transactional
     public void like(Long postId, String username) {
         Post post = postRepository.findByIdWithMember(postId);
