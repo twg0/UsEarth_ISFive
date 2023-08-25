@@ -43,4 +43,11 @@ public class PostCommentService {
         postComment.addReply(reply);
         postCommentRepository.save(reply);
     }
+
+    @Transactional
+    public void deleteComment(String commentId, String username) {
+        PostComment postComment = postCommentRepository.findByIdWithMember(commentId).orElseThrow();
+        postComment.verifyWriter(username);
+        postComment.delete();
+    }
 }

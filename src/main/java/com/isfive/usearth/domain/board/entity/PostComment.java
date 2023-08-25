@@ -71,4 +71,14 @@ public class PostComment {
     public void setPostComment(PostComment postComment) {
         this.postComment = postComment;
     }
+
+    public void delete() {
+        delete = true;
+    }
+
+    public void verifyWriter(String username) {
+        if (!member.isEqualsUsername(username)) {
+            throw new RuntimeException("댓글 작성자가 아닙니다.");
+        }
+    }
 }

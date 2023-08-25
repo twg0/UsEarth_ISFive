@@ -4,10 +4,7 @@ import com.isfive.usearth.domain.board.service.PostCommentService;
 import com.isfive.usearth.web.board.dto.PostCommentCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +20,10 @@ public class PostCommentController {
     @PostMapping("/comments/{commentId}/reply")
     public void writeReply(Authentication auth, @PathVariable Long commentId, @RequestBody PostCommentCreateRequest request) {
         postCommentService.createReply(commentId, request.getContent(), auth.getName());
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    public void deleteComment(Authentication auth, @PathVariable String commentId) {
+        postCommentService.deleteComment(commentId, auth.getName());
     }
 }
