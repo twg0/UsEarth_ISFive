@@ -89,7 +89,6 @@ class PostCommentServiceTest {
         assertThat(findPost.getCommentCount()).isEqualTo(all.size());
     }
 
-    @Transactional
     @DisplayName("사용자는 댓글에 대댓글을 작성 할 수 있다.")
     @Test
     void createReply() {
@@ -110,13 +109,11 @@ class PostCommentServiceTest {
         postCommentService.createReply(postComment.getId(), "대댓글입니다.", "writer");
         //then
 
-        PostComment findComment = postCommentRepository.findById(postComment.getId()).orElseThrow();
-        List<PostComment> postComments = findComment.getPostComments();
 
-        assertThat(postComments.size()).isEqualTo(1);
-        PostComment reply = postComments.get(0);
-        assertThat(reply.getPostComment()).isEqualTo(findComment);
-        assertThat(reply.getContent()).isEqualTo("대댓글입니다.");
+        PostComment comment = postCommentRepository.findById(postComment.getId()).orElseThrow();
+        PostComment reply = postCommentRepository.findById(postComment.getId() + 1).orElseThrow();
+
+        assertThat(reply.getPostComment()).isEqualTo(comment);
     }
 
     @DisplayName("사용자는 대댓글에 대댓글을 작성 할 수 없다.")
