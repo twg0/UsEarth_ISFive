@@ -84,4 +84,10 @@ public class Member extends BaseEntity {
         this.provider = provider;
         this.role = role;
     }
+
+    /* 로직 */
+
+    public boolean isEqualsEmail(String email) {
+        return this.email.equals(email);
+    }
 }

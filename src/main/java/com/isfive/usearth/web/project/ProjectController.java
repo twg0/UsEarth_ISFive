@@ -9,6 +9,7 @@ import com.isfive.usearth.domain.project.service.ProjectService;
 import com.isfive.usearth.web.project.dto.ProjectRegister;
 import com.isfive.usearth.web.project.dto.RewardRegister;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,8 +45,9 @@ public class ProjectController {
     }
 
     @GetMapping
-    public Page<ProjectResponse> findProjects(Pageable pageable) {
-        return projectService.readAllProject(pageable);
+    public ResponseEntity<Page<ProjectResponse>> findProjects(Pageable pageable) {
+        Page<ProjectResponse> projectResponses = projectService.readAllProject(pageable);
+        return new ResponseEntity<>(projectResponses, HttpStatus.OK);
     }
 
 }

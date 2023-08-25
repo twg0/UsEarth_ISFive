@@ -1,18 +1,14 @@
 package com.isfive.usearth.web.board;
 
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.isfive.usearth.domain.board.dto.PostResponse;
 import com.isfive.usearth.domain.board.dto.PostsResponse;
 import com.isfive.usearth.domain.board.service.PostService;
 import com.isfive.usearth.web.board.dto.PostCreateRequest;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,17 +18,28 @@ public class PostController {
 
     @PostMapping("/boards/{boardId}/posts")
     public void writePost(@PathVariable Long boardId, @RequestBody PostCreateRequest request) {
+        // TODO 이메일 파라미터 추후 수정
         postService.createPost(boardId, "temp", request.getTitle(), request.getContent());
     }
 
     @GetMapping("/boards/{boardId}/posts")
-    public Page<PostsResponse> findPosts(@PathVariable Long boardId,
-                                         @RequestParam(defaultValue = "1") Integer page) {
-        return postService.readPosts(boardId, page);
+    public ResponseEntity<Page<PostsResponse>> findPosts(@PathVariable Long boardId,
+                                                         @RequestParam(defaultValue = "1") Integer page) {
+
+        // TODO 이메일 추후 수정
+        Page<PostsResponse> postsResponses = postService.readPosts(boardId, page, "other");
+        return new ResponseEntity<>(postsResponses, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
-    public PostsResponse findPost(@PathVariable Long postId) {
-        return null;
+    public ResponseEntity<PostResponse> findPost(@PathVariable Long postId) {
+        PostResponse response = postService.readPost(postId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/posts/{postId}/like")
+    public void like(@PathVariable Long postId) {
+        // TODO 이메일 파라미터 추후 수정
+        postService.like(postId, "other");
     }
 }

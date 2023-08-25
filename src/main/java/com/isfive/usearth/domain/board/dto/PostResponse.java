@@ -1,13 +1,12 @@
 package com.isfive.usearth.domain.board.dto;
 
-import java.time.LocalDateTime;
-
 import com.isfive.usearth.domain.board.entity.Post;
-
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
-public class PostsResponse {
+public class PostResponse {
 
     private final Long id;
 
@@ -15,17 +14,23 @@ public class PostsResponse {
 
     private final String writer;
 
+    private final String content;
+
     private final Integer views;
+
+    private final Integer likeCount;
 
     private final LocalDateTime createdDate;
 
-    private Boolean likedByUser;
+    private boolean likedByUser;
 
-    public PostsResponse(Post post) {
+    public PostResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.writer = post.getWriterNickname();
+        this.content = post.getContent();
         this.views = post.getViews();
+        this.likeCount = post.getLikeCount();
         this.createdDate = post.getCreatedDate();
         this.likedByUser = false;
     }
