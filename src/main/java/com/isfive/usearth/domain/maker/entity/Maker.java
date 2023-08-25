@@ -1,27 +1,14 @@
 package com.isfive.usearth.domain.maker.entity;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.project.entity.Project;
 import com.isfive.usearth.web.maker.dto.MakerUpdate;
+import jakarta.persistence.*;
+import lombok.*;
 
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,9 +33,8 @@ public class Maker {
 
     private LocalDateTime deletedAt;
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
    public Maker(String name, String profileImage, String email, String phone, String submitFile) {
@@ -73,6 +59,12 @@ public class Maker {
     }
 
     @OneToMany(mappedBy = "maker")
-    List<Project> projects = new ArrayList<>();
+    private List<Project> projects = new ArrayList<>();
+
+   public void addProject(Project project) {
+       this.getProjects().add(project);
+       if (project.getMaker() != this)
+           project.setMaker(this);
+   }
 
 }

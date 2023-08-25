@@ -1,8 +1,17 @@
 package com.isfive.usearth.domain.utils.jwt;
 
-import java.io.IOException;
-import java.util.Optional;
-
+import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
+import com.isfive.usearth.domain.utils.cookie.CookieUtils;
+import com.isfive.usearth.exception.AuthException;
+import com.isfive.usearth.exception.ErrorCode;
+import com.isfive.usearth.exception.InvalidValueException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -11,19 +20,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
-import com.isfive.usearth.domain.utils.cookie.CookieUtils;
-import com.isfive.usearth.exception.AuthException;
-import com.isfive.usearth.exception.ErrorCode;
-import com.isfive.usearth.exception.InvalidValueException;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -37,6 +35,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		HttpServletResponse response,
 		FilterChain filterChain
 	) throws ServletException, IOException {
+//
+//		SecurityContext context
+//				= SecurityContextHolder.createEmptyContext();
+//
+//		// 사용자 인증 정보 생성
+//		AbstractAuthenticationToken authenticationToken
+//				= new UsernamePasswordAuthenticationToken(
+//				CustomUserDetails.builder()
+//						.email("user1@email.com")
+//						.build(),
+//				"1234safdfgdgsdfsd", new ArrayList<>()
+//		);
+//		// SecurityContext에 사용자 정보 설정
+//		context.setAuthentication(authenticationToken);
+//		// SecurityContextHolder에 SecurityContext 설정
+//		SecurityContextHolder.setContext(context);
+//
+//		filterChain.doFilter(request, response);
+//		return;
+
 		// 모든 사용자 가능 URI 처리
 		if (PermitAllURI.getList().contains(request.getRequestURI())) {
 			log.info("uri {}", request.getRequestURI());

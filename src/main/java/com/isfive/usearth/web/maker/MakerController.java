@@ -27,6 +27,8 @@ import com.isfive.usearth.web.maker.dto.register_request.MakerRegisterRequest;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/makers")
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class MakerController {
             @RequestPart("profileImage") MultipartFile profileImage,
             @RequestPart("submitFile") MultipartFile submitFile,
             @RequestPart("idCard") MultipartFile idCard
-            ) {
+            ) throws IOException {
         FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
         FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
         FileImage savedIdCard = fileImageService.createFileImage(idCard);
@@ -63,7 +65,7 @@ public class MakerController {
             @RequestPart("profileImage") MultipartFile profileImage,
             @RequestPart("submitFile") MultipartFile submitFile,
             @RequestPart("registration") MultipartFile registration
-    ) {
+    ) throws IOException {
         FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
         FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
         FileImage savedRegistration = fileImageService.createFileImage(registration);
@@ -85,7 +87,7 @@ public class MakerController {
             @RequestPart("submitFile") MultipartFile submitFile,
             @RequestPart("registration") MultipartFile registration,
             @RequestPart("corporateSealCertificate") MultipartFile corporateSealCertificate
-    ) {
+    ) throws IOException {
         FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
         FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
         FileImage savedRegistration = fileImageService.createFileImage(registration);

@@ -1,33 +1,22 @@
 package com.isfive.usearth.domain.project.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.isfive.usearth.domain.common.BaseEntity;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.maker.entity.Maker;
+import jakarta.persistence.*;
+import lombok.*;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Project {
+public class Project extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +41,8 @@ public class Project {
 
     @Embedded
     private Period fundingDate;
+
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "project")
     @Builder.Default
@@ -96,6 +87,19 @@ public class Project {
         this.getProjectImages().add(image);
         if (image.getProject() != this)
             image.setProject(this);
+    }
+
+    public void update(Project projectUpdate) {
+        if (projectUpdate.getTitle() != null)
+            this.title = projectUpdate.getTitle();
+        if (projectUpdate.getSummary() != null)
+            this.summary = projectUpdate.getSummary();
+        if (projectUpdate.getProjectImages() != null)
+            this.repImage = projectUpdate.getRepImage();
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 
 }
