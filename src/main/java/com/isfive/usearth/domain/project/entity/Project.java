@@ -1,26 +1,13 @@
 package com.isfive.usearth.domain.project.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.maker.entity.Maker;
+import jakarta.persistence.*;
+import lombok.*;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -54,12 +41,15 @@ public class Project {
     private Period fundingDate;
 
     @OneToMany(mappedBy = "project")
+    @Builder.Default
     private List<Tag> searchTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
+    @Builder.Default
     private List<Reward> rewards = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
+    @Builder.Default
     private List<ProjectFileImage> projectImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
@@ -71,6 +61,28 @@ public class Project {
     public void setMaker(Maker maker) {
         this.maker = maker;
         maker.getProjects().add(this);
+    }
+
+    public void setRepImage(FileImage fileImage) {
+        this.repImage = fileImage;
+    }
+
+    public void addTag(Tag tag) {
+        this.getSearchTags().add(tag);
+        if (tag.getProject() != this)
+            tag.setProject(this);
+    }
+
+    public void addReward(Reward reward) {
+        this.getRewards().add(reward);
+        if (reward.getProject() != this)
+            reward.setProject(this);
+    }
+
+    public void addProjectFileImage(ProjectFileImage image) {
+        this.getProjectImages().add(image);
+        if (image.getProject() != this)
+            image.setProject(this);
     }
 
 }
