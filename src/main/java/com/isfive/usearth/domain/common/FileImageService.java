@@ -19,15 +19,13 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class FileImageService {
 
-    @Transactional
     public FileImage createFileImage(MultipartFile file) throws IOException {
         String profileDir = String.format("./src/main/resources/projectImg/");
-//        try {
-//             Files.createDirectories(Path.of(profileDir));
-//        } catch (IOException e) {
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-        Files.createDirectories(Path.of(profileDir));
+        try {
+             Files.createDirectories(Path.of(profileDir));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         String originalName = file.getOriginalFilename();
         String[] fileNameSplit = originalName.split("\\.");
@@ -50,7 +48,6 @@ public class FileImageService {
         return fileImage;
     }
 
-    @Transactional
     public List<FileImage> createFileImageList(List<MultipartFile> fileList) throws IOException  {
         List<FileImage> fileImageList = new ArrayList<>();
         for (MultipartFile file : fileList) {

@@ -79,6 +79,7 @@ public class OptionService {
         for (Map.Entry<String, Integer> pair : optionStocks.entrySet()) {
             RewardSku rewardSku = RewardSku.builder()
                     .initStock(pair.getValue())
+                    .stock(pair.getValue())
                     .build();
             rewardSkuRepository.save(rewardSku);
             reward.addRewardSku(rewardSku);
@@ -86,7 +87,7 @@ public class OptionService {
 
             List<String> options = convertValueStrToList(pair.getKey());
             for (String option : options) {
-                OptionValue optionValue = optionValueRepository.findByValueAndReward_Id(option, reward.getId());
+                OptionValue optionValue = optionValueRepository.findByReward_IdAndValue(reward.getId(), option);
                 SkuValue skuValue = SkuValue
                         .builder()
                         .rewardSku(rewardSku)
