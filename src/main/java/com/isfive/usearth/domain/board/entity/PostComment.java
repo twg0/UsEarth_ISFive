@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.board.entity;
 
+import com.isfive.usearth.domain.common.BaseEntity;
 import com.isfive.usearth.domain.member.entity.Member;
 
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostComment {
+public class PostComment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +74,9 @@ public class PostComment {
     }
 
     public void delete() {
+        if (delete) {
+            throw new RuntimeException("이미 삭제된 댓글 입니다.");
+        }
         delete = true;
     }
 

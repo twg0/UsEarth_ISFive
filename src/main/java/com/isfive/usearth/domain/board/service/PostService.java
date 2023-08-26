@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.isfive.usearth.domain.board.annotation.Retry;
+import com.isfive.usearth.domain.board.dto.PostCommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -19,18 +20,9 @@ import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class PostService {
 
+    private final PostCommentService postCommentService;
     private final BoardRepository boardRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
@@ -78,6 +71,9 @@ public class PostService {
 
         boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, username);
         postResponse.setLikedByUser(likedByUser);
+
+        Page<PostCommentResponse> postCommentResponses = postCommentService.findComments(postId, 1);
+        postResponse.setPostCommentResponse(postCommentResponses);
 
         return postResponse;
     }

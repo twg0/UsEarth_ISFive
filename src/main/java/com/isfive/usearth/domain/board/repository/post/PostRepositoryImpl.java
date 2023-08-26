@@ -1,11 +1,11 @@
-package com.isfive.usearth.domain.board.repository;
+package com.isfive.usearth.domain.board.repository.post;
 
 import com.isfive.usearth.domain.board.entity.Post;
-import com.isfive.usearth.domain.member.entity.QMember;
 import com.isfive.usearth.exception.EntityNotFoundException;
 import com.isfive.usearth.exception.ErrorCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +18,10 @@ import static com.isfive.usearth.domain.board.entity.QPost.post;
 import static com.isfive.usearth.domain.member.entity.QMember.*;
 
 @Repository
+@RequiredArgsConstructor
 public class PostRepositoryImpl implements PostQueryRepository {
 
     private final JPAQueryFactory query;
-
-    public PostRepositoryImpl(EntityManager em) {
-        this.query = new JPAQueryFactory(em);
-    }
 
     @Override
     public Page<Post> findPosts(Long boardId, Pageable pageable) {
