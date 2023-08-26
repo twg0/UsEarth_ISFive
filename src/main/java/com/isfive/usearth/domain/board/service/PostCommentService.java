@@ -60,14 +60,31 @@ public class PostCommentService {
         postComment.delete();
     }
 
+    /**
+     * 댓글들을 모두 조회한다.(대댓글 포함)
+     * 대댓글DTO를 댓글DTO에 끼워 넣는다.
+     * 댓글DTO만 List로 만들어 반환한다. (대댓글을 댓글DTO 파라미터에 포함)
+     */
     public Page<PostCommentResponse> findComments(Long postId, Integer page) {
         PageRequest pageRequest = PageRequest.of(page - 1, 20);
         Page<PostComment> postComments = postCommentRepository.findAllByPost_Id(postId, pageRequest);
 
+        Map<Long, PostCommentResponse> map = createResponseMap(postComments);
+
+        insertReply(map, postComments);
+
+        List<PostCommentResponse> list = createCommentList(map);
+        return new PageImpl<>(list, pageRequest, list.size());
+    }
+
+    private Map<Long, PostCommentResponse> createResponseMap(Page<PostComment> postComments) {
         Map<Long, PostCommentResponse> map = postComments.getContent()
                 .stream()
                 .collect(Collectors.toMap(PostComment::getId, PostCommentResponse::new));
+        return map;
+    }
 
+    private void insertReply(Map<Long, PostCommentResponse> map, Page<PostComment> postComments) {
         postComments.forEach(postComment -> {
             PostComment parentPostComment = postComment.getPostComment();
             if (parentPostComment != null) {
@@ -75,13 +92,13 @@ public class PostCommentService {
                 postCommentResponse.addPostCommentResponses(new PostCommentResponse(postComment));
             }
         });
+    }
 
-        List<PostCommentResponse> list = map.values().stream()
+    private List<PostCommentResponse> createCommentList(Map<Long, PostCommentResponse> map) {
+        return map.values().stream()
                 .filter(postCommentResponse -> !postCommentResponse.getPostCommentResponses().isEmpty())
                 .sorted(Comparator.comparingLong(PostCommentResponse::getId).reversed())
                 .collect(Collectors.toList());
-
-        return new PageImpl<>(list, pageRequest, list.size());
     }
 
 }
