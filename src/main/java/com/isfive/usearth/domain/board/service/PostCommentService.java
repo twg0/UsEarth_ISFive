@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -78,10 +80,9 @@ public class PostCommentService {
     }
 
     private Map<Long, PostCommentResponse> createResponseMap(Page<PostComment> postComments) {
-        Map<Long, PostCommentResponse> map = postComments.getContent()
+        return postComments.getContent()
                 .stream()
-                .collect(Collectors.toMap(PostComment::getId, PostCommentResponse::new));
-        return map;
+                .collect(toMap(PostComment::getId, PostCommentResponse::new));
     }
 
     private void insertReply(Map<Long, PostCommentResponse> map, Page<PostComment> postComments) {
@@ -98,7 +99,7 @@ public class PostCommentService {
         return map.values().stream()
                 .filter(postCommentResponse -> !postCommentResponse.getPostCommentResponses().isEmpty())
                 .sorted(Comparator.comparingLong(PostCommentResponse::getId).reversed())
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
 }
