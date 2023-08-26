@@ -1,17 +1,14 @@
 package com.isfive.usearth.domain.board.service;
 
+import com.isfive.usearth.domain.board.dto.PostCommentResponse;
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostComment;
-import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostCommentRepository;
-import com.isfive.usearth.domain.board.repository.PostLikeRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +24,6 @@ import java.util.concurrent.Executors;
 import static com.isfive.usearth.domain.board.entity.Post.createPost;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -167,5 +163,54 @@ class PostCommentServiceTest {
         assertThatThrownBy(() -> postCommentService.createReply(postComment.getId(), "대댓글입니다.", "writer"))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("삭제된 댓글에는 댓글을 작성 할 수 없습니다.");
+    }
+
+    @DisplayName("사용자는 댓글을 페이징 조회 할 수 있다.")
+    @Test
+    void findComments() {
+        //given
+        Member writer = Member.builder().username("writer").build();
+        memberRepository.save(writer);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = createPost(writer, board, "제목1", "내용1");
+        postRepository.save(post);
+
+        PostComment postComment1 = PostComment.createPostComment(writer, post, "댓글1");
+        PostComment postComment2 = PostComment.createPostComment(writer, post, "댓글2");
+
+        postCommentRepository.save(postComment1);
+        postCommentRepository.save(postComment2);
+
+        PostComment reply1 = PostComment.createPostComment(writer, post, "답글1.");
+        PostComment reply2 = PostComment.createPostComment(writer, post, "답글2.");
+        PostComment reply3 = PostComment.createPostComment(writer, post, "답글3.");
+        PostComment reply4 = PostComment.createPostComment(writer, post, "답글4.");
+        postComment1.addReply(reply1);
+        postComment1.addReply(reply2);
+        postComment2.addReply(reply3);
+        postComment2.addReply(reply4);
+
+        postCommentRepository.save(reply1);
+        postCommentRepository.save(reply2);
+        postCommentRepository.save(reply3);
+        postCommentRepository.save(reply4);
+
+        //when
+        List<PostCommentResponse> postCommentResponses = postCommentService.findComments(post.getId(), 1).getContent();
+
+        //then
+        assertThat(postCommentResponses.size()).isEqualTo(2);
+        assertThat(postCommentResponses.get(0).getId()).isEqualTo(postComment2.getId());
+        assertThat(postCommentResponses.get(1).getId()).isEqualTo(postComment1.getId());
+
+        assertThat(postCommentResponses.get(0).getPostCommentResponses().size()).isEqualTo(2);
+        assertThat(postCommentResponses.get(0).getPostCommentResponses().get(0).getId()).isEqualTo(reply3.getId());
+        assertThat(postCommentResponses.get(0).getPostCommentResponses().get(1).getId()).isEqualTo(reply4.getId());
+        assertThat(postCommentResponses.get(1).getPostCommentResponses().size()).isEqualTo(2);
+        assertThat(postCommentResponses.get(1).getPostCommentResponses().get(0).getId()).isEqualTo(reply1.getId());
+        assertThat(postCommentResponses.get(1).getPostCommentResponses().get(1).getId()).isEqualTo(reply2.getId());
     }
 }

@@ -1,18 +1,17 @@
 package com.isfive.usearth.web.board;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import com.isfive.usearth.domain.board.entity.PostComment;
 import com.isfive.usearth.domain.board.entity.PostLike;
+import com.isfive.usearth.domain.board.repository.PostCommentRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.web.board.dto.PostCreateRequest;
@@ -49,6 +48,8 @@ class PostControllerTest {
 	@Autowired PostLikeRepository postLikeRepository;
 
 	@Autowired MemberRepository memberRepository;
+
+	@Autowired PostCommentRepository postCommentRepository;
 
 	@WithMockUser(username = "writer")
 	@DisplayName("사용자는 게시글을 작성 할 수 있다.")
@@ -131,6 +132,26 @@ class PostControllerTest {
 		Post post = Post.createPost(member, board, "title", "content");
 		postRepository.save(post);
 
+		PostComment postComment1 = PostComment.createPostComment(member, post, "댓글1");
+		PostComment postComment2 = PostComment.createPostComment(member, post, "댓글2");
+
+		postCommentRepository.save(postComment1);
+		postCommentRepository.save(postComment2);
+
+		PostComment reply1 = PostComment.createPostComment(member, post, "답글1.");
+		PostComment reply2 = PostComment.createPostComment(member, post, "답글2.");
+		PostComment reply3 = PostComment.createPostComment(member, post, "답글3.");
+		PostComment reply4 = PostComment.createPostComment(member, post, "답글4.");
+		postComment1.addReply(reply1);
+		postComment1.addReply(reply2);
+		postComment2.addReply(reply3);
+		postComment2.addReply(reply4);
+
+		postCommentRepository.save(reply1);
+		postCommentRepository.save(reply2);
+		postCommentRepository.save(reply3);
+		postCommentRepository.save(reply4);
+
 		//when //then
 		mockMvc.perform(get("/posts/{postId}", post.getId())
 						.contentType(APPLICATION_JSON)
@@ -140,6 +161,9 @@ class PostControllerTest {
 				.andExpect(jsonPath("$.writer").value(member.getNickname()))
 				.andExpect(jsonPath("$.content").value(post.getContent()))
 				.andExpect(jsonPath("$.views").value(post.getViews()))
+				.andExpect(jsonPath("$.postCommentResponse.content.size()").value(2))
+				.andExpect(jsonPath("$.postCommentResponse.content[0].postCommentResponses.size()").value(2))
+				.andExpect(jsonPath("$.postCommentResponse.content[1].postCommentResponses.size()").value(2))
 				.andExpect(status().isOk())
 				.andDo(print());
 	}

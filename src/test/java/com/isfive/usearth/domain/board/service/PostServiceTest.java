@@ -6,16 +6,14 @@ import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
