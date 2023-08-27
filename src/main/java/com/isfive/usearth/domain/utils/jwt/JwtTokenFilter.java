@@ -35,25 +35,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		HttpServletResponse response,
 		FilterChain filterChain
 	) throws ServletException, IOException {
-//
-//		SecurityContext context
-//				= SecurityContextHolder.createEmptyContext();
-//
-//		// 사용자 인증 정보 생성
-//		AbstractAuthenticationToken authenticationToken
-//				= new UsernamePasswordAuthenticationToken(
-//				CustomUserDetails.builder()
-//						.email("user1@email.com")
-//						.build(),
-//				"1234safdfgdgsdfsd", new ArrayList<>()
-//		);
-//		// SecurityContext에 사용자 정보 설정
-//		context.setAuthentication(authenticationToken);
-//		// SecurityContextHolder에 SecurityContext 설정
-//		SecurityContextHolder.setContext(context);
-//
-//		filterChain.doFilter(request, response);
-//		return;
 
 		// 모든 사용자 가능 URI 처리
 		if (PermitAllURI.getList().contains(request.getRequestURI())) {
