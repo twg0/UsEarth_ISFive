@@ -35,7 +35,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		HttpServletResponse response,
 		FilterChain filterChain
 	) throws ServletException, IOException {
-
 		// 모든 사용자 가능 URI 처리
 		if (PermitAllURI.getList().contains(request.getRequestURI())) {
 			log.info("uri {}", request.getRequestURI());
