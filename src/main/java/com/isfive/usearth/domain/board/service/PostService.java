@@ -7,6 +7,9 @@ import java.util.Set;
 
 import com.isfive.usearth.domain.board.annotation.Retry;
 import com.isfive.usearth.domain.board.dto.PostCommentResponse;
+import com.isfive.usearth.domain.board.entity.PostFileImage;
+import com.isfive.usearth.domain.board.repository.PostFileImageRepository;
+import com.isfive.usearth.domain.common.FileImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -37,10 +40,11 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
 
     @Transactional
-    public void createPost(Long boardId, String username, String title, String content) {
+    public void createPost(Long boardId, String username, String title, String content, List<FileImage> fileImages) {
         Member member = memberRepository.findByUsernameOrThrow(username);
         Board board = boardRepository.findByIdOrThrow(boardId);
         Post post = Post.createPost(member, board, title, content);
+        saveImages(post, fileImages);
         postRepository.save(post);
     }
 
@@ -92,6 +96,12 @@ public class PostService {
         } else {
             like(post, member);
         }
+    }
+
+    private void saveImages(Post post, List<FileImage> fileImages) {
+        fileImages.forEach(fileImage -> {
+            post.addImage(new PostFileImage(fileImage));
+        });
     }
 
     private List<PostsResponse> createPostResponses(Page<Post> posts) {

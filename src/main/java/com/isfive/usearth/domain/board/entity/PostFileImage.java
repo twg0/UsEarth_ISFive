@@ -24,4 +24,16 @@ public class PostFileImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
+
+    public PostFileImage(FileImage fileImage) {
+        this.fileImage = fileImage;
+    }
+
+    public FileImage getFileImage() {
+        return fileImage;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
 }

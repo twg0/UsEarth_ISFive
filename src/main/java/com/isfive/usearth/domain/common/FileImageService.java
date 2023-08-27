@@ -49,7 +49,7 @@ public class FileImageService {
         return fileImage;
     }
 
-    public List<FileImage> createFileImageList(List<MultipartFile> fileList) throws IOException  {
+    public List<FileImage> createFileImageList(List<MultipartFile> fileList) {
         List<FileImage> fileImageList = new ArrayList<>();
         for (MultipartFile file : fileList) {
             FileImage fileImage = createFileImage(file);
