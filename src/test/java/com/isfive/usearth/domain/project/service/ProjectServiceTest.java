@@ -39,7 +39,7 @@ class ProjectServiceTest {
     @Autowired OptionRepository optionRepository;
     @Autowired OptionValueRepository optionValueRepository;
     @Autowired RewardSkuRepository rewardSkuRepository;
-    @Autowired SkuValueRespository skuValueRespository;
+    @Autowired SkuValueRepository skuValueRepository;
     @Autowired TagRepository tagRepository;
     @Autowired ProjectFileImageRepository projectFileImageRepository;
 
@@ -132,7 +132,7 @@ class ProjectServiceTest {
         List<Option> options = optionRepository.findAll();
         List<OptionValue> optionValues = optionValueRepository.findAll();
         List<RewardSku> rewardSkus = rewardSkuRepository.findAll();
-        List<SkuValue> skuValues = skuValueRespository.findAll();
+        List<SkuValue> skuValues = skuValueRepository.findAll();
         List<Tag> tags = tagRepository.findAll();
         List<ProjectFileImage> projectFileImages = projectFileImageRepository.findAll();
 

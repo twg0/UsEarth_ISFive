@@ -47,7 +47,7 @@ public class ProjectService {
 
     @Transactional
     public void createProject(String username, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
-        memberRepository.findByUsername(username);
+        Member member = memberRepository.findByUsernameOrThrow(username);
 
         Project project = projectCreate.toEntity(member);
         projectRepository.save(project);
@@ -110,7 +110,7 @@ public class ProjectService {
 
     @Transactional
     public void updateProject(String username, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) {
-        memberRepository.findByUsername(username);
+        Member member = memberRepository.findByUsernameOrThrow(username);
 
         Project project = projectRepository.findByIdOrElseThrow(projectId);
 
