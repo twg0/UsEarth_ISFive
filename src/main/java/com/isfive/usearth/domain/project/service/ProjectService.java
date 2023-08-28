@@ -16,7 +16,7 @@ import com.isfive.usearth.domain.project.entity.Reward;
 import com.isfive.usearth.domain.project.entity.Tag;
 import com.isfive.usearth.domain.project.repository.ProjectFileImageRepository;
 import com.isfive.usearth.domain.project.repository.ProjectRepository;
-import com.isfive.usearth.domain.project.repository.RewardRepository;
+
 import com.isfive.usearth.domain.project.repository.TagRepository;
 import com.isfive.usearth.exception.EntityNotFoundException;
 import com.isfive.usearth.exception.ErrorCode;
@@ -24,11 +24,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,25 +40,20 @@ public class ProjectService {
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final MakerRepository makerRepository;
-    private final RewardRepository rewardRepository;
     private final TagRepository tagRepository;
     private final ProjectFileImageRepository projectFileImageRepository;
     private final RewardService rewardService;
     private final TagService tagService;
-    private final FileImageService fileImageService;
 
     @Transactional
-    public void createProject(
-            Authentication auth, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
-        String username = auth.getName();
-        Member member = memberRepository.findByUsernameOrThrow(username);
+    public void createProject(String username, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
+        memberRepository.findByUsername(username);
 
         Project project = projectCreate.toEntity(member);
         projectRepository.save(project);
 
         // 대표 이미지 등록
-        FileImage fileImage = fileImageService.createFileImage(projectCreate.getRepImage());
-        project.setRepImage(fileImage);
+        project.setRepImage(projectCreate.getRepImage());
 
         // 메이커 등록
         Maker maker = makerRepository.findByName(projectCreate.getMakerName());
@@ -114,10 +109,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateProject(
-            Authentication auth, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) throws IOException {
-        String username = auth.getName();
-        Member member = memberRepository.findByUsernameOrThrow(username);
+    public void updateProject(String username, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) {
+        memberRepository.findByUsername(username);
 
         Project project = projectRepository.findByIdOrElseThrow(projectId);
 
@@ -126,6 +119,9 @@ public class ProjectService {
 
         // 프로젝트 정보 수정
         project.update(projectUpdate.toEntity());
+
+        // 대표 이미지 수정
+        project.setRepImage(projectUpdate.getRepImage());
 
         // 이미지 리스트 수정
         List<ProjectFileImage> oldImageList = projectFileImageRepository.findAllByProject(project);
