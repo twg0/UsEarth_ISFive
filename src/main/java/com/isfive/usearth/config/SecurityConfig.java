@@ -39,7 +39,8 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/")
 				).permitAll()
 				.requestMatchers(
-					new AntPathRequestMatcher("/members/my-page")
+					new AntPathRequestMatcher("/members/my-page"),
+						new AntPathRequestMatcher("/projects", "/projects/{projectId}")
 				).hasRole("USER")
 				.anyRequest()
 				.authenticated()
