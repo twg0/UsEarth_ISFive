@@ -47,10 +47,7 @@ public class ProjectService {
     private final FileImageService fileImageService;
 
     @Transactional
-    public void createProject(Authentication auth, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) throws IOException {
-//        String email = auth.getName();
-//        memberRepository.findByEmailOrThrow(email);
-
+    public void createProject(ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
         Project project = projectCreate.toEntity();
         projectRepository.save(project);
 

@@ -6,16 +6,16 @@ import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class PostServiceTest {
 
     @Autowired MemberRepository memberRepository;
@@ -39,21 +40,13 @@ class PostServiceTest {
 
     @Autowired PostService postService;
 
-    @BeforeEach
-    void clear() {
-        postLikeRepository.deleteAll();
-        postRepository.deleteAll();
-        memberRepository.deleteAll();
-        boardRepository.deleteAll();
-    }
-
     @DisplayName("사용자는 게시글을 페이징 조회하여 좋아요 한 게시글들을 확인 할 수 있다.")
     @Test
     void readPosts() {
         //given
-        Member writer = Member.builder().email("writer").build();
-        Member member1 = Member.builder().email("member1").build();
-        Member member2 = Member.builder().email("member2").build();
+        Member writer = Member.builder().username("writer").build();
+        Member member1 = Member.builder().username("member1").build();
+        Member member2 = Member.builder().username("member2").build();
         memberRepository.save(writer);
         memberRepository.save(member1);
         memberRepository.save(member2);
@@ -76,8 +69,8 @@ class PostServiceTest {
 
 
         //when
-        Page<PostsResponse> responses1 = postService.readPosts(board.getId(), 1, member1.getEmail());
-        Page<PostsResponse> responses2 = postService.readPosts(board.getId(), 1, member2.getEmail());
+        Page<PostsResponse> responses1 = postService.readPosts(board.getId(), 1, member1.getUsername());
+        Page<PostsResponse> responses2 = postService.readPosts(board.getId(), 1, member2.getUsername());
 
         //then
 
@@ -99,6 +92,7 @@ class PostServiceTest {
                 .contains(post1.getId(), false);
     }
 
+
     @DisplayName("동시에 100개 의 좋아요 요청이 왔을 때 데이터 정합성을 유지해야 한다.")
     @Test
     void request100LikeConcurrence() throws InterruptedException {
@@ -106,10 +100,10 @@ class PostServiceTest {
         // given
         int count = 100;
 
-        Member writer = Member.builder().email("writer").build();
+        Member writer = Member.builder().username("writer").build();
         memberRepository.save(writer);
         for (int i = 0; i < count; i++) {
-            Member member = Member.builder().email("member" + i).build();
+            Member member = Member.builder().username("member" + i).build();
             memberRepository.save(member);
         }
 

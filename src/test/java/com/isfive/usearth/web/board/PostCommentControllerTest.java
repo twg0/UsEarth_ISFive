@@ -6,28 +6,24 @@ import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostComment;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostCommentRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.web.board.dto.PostCommentCreateRequest;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -49,25 +45,26 @@ class PostCommentControllerTest {
 
     @Autowired PostCommentRepository postCommentRepository;
 
+    @WithMockUser(username = "comment writer")
     @DisplayName("사용자는 댓글을 작성할 수 있다.")
     @Test
     void writeComment() throws Exception {
         //given
-        Member writer = Member.builder()
-                .email("post writer")
+        Member postWriter = Member.builder()
+                .username("post writer")
                 .build();
 
-        Member other = Member.builder()
-                .email("other")
+        Member commentWriter = Member.builder()
+                .username("comment writer")
                 .build();
 
-        memberRepository.save(writer);
-        memberRepository.save(other);
+        memberRepository.save(postWriter);
+        memberRepository.save(commentWriter);
 
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = Post.createPost(writer, board, "title", "content");
+        Post post = Post.createPost(postWriter, board, "title", "content");
         postRepository.save(post);
         PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
         //when //then
@@ -83,6 +80,87 @@ class PostCommentControllerTest {
 
         assertThat(findPost.getCommentCount()).isEqualTo(1);
         assertThat(all.size()).isEqualTo(1);
+    }
+
+    @WithMockUser(username = "comment writer")
+    @DisplayName("사용자는 댓글을 작성할 수 있다.")
+    @Test
+    void writeReply() throws Exception {
+        //given
+        Member postWriter = Member.builder()
+                .username("post writer")
+                .build();
+
+        Member commentWriter = Member.builder()
+                .username("comment writer")
+                .build();
+
+        memberRepository.save(postWriter);
+        memberRepository.save(commentWriter);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = Post.createPost(postWriter, board, "title", "content");
+        postRepository.save(post);
+
+        PostComment postComment = PostComment.createPostComment(postWriter, post, "댓글입니다.");
+        postCommentRepository.save(postComment);
+
+        PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
+        //when //then
+
+        mockMvc.perform(post("/comments/{commentId}/reply", postComment.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(MockMvcResultHandlers.print());
+
+
+        PostComment comment = postCommentRepository.findById(postComment.getId()).orElseThrow();
+        PostComment reply = postCommentRepository.findById(postComment.getId() + 1).orElseThrow();
+
+        assertThat(reply.getPostComment()).isEqualTo(comment);
+    }
+
+    @WithMockUser(username = "comment writer")
+    @DisplayName("사용자는 댓글을 삭제할 수 있다.")
+    @Test
+    void deleteReply() throws Exception {
+        //given
+        Member postWriter = Member.builder()
+                .username("post writer")
+                .build();
+
+        Member commentWriter = Member.builder()
+                .username("comment writer")
+                .build();
+
+        memberRepository.save(postWriter);
+        memberRepository.save(commentWriter);
+
+        Board board = Board.createBoard("게시판 제목", "게시판 요약");
+        boardRepository.save(board);
+
+        Post post = Post.createPost(postWriter, board, "title", "content");
+        postRepository.save(post);
+
+        PostComment postComment = PostComment.createPostComment(commentWriter, post, "댓글입니다.");
+        postCommentRepository.save(postComment);
+
+        PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
+        //when //then
+
+        mockMvc.perform(delete("/comments/{commentId}", postComment.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(MockMvcResultHandlers.print());
+
+
+        PostComment comment = postCommentRepository.findById(postComment.getId()).orElseThrow();
+
+        assertThat(comment.isDelete()).isTrue();
     }
 
 }

@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class FileImageService {
 
-    public FileImage createFileImage(MultipartFile file) throws IOException {
+    public FileImage createFileImage(MultipartFile file) {
         String profileDir = String.format("./src/main/resources/projectImg/");
         try {
              Files.createDirectories(Path.of(profileDir));
@@ -49,7 +49,7 @@ public class FileImageService {
         return fileImage;
     }
 
-    public List<FileImage> createFileImageList(List<MultipartFile> fileList) throws IOException  {
+    public List<FileImage> createFileImageList(List<MultipartFile> fileList) {
         List<FileImage> fileImageList = new ArrayList<>();
         for (MultipartFile file : fileList) {
             FileImage fileImage = createFileImage(file);

@@ -35,17 +35,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		HttpServletResponse response,
 		FilterChain filterChain
 	) throws ServletException, IOException {
-		// 모든 사용자 가능 URI 처리
-		if (PermitAllURI.getList().contains(request.getRequestURI())) {
+
+		Optional<Cookie> serialAT = CookieUtils.getCookie(request, "serialAT");
+		Optional<Cookie> serialRT = CookieUtils.getCookie(request, "serialRT");
+
+		if (serialAT.isEmpty() && serialRT.isEmpty()) {
 			log.info("uri {}", request.getRequestURI());
 			filterChain.doFilter(request, response);
 			return;
 		}
-
-		log.info("uri {}", request.getRequestURI());
-
-		Optional<Cookie> serialAT = CookieUtils.getCookie(request, "serialAT");
-		Optional<Cookie> serialRT = CookieUtils.getCookie(request, "serialRT");
 
 		if (serialAT.isEmpty())
 			throw new AuthException(ErrorCode.BAD_REQUEST_COOKIE);

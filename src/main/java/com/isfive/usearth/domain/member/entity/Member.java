@@ -95,7 +95,7 @@ public class Member extends BaseEntity {
 
     /* 로직 */
 
-    public boolean isEqualsEmail(String email) {
-        return this.email.equals(email);
+    public boolean isEqualsUsername(String username) {
+        return this.username.equals(username);
     }
 }

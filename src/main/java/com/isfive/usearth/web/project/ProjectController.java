@@ -40,7 +40,7 @@ public class ProjectController {
             @RequestPart MultipartFile repImage,                    // 대표 이미지
             @RequestPart List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
             @RequestPart List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트
-    ) throws IOException {
+    ) {
         ProjectCreate projectCreate = projectRegister.toService(repImage);
         List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
         List<RewardCreate> rewardCreateList = rewardRegisterList.stream()

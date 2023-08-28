@@ -1,10 +1,15 @@
 package com.isfive.usearth.domain.board.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.isfive.usearth.domain.board.entity.Post;
 
+import com.isfive.usearth.domain.common.FileImage;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 @Data
 public class PostResponse {
@@ -23,7 +28,11 @@ public class PostResponse {
 
     private final LocalDateTime createdDate;
 
+    private List<FileImage> fileImages;
+
     private boolean likedByUser;
+
+    private Page<PostCommentResponse> postCommentResponse;
 
     public PostResponse(Post post) {
         this.id = post.getId();
@@ -33,6 +42,11 @@ public class PostResponse {
         this.views = post.getViews();
         this.likeCount = post.getLikeCount();
         this.createdDate = post.getCreatedDate();
+        this.fileImages = post.getFileImages();
         this.likedByUser = false;
+    }
+
+    public void setPostCommentResponse(Page<PostCommentResponse> postCommentResponse) {
+        this.postCommentResponse = postCommentResponse;
     }
 }

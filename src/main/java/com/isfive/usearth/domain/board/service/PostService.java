@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.isfive.usearth.domain.board.annotation.Retry;
+import com.isfive.usearth.domain.board.dto.PostCommentResponse;
+import com.isfive.usearth.domain.board.entity.PostFileImage;
+import com.isfive.usearth.domain.board.repository.PostFileImageRepository;
+import com.isfive.usearth.domain.common.FileImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,18 +23,9 @@ import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
-import com.isfive.usearth.domain.board.repository.PostRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,16 +33,18 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class PostService {
 
+    private final PostCommentService postCommentService;
     private final BoardRepository boardRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final PostLikeRepository postLikeRepository;
 
     @Transactional
-    public void createPost(Long boardId, String email, String title, String content) {
-        Member member = memberRepository.findByEmailOrThrow(email);
+    public void createPost(Long boardId, String username, String title, String content, List<FileImage> fileImages) {
+        Member member = memberRepository.findByUsernameOrThrow(username);
         Board board = boardRepository.findByIdOrThrow(boardId);
         Post post = Post.createPost(member, board, title, content);
+        saveImages(post, fileImages);
         postRepository.save(post);
     }
 
@@ -55,12 +53,12 @@ public class PostService {
      * 로그인 한 사용자가 좋아요를 누른 Post에 일치하는 PostsResponse에는
      * 좋아요 표시를 할 수 있도록 true 값을 설정해주고 Page<> 타입으로 변환 후 반환한다.
      */
-    public Page<PostsResponse> readPosts(Long boardId, Integer page, String email) {
+    public Page<PostsResponse> readPosts(Long boardId, Integer page, String username) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         Page<Post> posts = postRepository.findPosts(boardId, pageRequest);
         List<PostsResponse> postsResponses = createPostResponses(posts);
 
-        List<PostLike> postLikes = postLikeRepository.findByMember_EmailAndPostIn(email, posts.getContent());
+        List<PostLike> postLikes = postLikeRepository.findByMember_UsernameAndPostIn(username, posts.getContent());
 
         Set<Long> postIdSet = createPostIdSetBy(postLikes);
         setLikedByUser(postsResponses, postIdSet);
@@ -69,26 +67,28 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse readPost(Long postId) {
+    public PostResponse readPost(Long postId, String username) {
         Post post = postRepository.findByIdOrThrow(postId);
         post.increaseView();
 
         PostResponse postResponse = new PostResponse(post);
 
-        // TODO 이메일 파라미터 추후 수정
-        boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, null);
+        boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, username);
         postResponse.setLikedByUser(likedByUser);
+
+        Page<PostCommentResponse> postCommentResponses = postCommentService.findComments(postId, 1);
+        postResponse.setPostCommentResponse(postCommentResponses);
 
         return postResponse;
     }
 
-
+    @Retry
     @Transactional
-    public void like(Long postId, String email) {
+    public void like(Long postId, String username) {
         Post post = postRepository.findByIdWithMember(postId);
-        post.verifyNotWriter(email);
+        post.verifyNotWriter(username);
 
-        Member member = memberRepository.findByEmailOrThrow(email);
+        Member member = memberRepository.findByUsernameOrThrow(username);
         Optional<PostLike> optionalPostLike = postLikeRepository.findByPostAndMember(post, member);
 
         if (optionalPostLike.isPresent()) {
@@ -96,6 +96,12 @@ public class PostService {
         } else {
             like(post, member);
         }
+    }
+
+    private void saveImages(Post post, List<FileImage> fileImages) {
+        fileImages.forEach(fileImage -> {
+            post.addImage(new PostFileImage(fileImage));
+        });
     }
 
     private List<PostsResponse> createPostResponses(Page<Post> posts) {
