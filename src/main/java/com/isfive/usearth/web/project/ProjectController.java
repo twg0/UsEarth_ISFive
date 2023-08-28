@@ -46,7 +46,6 @@ public class ProjectController {
         List<RewardCreate> rewardCreateList = rewardRegisterList.stream()
                 .map(RewardRegister::toService).collect(Collectors.toList());
 
-
         ProjectCreate projectCreate = projectRegister.toService(fileImage);
         projectService.createProject(auth.getName(), projectCreate, rewardCreateList, fileImageList);
 

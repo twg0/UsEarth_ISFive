@@ -67,4 +67,7 @@ public class Maker {
            project.setMaker(this);
    }
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }

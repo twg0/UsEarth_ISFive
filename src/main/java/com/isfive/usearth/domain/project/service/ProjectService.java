@@ -15,20 +15,19 @@ import com.isfive.usearth.domain.project.entity.Reward;
 import com.isfive.usearth.domain.project.entity.Tag;
 import com.isfive.usearth.domain.project.repository.ProjectFileImageRepository;
 import com.isfive.usearth.domain.project.repository.ProjectRepository;
-import com.isfive.usearth.domain.project.repository.RewardRepository;
+
 import com.isfive.usearth.domain.project.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
