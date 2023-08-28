@@ -36,35 +36,36 @@ public class SecurityConfig {
                 .requestMatchers(toH2Console());
     }
 
-    @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authHttp -> authHttp
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/token/**"),
-                                new AntPathRequestMatcher("/views/**"),
-                                new AntPathRequestMatcher("/login/**"),
-                                new AntPathRequestMatcher("/")
-                        ).permitAll()
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/members/my-page")
-                                , new AntPathRequestMatcher("/projects", "/projects/{projectId}")
-                        ).hasRole("USER")
-                        .anyRequest()
-                        .authenticated()
-                )
-                .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/login")
-                        .successHandler(oAuth2SuccessHandler)
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2UserServiceImpl)
-                        )
-                )
-                .sessionManagement(
-                        sessionManagement -> sessionManagement
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtTokenFilter, AuthorizationFilter.class);
+	@Bean
+	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+		http
+			.csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(authHttp -> authHttp
+				.requestMatchers(
+						new AntPathRequestMatcher("/token/**"),
+						new AntPathRequestMatcher("/views/**"),
+						new AntPathRequestMatcher("/login/**"),
+						new AntPathRequestMatcher("/"),
+						new AntPathRequestMatcher("/projects", "GET"),
+						new AntPathRequestMatcher("/projects/{projectId}", "GET")
+				).permitAll()
+				.requestMatchers(
+					new AntPathRequestMatcher("/members/my-page")
+				).hasRole("USER")
+				.anyRequest()
+				.authenticated()
+			)
+			.oauth2Login(oauth2Login -> oauth2Login
+				.loginPage("/login")
+				.successHandler(oAuth2SuccessHandler)
+				.userInfoEndpoint(userInfo -> userInfo
+					.userService(oAuth2UserServiceImpl)
+				)
+			)
+			.sessionManagement(
+				sessionManagement -> sessionManagement
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.addFilterBefore(jwtTokenFilter, AuthorizationFilter.class);
 
         return http.build();
     }

@@ -2,11 +2,7 @@ package com.isfive.usearth.web.project;
 
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.FileImageService;
-import com.isfive.usearth.domain.project.dto.ProjectCreate;
-import com.isfive.usearth.domain.project.dto.ProjectResponse;
-import com.isfive.usearth.domain.project.dto.ProjectUpdate;
-import com.isfive.usearth.domain.project.dto.RewardCreate;
-import com.isfive.usearth.domain.project.repository.ProjectRepository;
+import com.isfive.usearth.domain.project.dto.*;
 import com.isfive.usearth.domain.project.service.ProjectService;
 import com.isfive.usearth.web.project.dto.ProjectModify;
 import com.isfive.usearth.web.project.dto.ProjectRegister;
@@ -29,7 +25,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/projects")
 public class ProjectController {
 
-    private final ProjectRepository projectRepository;
     private final ProjectService projectService;
     private final FileImageService fileImageService;
 
@@ -53,9 +48,15 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProjectResponse>> findProjects(Pageable pageable) {
-        Page<ProjectResponse> projectResponses = projectService.readAllProject(pageable);
-        return new ResponseEntity<>(projectResponses, HttpStatus.OK);
+    public ResponseEntity<Page<ProjectsResponse>> findProjects(Pageable pageable) {
+        Page<ProjectsResponse> projectsResponses = projectService.readProjects(pageable);
+        return new ResponseEntity<>(projectsResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectResponse> findProject(@PathVariable Long projectId) {
+        ProjectResponse projectResponse = projectService.readProject(projectId);
+        return new ResponseEntity<>(projectResponse, HttpStatus.OK);
     }
 
     @PatchMapping("/{projectId}")

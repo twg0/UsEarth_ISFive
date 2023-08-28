@@ -6,10 +6,7 @@ import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.domain.project.dto.ProjectCreate;
-import com.isfive.usearth.domain.project.dto.ProjectResponse;
-import com.isfive.usearth.domain.project.dto.ProjectUpdate;
-import com.isfive.usearth.domain.project.dto.RewardCreate;
+import com.isfive.usearth.domain.project.dto.*;
 import com.isfive.usearth.domain.project.entity.Project;
 import com.isfive.usearth.domain.project.entity.ProjectFileImage;
 import com.isfive.usearth.domain.project.entity.Reward;
@@ -79,35 +76,6 @@ public class ProjectService {
 
     }
 
-    public ProjectFileImage createProjectFileImage(FileImage fileImage) {
-        ProjectFileImage projectFileImage = ProjectFileImage.builder()
-                .fileImage(fileImage)
-                .build();
-        projectFileImageRepository.save(projectFileImage);
-        return projectFileImage;
-    }
-
-    public List<ProjectFileImage> createProjectFileImageList(List<FileImage> fileImageList) {
-        List<ProjectFileImage> projectFileImageList = new ArrayList<>();
-        for (FileImage file : fileImageList) {
-            projectFileImageList.add(createProjectFileImage(file));
-        }
-        projectFileImageRepository.saveAll(projectFileImageList);
-        return projectFileImageList;
-    }
-
-    public Page<ProjectResponse> readAllProject(Pageable pageable) {
-        Page<Project> projects = projectRepository.findAll(pageable);
-        return createProjectResponsePage(pageable, projects);
-    }
-
-    private Page<ProjectResponse> createProjectResponsePage(Pageable pageable, Page<Project> projects) {
-        List<ProjectResponse> list = projects.stream()
-                .map(ProjectResponse::new)
-                .toList();
-        return new PageImpl<>(list, pageable, projects.getTotalElements());
-    }
-
     @Transactional
     public void updateProject(String username, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) {
         Member member = memberRepository.findByUsernameOrThrow(username);
@@ -145,5 +113,39 @@ public class ProjectService {
             new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
 
         project.delete();
+    }
+
+    public Page<ProjectsResponse> readProjects(Pageable pageable) {
+        Page<Project> projects = projectRepository.findAll(pageable);
+        return createProjectResponsePage(pageable, projects);
+    }
+
+    public ProjectResponse readProject(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow();
+        return new ProjectResponse(project);
+    }
+
+    private List<ProjectFileImage> createProjectFileImageList(List<FileImage> fileImageList) {
+        List<ProjectFileImage> projectFileImageList = new ArrayList<>();
+        for (FileImage file : fileImageList) {
+            projectFileImageList.add(createProjectFileImage(file));
+        }
+        projectFileImageRepository.saveAll(projectFileImageList);
+        return projectFileImageList;
+    }
+
+    private ProjectFileImage createProjectFileImage(FileImage fileImage) {
+        ProjectFileImage projectFileImage = ProjectFileImage.builder()
+                .fileImage(fileImage)
+                .build();
+        projectFileImageRepository.save(projectFileImage);
+        return projectFileImage;
+    }
+
+    private Page<ProjectsResponse> createProjectResponsePage(Pageable pageable, Page<Project> projects) {
+        List<ProjectsResponse> list = projects.stream()
+                .map(ProjectsResponse::new)
+                .toList();
+        return new PageImpl<>(list, pageable, projects.getTotalElements());
     }
 }
