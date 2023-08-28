@@ -1,12 +1,14 @@
 package com.isfive.usearth.web.project.dto;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import com.isfive.usearth.domain.common.FileImage;
+
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.project.dto.ProjectCreate;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
@@ -23,7 +25,7 @@ public class ProjectRegister {
     private String makerName;
     private String hashTag;
 
-    public ProjectCreate toService(MultipartFile file) {
+    public ProjectCreate toService(FileImage file) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Period period = Period.builder()
                 .startDate(LocalDate.parse(startDate, formatter))

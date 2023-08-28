@@ -41,11 +41,14 @@ public class ProjectController {
             @RequestPart List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
             @RequestPart List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트
     ) {
-        ProjectCreate projectCreate = projectRegister.toService(repImage);
+        FileImage fileImage = fileImageService.createFileImage(repImage);
         List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
         List<RewardCreate> rewardCreateList = rewardRegisterList.stream()
                 .map(RewardRegister::toService).collect(Collectors.toList());
-        projectService.createProject(auth, projectCreate, rewardCreateList, fileImageList);
+
+        ProjectCreate projectCreate = projectRegister.toService(fileImage);
+        projectService.createProject(auth.getName(), projectCreate, rewardCreateList, fileImageList);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -62,10 +65,11 @@ public class ProjectController {
             @RequestPart ProjectModify projectModify,
             @RequestPart MultipartFile repImage,
             @RequestPart List<MultipartFile> projectImageList
-    ) throws IOException {
-        ProjectUpdate projectUpdate = projectModify.toService(repImage);
+    ) {
+        FileImage fileImage = fileImageService.createFileImage(repImage);
         List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
-        projectService.updateProject(auth, projectId, projectUpdate, fileImageList);
+        ProjectUpdate projectUpdate = projectModify.toService(fileImage);
+        projectService.updateProject(auth.getName(), projectId, projectUpdate, fileImageList);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
