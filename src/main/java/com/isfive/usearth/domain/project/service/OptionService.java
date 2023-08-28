@@ -1,26 +1,16 @@
 package com.isfive.usearth.domain.project.service;
 
+import com.isfive.usearth.domain.project.entity.*;
+import com.isfive.usearth.domain.project.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.isfive.usearth.domain.project.entity.Option;
-import com.isfive.usearth.domain.project.entity.OptionValue;
-import com.isfive.usearth.domain.project.entity.Reward;
-import com.isfive.usearth.domain.project.entity.RewardSku;
-import com.isfive.usearth.domain.project.entity.SkuValue;
-import com.isfive.usearth.domain.project.repository.OptionRepository;
-import com.isfive.usearth.domain.project.repository.OptionValueRepository;
-import com.isfive.usearth.domain.project.repository.RewardRepository;
-import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
-import com.isfive.usearth.domain.project.repository.SkuValueRespository;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class OptionService {
 
     private final RewardSkuRepository rewardSkuRepository;
-    private final SkuValueRespository skuValueRespository;
+    private final SkuValueRepository skuValueRepository;
     private final OptionRepository optionRepository;
     private final OptionValueRepository optionValueRepository;
     private final RewardRepository rewardRepository;
@@ -103,7 +93,7 @@ public class OptionService {
                         .rewardSku(rewardSku)
                         .optionValue(optionValue)
                         .build();
-                skuValueRespository.save(skuValue);
+                skuValueRepository.save(skuValue);
             }
         }
         rewardSkuRepository.saveAll(rewardSkuList);

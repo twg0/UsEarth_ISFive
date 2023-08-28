@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.isfive.usearth.domain.project.entity.SkuValue;
 
-public interface SkuValueRespository extends JpaRepository<SkuValue, Long> {
+public interface SkuValueRepository extends JpaRepository<SkuValue, Long> {
 }

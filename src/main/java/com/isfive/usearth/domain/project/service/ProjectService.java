@@ -4,6 +4,7 @@ import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
+import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.project.dto.ProjectCreate;
 import com.isfive.usearth.domain.project.dto.ProjectResponse;
@@ -17,17 +18,16 @@ import com.isfive.usearth.domain.project.repository.ProjectFileImageRepository;
 import com.isfive.usearth.domain.project.repository.ProjectRepository;
 
 import com.isfive.usearth.domain.project.repository.TagRepository;
+import com.isfive.usearth.exception.EntityNotFoundException;
+import com.isfive.usearth.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class ProjectService {
     public void createProject(String username, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
         memberRepository.findByUsername(username);
 
-        Project project = projectCreate.toEntity();
+        Project project = projectCreate.toEntity(member);
         projectRepository.save(project);
 
         // 대표 이미지 등록
@@ -112,7 +112,10 @@ public class ProjectService {
     public void updateProject(String username, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) {
         memberRepository.findByUsername(username);
 
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.findByIdOrElseThrow(projectId);
+
+        if (!member.equals(project.getMember()))
+            new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
 
         // 프로젝트 정보 수정
         project.update(projectUpdate.toEntity());
@@ -132,11 +135,15 @@ public class ProjectService {
     }
 
     @Transactional
-    public void deleteProject(Authentication auth, Long projectId) {
-        String email = auth.getName();
-        memberRepository.findByEmail(email);
+    public void deleteProject(
+            Authentication auth, Long projectId) {
+        String username = auth.getName();
+        Member member = memberRepository.findByUsernameOrThrow(username);
+        Project project = projectRepository.findByIdOrElseThrow(projectId);
 
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!member.equals(project.getMember()))
+            new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+
         project.delete();
     }
 }

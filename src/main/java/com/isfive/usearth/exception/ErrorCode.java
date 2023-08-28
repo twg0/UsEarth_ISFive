@@ -9,6 +9,7 @@ public enum ErrorCode {
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M_001", "사용자를 찾을 수 없습니다."),
 	BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "B_001", "게시판을 찾을 수 없습니다."),
 	POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P_001", "게시글을 찾을 수 없습니다."),
+	PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PR_001", "프로젝트를 찾을 수 없습니다."),
 
 	POST_WRITER_NOT_ALLOW(HttpStatus.BAD_REQUEST, "PW_001", "작성자는 해당 기능을 사용할 수 없습니다."),
 	MEMBER_CONFLICT(HttpStatus.CONFLICT, "M_002", "이미 등록된 사용자입니다."),
