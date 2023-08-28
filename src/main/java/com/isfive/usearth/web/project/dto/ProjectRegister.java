@@ -1,18 +1,15 @@
 package com.isfive.usearth.web.project.dto;
 
+import com.isfive.usearth.domain.common.Period;
+import com.isfive.usearth.domain.project.dto.ProjectCreate;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import com.isfive.usearth.domain.common.Period;
-import com.isfive.usearth.domain.project.dto.ProjectCreate;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectRegister {

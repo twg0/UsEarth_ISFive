@@ -1,14 +1,14 @@
 package com.isfive.usearth.web.project.dto;
 
+import com.isfive.usearth.domain.project.dto.RewardCreate;
+import lombok.*;
+
 import java.util.Map;
 
-import com.isfive.usearth.domain.project.dto.RewardCreate;
-
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
-@Data
-@RequiredArgsConstructor
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RewardRegister {
     private String title;
     private String description;
