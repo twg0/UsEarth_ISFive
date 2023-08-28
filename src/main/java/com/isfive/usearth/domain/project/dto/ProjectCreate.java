@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.project.dto;
 
+import com.isfive.usearth.domain.member.entity.Member;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.isfive.usearth.domain.common.Period;
@@ -24,8 +25,9 @@ public class ProjectCreate {
     private String makerName;
     private MultipartFile repImage;
 
-    public Project toEntity() {
+    public Project toEntity(Member member) {
         return Project.builder()
+                .member(member)
                 .title(title)
                 .summary(summary)
                 .story(story)

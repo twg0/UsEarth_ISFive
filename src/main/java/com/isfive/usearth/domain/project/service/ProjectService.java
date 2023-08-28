@@ -4,6 +4,7 @@ import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
+import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.project.dto.ProjectCreate;
 import com.isfive.usearth.domain.project.dto.ProjectResponse;
@@ -17,15 +18,14 @@ import com.isfive.usearth.domain.project.repository.ProjectFileImageRepository;
 import com.isfive.usearth.domain.project.repository.ProjectRepository;
 import com.isfive.usearth.domain.project.repository.RewardRepository;
 import com.isfive.usearth.domain.project.repository.TagRepository;
+import com.isfive.usearth.exception.EntityNotFoundException;
+import com.isfive.usearth.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,11 +47,13 @@ public class ProjectService {
     private final FileImageService fileImageService;
 
     @Transactional
-    public void createProject(Authentication auth, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
-        String email = auth.getName();
-        memberRepository.findByEmail(email);
+    public void createProject(
+//            Authentication auth,
+            ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
+//        String username = auth.getName();
+        Member member = memberRepository.findByUsernameOrThrow("sns-d1ca9eb8-df50-49ff-9ec3-9a1f6751d95d");
 
-        Project project = projectCreate.toEntity();
+        Project project = projectCreate.toEntity(member);
         projectRepository.save(project);
 
         // 대표 이미지 등록
@@ -112,18 +114,19 @@ public class ProjectService {
     }
 
     @Transactional
-    public void updateProject(Authentication auth, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) throws IOException {
-        String email = auth.getName();
-        memberRepository.findByEmail(email);
+    public void updateProject(
+//            Authentication auth,
+            Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) throws IOException {
+//        String username = auth.getName();
+        Member member = memberRepository.findByUsernameOrThrow("sns-d1ca9eb8-df50-49ff-9ec3-9a1f6751d95d");
 
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.findByIdOrElseThrow(projectId);
+
+        if (!member.equals(project.getMember()))
+            new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
 
         // 프로젝트 정보 수정
         project.update(projectUpdate.toEntity());
-
-        // 대표 이미지 수정
-        FileImage fileImage = fileImageService.createFileImage(projectUpdate.getRepImage());
-        project.setRepImage(fileImage);
 
         // 이미지 리스트 수정
         List<ProjectFileImage> oldImageList = projectFileImageRepository.findAllByProject(project);
@@ -137,11 +140,17 @@ public class ProjectService {
     }
 
     @Transactional
-    public void deleteProject(Authentication auth, Long projectId) {
-        String email = auth.getName();
-        memberRepository.findByEmail(email);
+    public void deleteProject(
+//            Authentication auth,
+            Long projectId) {
+//        String username = auth.getName();
+        Member member = memberRepository.findByUsernameOrThrow("sns-d1ca9eb8-df50-49ff-9ec3-9a1f6751d95d");
 
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.findByIdOrElseThrow(projectId);
+
+        if (!member.equals(project.getMember()))
+            new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+
         project.delete();
     }
 }

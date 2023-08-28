@@ -4,6 +4,7 @@ import com.isfive.usearth.domain.common.BaseEntity;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.maker.entity.Maker;
+import com.isfive.usearth.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +35,10 @@ public class Project extends BaseEntity {
 
     @Embedded
     private FileImage repImage; // 대표이미지
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maker_id")
@@ -94,7 +99,7 @@ public class Project extends BaseEntity {
             this.title = projectUpdate.getTitle();
         if (projectUpdate.getSummary() != null)
             this.summary = projectUpdate.getSummary();
-        if (projectUpdate.getProjectImages() != null)
+        if (projectUpdate.getRepImage() != null)
             this.repImage = projectUpdate.getRepImage();
     }
 
