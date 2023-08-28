@@ -47,7 +47,10 @@ public class ProjectService {
     private final FileImageService fileImageService;
 
     @Transactional
-    public void createProject(ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
+    public void createProject(Authentication auth, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
+        String email = auth.getName();
+        memberRepository.findByEmail(email);
+
         Project project = projectCreate.toEntity();
         projectRepository.save(project);
 
