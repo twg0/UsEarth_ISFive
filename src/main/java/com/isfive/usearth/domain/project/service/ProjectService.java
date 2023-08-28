@@ -1,7 +1,7 @@
 package com.isfive.usearth.domain.project.service;
 
 import com.isfive.usearth.domain.common.FileImage;
-import com.isfive.usearth.domain.common.FileImageService;
+
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.member.entity.Member;
