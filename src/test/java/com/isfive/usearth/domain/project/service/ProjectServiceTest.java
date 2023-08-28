@@ -41,6 +41,7 @@ class ProjectServiceTest {
     @Autowired RewardSkuRepository rewardSkuRepository;
     @Autowired SkuValueRespository skuValueRespository;
     @Autowired TagRepository tagRepository;
+    @Autowired ProjectFileImageRepository projectFileImageRepository;
 
     @DisplayName("사용자는 프로젝트를 생성할 수 있다.")
     @Test
@@ -133,6 +134,7 @@ class ProjectServiceTest {
         List<RewardSku> rewardSkus = rewardSkuRepository.findAll();
         List<SkuValue> skuValues = skuValueRespository.findAll();
         List<Tag> tags = tagRepository.findAll();
+        List<ProjectFileImage> projectFileImages = projectFileImageRepository.findAll();
 
         assertThat(projects.size()).isEqualTo(1);
         assertThat(rewards.size()).isEqualTo(2);
@@ -141,5 +143,6 @@ class ProjectServiceTest {
         assertThat(rewardSkus.size()).isEqualTo(15);
         assertThat(skuValues.size()).isEqualTo(30);
         assertThat(tags.size()).isEqualTo(3);
+        assertThat(projectFileImages.size()).isEqualTo(2);
     }
 }
