@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.project.dto;
 
+import com.isfive.usearth.domain.common.FileImage;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.isfive.usearth.domain.common.Period;
@@ -22,7 +23,7 @@ public class ProjectCreate {
     private Period fundingDate;
     private String hashTag;
     private String makerName;
-    private MultipartFile repImage;
+    private FileImage repImage;
 
     public Project toEntity() {
         return Project.builder()
