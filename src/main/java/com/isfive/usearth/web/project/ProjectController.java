@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +35,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<Void> createProject(
-//            Authentication auth,
+            Authentication auth,
             @RequestPart ProjectRegister projectRegister,           // 프로젝트 정보
             @RequestPart MultipartFile repImage,                    // 대표 이미지
             @RequestPart List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
@@ -44,8 +45,7 @@ public class ProjectController {
         List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
         List<RewardCreate> rewardCreateList = rewardRegisterList.stream()
                 .map(RewardRegister::toService).collect(Collectors.toList());
-//        projectService.createProject(auth, projectCreate, rewardCreateList, fileImageList);
-        projectService.createProject(projectCreate, rewardCreateList, fileImageList);
+        projectService.createProject(auth, projectCreate, rewardCreateList, fileImageList);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -57,7 +57,7 @@ public class ProjectController {
 
     @PatchMapping("/{projectId}")
     public ResponseEntity<Void> updateProject(
-//            Authentication auth,
+            Authentication auth,
             @PathVariable Long projectId,
             @RequestPart ProjectModify projectModify,
             @RequestPart MultipartFile repImage,
@@ -66,18 +66,16 @@ public class ProjectController {
         FileImage fileImage = fileImageService.createFileImage(repImage);
         List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
         ProjectUpdate projectUpdate = projectModify.toService(fileImage);
-//        projectService.updateProject(auth, projectId, projectUpdate, fileImageList);
-        projectService.updateProject(projectId, projectUpdate, fileImageList);
+        projectService.updateProject(auth, projectId, projectUpdate, fileImageList);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> deleteProject(
-//            Authentication auth,
+            Authentication auth,
             @PathVariable Long projectId
     ) {
-//        projectService.deleteProject(auth, projectId);
-        projectService.deleteProject(projectId);
+        projectService.deleteProject(auth, projectId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

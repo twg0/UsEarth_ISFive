@@ -80,7 +80,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			AbstractAuthenticationToken authenticationToken
 				= new UsernamePasswordAuthenticationToken(
 				CustomUserDetails.builder()
-					.email(((CustomUserDetails)userDetails).getEmail())
+					.username(((CustomUserDetails)userDetails).getUsername())
 					.build(),
 				token, userDetails.getAuthorities()
 			);

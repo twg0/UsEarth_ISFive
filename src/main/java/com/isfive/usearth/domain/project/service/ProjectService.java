@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,10 +49,9 @@ public class ProjectService {
 
     @Transactional
     public void createProject(
-//            Authentication auth,
-            ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
-//        String username = auth.getName();
-        Member member = memberRepository.findByUsernameOrThrow("sns-d1ca9eb8-df50-49ff-9ec3-9a1f6751d95d");
+            Authentication auth, ProjectCreate projectCreate, List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
+        String username = auth.getName();
+        Member member = memberRepository.findByUsernameOrThrow(username);
 
         Project project = projectCreate.toEntity(member);
         projectRepository.save(project);
@@ -115,10 +115,9 @@ public class ProjectService {
 
     @Transactional
     public void updateProject(
-//            Authentication auth,
-            Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) throws IOException {
-//        String username = auth.getName();
-        Member member = memberRepository.findByUsernameOrThrow("sns-d1ca9eb8-df50-49ff-9ec3-9a1f6751d95d");
+            Authentication auth, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) throws IOException {
+        String username = auth.getName();
+        Member member = memberRepository.findByUsernameOrThrow(username);
 
         Project project = projectRepository.findByIdOrElseThrow(projectId);
 
@@ -141,11 +140,9 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(
-//            Authentication auth,
-            Long projectId) {
-//        String username = auth.getName();
-        Member member = memberRepository.findByUsernameOrThrow("sns-d1ca9eb8-df50-49ff-9ec3-9a1f6751d95d");
-
+            Authentication auth, Long projectId) {
+        String username = auth.getName();
+        Member member = memberRepository.findByUsernameOrThrow(username);
         Project project = projectRepository.findByIdOrElseThrow(projectId);
 
         if (!member.equals(project.getMember()))
