@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,5 +77,17 @@ public class Reward {
         this.getRewardSkus().add(rewardSku);
         if (rewardSku.getReward() != this)
             rewardSku.setReward(this);
+    }
+
+    public Integer getStock() {
+        return rewardSkus.stream()
+                .mapToInt(RewardSku::getStock)
+                .sum();
+    }
+
+    public Integer getInitStock() {
+        return rewardSkus.stream()
+                .mapToInt(RewardSku::getInitStock)
+                .sum();
     }
 }

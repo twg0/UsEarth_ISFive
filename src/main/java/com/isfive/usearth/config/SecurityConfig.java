@@ -45,11 +45,12 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/token/**"),
                                 new AntPathRequestMatcher("/views/**"),
                                 new AntPathRequestMatcher("/login/**"),
+                                new AntPathRequestMatcher("/projects", "GET"),
+						                    new AntPathRequestMatcher("/projects/{projectId}", "GET"),
                                 new AntPathRequestMatcher("/**")
                         ).permitAll()
                         .requestMatchers(
                                 new AntPathRequestMatcher("/members/my-page")
-                                , new AntPathRequestMatcher("/projects", "/projects/{projectId}")
                         ).hasRole("USER")
                         .anyRequest()
                         .authenticated()
