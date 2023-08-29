@@ -107,4 +107,17 @@ public class Project extends BaseEntity {
         deletedAt = LocalDateTime.now();
     }
 
+    public String getMakerName() {
+        return maker.getName();
+    }
+
+    public List<FileImage> getProjectFileImages() {
+        return projectImages.stream()
+                .map(ProjectFileImage::getFileImage)
+                .toList();
+    }
+
+    public Integer getProjectLikeCount() {
+        return likes == null ? 0 : likes.size();
+    }
 }

@@ -48,7 +48,7 @@ class ProjectServiceTest {
     void createProject() {
         //given
 
-        Member member = Member.builder().username("Member").build();
+        Member member = Member.builder().username("username").build();
         memberRepository.save(member);
         Individual individual = Individual.builder().name("Individual").build();
         individual.setMember(member);
