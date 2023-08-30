@@ -37,7 +37,7 @@ public class FundingService {
 
         List<RewardSku> rewardSkus = rewardSkuRepository.findAllByIdWithReward(idCountMap.keySet());
 
-        List<FundingRewardSku> fundingRewardSkus = createFindingRewardSkus(idCountMap, rewardSkus);
+        List<FundingRewardSku> fundingRewardSkus = createFindingRewardSkus(rewardSkus, idCountMap);
 
         Funding funding = Funding.createFunding(member, delivery, fundingRewardSkus);
         fundingRepository.save(funding);
@@ -48,7 +48,7 @@ public class FundingService {
                 .collect(Collectors.toMap(RewardSkuRegister::getRewardSkuId, RewardSkuRegister::getCount));
     }
 
-    private List<FundingRewardSku> createFindingRewardSkus(Map<Long, Integer> idCountMap, List<RewardSku> rewardSkus) {
+    private List<FundingRewardSku> createFindingRewardSkus(List<RewardSku> rewardSkus, Map<Long, Integer> idCountMap) {
         return rewardSkus.stream()
                 .map(rewardSku -> {
                     Integer count = idCountMap.get(rewardSku.getId());
