@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FundingReward {
+public class FundingRewardSku {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

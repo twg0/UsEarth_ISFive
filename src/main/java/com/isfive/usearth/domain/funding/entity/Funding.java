@@ -34,5 +34,5 @@ public class Funding {
     private FundingStatus status;
 
     @OneToMany(mappedBy = "funding")
-    private List<FundingReward> fundingRewards = new ArrayList<>();
+    private List<FundingRewardSku> fundingRewardSkus = new ArrayList<>();
 }
