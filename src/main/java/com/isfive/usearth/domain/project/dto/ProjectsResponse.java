@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public class ProjectsResponse {
 
-    private String title;
-    private FileImage fileImage;
-    private Period fundingDate;
-    private Integer targetAmount;
-    private Integer totalFundingAmount;
+    private final String title;
+    private final FileImage fileImage;
+    private final Period fundingDate;
+    private final Integer targetAmount;
+    private final Integer totalFundingAmount;
 
     public ProjectsResponse(Project project) {
         this.title = project.getTitle();

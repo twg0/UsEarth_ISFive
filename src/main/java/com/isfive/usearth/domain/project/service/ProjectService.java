@@ -121,7 +121,8 @@ public class ProjectService {
     }
 
     public ProjectResponse readProject(Long projectId) {
-        Project project = projectRepository.findById(projectId).orElseThrow();
+        Project project = projectRepository.findByIdWithRewards(projectId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
         return new ProjectResponse(project);
     }
 
