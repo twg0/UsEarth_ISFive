@@ -47,6 +47,7 @@ public class RewardService {
         return rewards;
     }
 
+    // TODO 조회 방식 개선
     public Result<RewardsResponse> findRewards(Long projectId) {
         List<Reward> rewards = rewardRepository.findByProject_IdWithRewardSkus(projectId);
 
@@ -70,10 +71,10 @@ public class RewardService {
     }
 
     private void createRewardsResponseWithRewardSkus(List<Reward> rewards, Map<Long, RewardsResponse> rewardMap) {
-        rewards.forEach(reward -> addRewardSkuResponses(rewardMap, reward.getId()));
+        rewards.forEach(reward -> addRewardSkuResponses(reward.getId(), rewardMap));
     }
 
-    private void addRewardSkuResponses(Map<Long, RewardsResponse> rewardMap, Long rewardId) {
+    private void addRewardSkuResponses(Long rewardId, Map<Long, RewardsResponse> rewardMap) {
         List<RewardSku> rewardSkus = rewardSkuRepository.findAllByReward_Id(rewardId);
         rewardSkus.forEach(rewardSku -> {
             Map<String, String> options = new HashMap<>();
