@@ -83,7 +83,7 @@ public class ProjectService {
         Project project = projectRepository.findByIdOrElseThrow(projectId);
 
         if (!member.equals(project.getMember()))
-            new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
 
         // 프로젝트 정보 수정
         project.update(projectUpdate.toEntity());
@@ -110,7 +110,7 @@ public class ProjectService {
         Project project = projectRepository.findByIdOrElseThrow(projectId);
 
         if (!member.equals(project.getMember()))
-            new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
 
         project.delete();
     }
