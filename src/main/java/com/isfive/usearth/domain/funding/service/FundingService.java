@@ -8,7 +8,6 @@ import com.isfive.usearth.domain.funding.entity.FundingRewardSku;
 import com.isfive.usearth.domain.funding.repository.FundingRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.domain.project.dto.RewardsResponse;
 import com.isfive.usearth.domain.project.entity.RewardSku;
 import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,20 +33,28 @@ public class FundingService {
 
         Delivery delivery = Delivery.createDelivery(deliveryRegister);
 
-        Map<Long, Integer> idCountMap = rewardSkuRegisters.stream()
-                .collect(Collectors.toMap(RewardSkuRegister::getRewardSkuId, RewardSkuRegister::getCount));
+        Map<Long, Integer> idCountMap = createidCountMap(rewardSkuRegisters);
 
         List<RewardSku> rewardSkus = rewardSkuRepository.findAllByIdWithReward(idCountMap.keySet());
 
-        List<FundingRewardSku> fundingRewardSkus = rewardSkus.stream()
+        List<FundingRewardSku> fundingRewardSkus = createFindingRewardSkus(idCountMap, rewardSkus);
+
+        Funding funding = Funding.createFunding(member, delivery, fundingRewardSkus);
+        fundingRepository.save(funding);
+    }
+
+    private Map<Long, Integer> createidCountMap(List<RewardSkuRegister> rewardSkuRegisters) {
+        return rewardSkuRegisters.stream()
+                .collect(Collectors.toMap(RewardSkuRegister::getRewardSkuId, RewardSkuRegister::getCount));
+    }
+
+    private List<FundingRewardSku> createFindingRewardSkus(Map<Long, Integer> idCountMap, List<RewardSku> rewardSkus) {
+        return rewardSkus.stream()
                 .map(rewardSku -> {
                     Integer count = idCountMap.get(rewardSku.getId());
                     Integer price = rewardSku.getPrice();
                     return FundingRewardSku.createFundingRewardSku(rewardSku, count, price);
                 })
                 .toList();
-
-        Funding funding = Funding.createFunding(member, delivery, fundingRewardSkus);
-        fundingRepository.save(funding);
     }
 }
