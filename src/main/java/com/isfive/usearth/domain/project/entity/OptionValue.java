@@ -55,4 +55,8 @@ public class OptionValue {
         if (!reward.getOptionValues().contains(this))
             reward.getOptionValues().add(this);
     }
+
+    public String getOptionName() {
+        return option.getName();
+    }
 }

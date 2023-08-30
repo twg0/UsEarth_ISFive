@@ -1,15 +1,20 @@
 package com.isfive.usearth.domain.project.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
+import com.isfive.usearth.domain.common.Result;
 import com.isfive.usearth.domain.maker.entity.Individual;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.project.dto.ProjectCreate;
 import com.isfive.usearth.domain.project.dto.RewardCreate;
+import com.isfive.usearth.domain.project.dto.RewardsResponse;
 import com.isfive.usearth.domain.project.entity.*;
 import com.isfive.usearth.domain.project.repository.*;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +47,10 @@ class ProjectServiceTest {
     @Autowired SkuValueRepository skuValueRepository;
     @Autowired TagRepository tagRepository;
     @Autowired ProjectFileImageRepository projectFileImageRepository;
+
+    @Autowired RewardService rewardService;
+    @Autowired EntityManager em;
+
 
     @DisplayName("사용자는 프로젝트를 생성할 수 있다.")
     @Test

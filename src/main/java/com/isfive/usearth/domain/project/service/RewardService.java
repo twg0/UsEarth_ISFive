@@ -1,15 +1,19 @@
 package com.isfive.usearth.domain.project.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.isfive.usearth.domain.common.Result;
+import com.isfive.usearth.domain.project.dto.RewardSkuResponse;
+import com.isfive.usearth.domain.project.dto.RewardsResponse;
+import com.isfive.usearth.domain.project.entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.isfive.usearth.domain.project.dto.RewardCreate;
-import com.isfive.usearth.domain.project.entity.Option;
-import com.isfive.usearth.domain.project.entity.Reward;
-import com.isfive.usearth.domain.project.entity.RewardSku;
 import com.isfive.usearth.domain.project.repository.RewardRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -39,5 +43,47 @@ public class RewardService {
         }
         rewardRepository.saveAll(rewards);
         return rewards;
+    }
+
+    public Result<RewardsResponse> findRewards(Long projectId) {
+        List<Reward> rewards = rewardRepository.findByProject_Id(projectId);
+
+        List<RewardsResponse> rewardsResponses = createRewardsResponse(rewards);
+
+        Map<Long, RewardsResponse> rewardMap = createRewardsResponseMap(rewardsResponses);
+
+        createRewardsResponseWithRewardSkus(rewards, rewardMap);
+        return new Result<>(new ArrayList<>(rewardMap.values()));
+    }
+
+    private List<RewardsResponse> createRewardsResponse(List<Reward> rewards) {
+        return rewards.stream()
+                .map(RewardsResponse::new)
+                .toList();
+    }
+
+    private Map<Long, RewardsResponse> createRewardsResponseMap(List<RewardsResponse> rewardsResponses) {
+        return rewardsResponses.stream()
+                .collect(Collectors.toMap(RewardsResponse::getId, reward -> reward));
+    }
+
+    private void createRewardsResponseWithRewardSkus(List<Reward> rewards, Map<Long, RewardsResponse> rewardMap) {
+        rewards.forEach(reward -> addRewardSkuResponses(rewardMap, reward));
+    }
+
+    private void addRewardSkuResponses(Map<Long, RewardsResponse> rewardMap, Reward reward) {
+        reward.getRewardSkus().forEach(rewardSkus -> {
+            Map<String, String> options = new HashMap<>();
+            putOptionValue(rewardSkus, options);
+            RewardSkuResponse rewardSkuResponse = new RewardSkuResponse(rewardSkus.getId(), rewardSkus.getStock(), options);
+            RewardsResponse rewardsResponse = rewardMap.get(reward.getId());
+            rewardsResponse.addRewardSkuResponses(rewardSkuResponse);
+        });
+    }
+
+    private void putOptionValue(RewardSku rewardSkus, Map<String, String> options) {
+        rewardSkus.getSkuValues().forEach(skuValue -> {
+            options.put(skuValue.getOptionName(), skuValue.getValue());
+        });
     }
 }

@@ -38,7 +38,7 @@ public class RewardSku {
     @JoinColumn(name = "reward_id")
     private Reward reward;
 
-    @OneToMany
+    @OneToMany(mappedBy = "rewardSku")
     @Builder.Default
     private List<SkuValue> skuValues = new ArrayList<>();
 

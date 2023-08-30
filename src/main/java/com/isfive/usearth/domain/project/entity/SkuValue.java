@@ -32,4 +32,11 @@ public class SkuValue {
     @JoinColumn(name = "reward_sku_id")
     private RewardSku rewardSku;
 
+    public String getValue() {
+        return optionValue.getValue();
+    }
+
+    public String getOptionName() {
+        return optionValue.getOptionName();
+    }
 }

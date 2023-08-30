@@ -3,7 +3,6 @@ package com.isfive.usearth.domain.project.dto;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.project.entity.Project;
-import com.isfive.usearth.domain.project.entity.Reward;
 import lombok.Data;
 
 import java.util.List;
@@ -23,27 +22,6 @@ public class ProjectResponse {
     private List<RewardsResponse> rewardsResponses;
     private List<FileImage> projectImages;
     private Integer likeCount;
-
-    @Data
-    private static class RewardsResponse {
-        private String title;
-        private String description;
-        private Integer price;
-        private String expectedSendDate;
-        private Integer deliveryFee;
-        private Integer stock;
-        private Integer initStock;
-
-        public RewardsResponse(Reward reward) {
-            this.title = reward.getTitle();
-            this.description = reward.getDescription();
-            this.price = reward.getPrice();
-            this.expectedSendDate = reward.getExpectedSendDate();
-            this.deliveryFee = reward.getDeliveryFee();
-            this.stock = reward.getStock();
-            this.initStock = reward.getInitStock();
-        }
-    }
 
     public ProjectResponse(Project project) {
         this.title = project.getTitle();
