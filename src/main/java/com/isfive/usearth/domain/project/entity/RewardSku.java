@@ -48,4 +48,15 @@ public class RewardSku {
             reward.getRewardSkus().add(this);
     }
 
+    public Integer getPrice() {
+        return reward.getPrice();
+    }
+
+    public void removeStock(Integer count) {
+        if (stock < count) {
+            // TODO 예외 변경
+            throw new RuntimeException("재고가 부족합니다.");
+        }
+        stock -= count;
+    }
 }
