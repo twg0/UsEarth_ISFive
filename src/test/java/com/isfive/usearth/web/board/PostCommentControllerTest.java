@@ -34,15 +34,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class PostCommentControllerTest {
 
     @Autowired MockMvc mockMvc;
-
     @Autowired ObjectMapper objectMapper;
-
     @Autowired BoardRepository boardRepository;
-
     @Autowired PostRepository postRepository;
-
     @Autowired MemberRepository memberRepository;
-
     @Autowired PostCommentRepository postCommentRepository;
 
     @WithMockUser(username = "comment writer")
@@ -53,13 +48,10 @@ class PostCommentControllerTest {
         Member postWriter = Member.builder()
                 .username("post writer")
                 .build();
-
         Member commentWriter = Member.builder()
                 .username("comment writer")
                 .build();
-
-        memberRepository.save(postWriter);
-        memberRepository.save(commentWriter);
+        memberRepository.saveAll(List.of(postWriter, commentWriter));
 
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
@@ -90,13 +82,10 @@ class PostCommentControllerTest {
         Member postWriter = Member.builder()
                 .username("post writer")
                 .build();
-
         Member commentWriter = Member.builder()
                 .username("comment writer")
                 .build();
-
-        memberRepository.save(postWriter);
-        memberRepository.save(commentWriter);
+        memberRepository.saveAll(List.of(postWriter, commentWriter));
 
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
@@ -131,13 +120,10 @@ class PostCommentControllerTest {
         Member postWriter = Member.builder()
                 .username("post writer")
                 .build();
-
         Member commentWriter = Member.builder()
                 .username("comment writer")
                 .build();
-
-        memberRepository.save(postWriter);
-        memberRepository.save(commentWriter);
+        memberRepository.saveAll(List.of(postWriter, commentWriter));
 
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
@@ -157,9 +143,7 @@ class PostCommentControllerTest {
                 )
                 .andDo(MockMvcResultHandlers.print());
 
-
         PostComment comment = postCommentRepository.findById(postComment.getId()).orElseThrow();
-
         assertThat(comment.isDelete()).isTrue();
     }
 

@@ -9,6 +9,7 @@ import com.isfive.usearth.domain.board.repository.PostCommentRepository;
 import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PostCommentServiceTest {
 
     @Autowired MemberRepository memberRepository;
-
     @Autowired BoardRepository boardRepository;
-
     @Autowired PostRepository postRepository;
-
     @Autowired PostCommentService postCommentService;
-
     @Autowired PostCommentRepository postCommentRepository;
 
     @DisplayName("댓글 작성 동시성 문제 발생 시 재시도한다.")
@@ -80,7 +77,7 @@ class PostCommentServiceTest {
         latch.await();
 
         List<PostComment> all = postCommentRepository.findAll();
-        Post findPost = postRepository.findById(post.getId()).get();
+        Post findPost = postRepository.findById(post.getId()).orElseThrow();
 
         assertThat(findPost.getCommentCount()).isEqualTo(all.size());
     }
@@ -180,9 +177,7 @@ class PostCommentServiceTest {
 
         PostComment postComment1 = PostComment.createPostComment(writer, post, "댓글1");
         PostComment postComment2 = PostComment.createPostComment(writer, post, "댓글2");
-
-        postCommentRepository.save(postComment1);
-        postCommentRepository.save(postComment2);
+        postCommentRepository.saveAll(List.of(postComment1, postComment2));
 
         PostComment reply1 = PostComment.createPostComment(writer, post, "답글1.");
         PostComment reply2 = PostComment.createPostComment(writer, post, "답글2.");
@@ -192,11 +187,7 @@ class PostCommentServiceTest {
         postComment1.addReply(reply2);
         postComment2.addReply(reply3);
         postComment2.addReply(reply4);
-
-        postCommentRepository.save(reply1);
-        postCommentRepository.save(reply2);
-        postCommentRepository.save(reply3);
-        postCommentRepository.save(reply4);
+        postCommentRepository.saveAll(List.of(reply1, reply2, reply3, reply4));
 
         //when
         List<PostCommentResponse> postCommentResponses = postCommentService.findComments(post.getId(), 1).getContent();
