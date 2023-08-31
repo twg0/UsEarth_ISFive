@@ -92,8 +92,8 @@ class ProjectControllerTest {
 		Reward reward1 = Reward.builder().project(project).title("리워드1").build();
 		Reward reward2 = Reward.builder().project(project).title("리워드2").build();
 		projectRepository.save(project);
-		rewardRepository.save(reward1);
-		rewardRepository.save(reward2);
+		rewardRepository.saveAll(List.of(reward1, reward2));
+
 		em.flush();
 		em.clear();
 

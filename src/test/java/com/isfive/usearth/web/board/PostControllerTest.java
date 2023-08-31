@@ -38,17 +38,11 @@ import com.isfive.usearth.web.board.dto.PostCreateRequest;
 class PostControllerTest {
 
 	@Autowired MockMvc mockMvc;
-
 	@Autowired ObjectMapper objectMapper;
-
 	@Autowired BoardRepository boardRepository;
-
 	@Autowired PostRepository postRepository;
-
 	@Autowired PostLikeRepository postLikeRepository;
-
 	@Autowired MemberRepository memberRepository;
-
 	@Autowired PostCommentRepository postCommentRepository;
 
 	@WithMockUser(username = "writer")
@@ -135,8 +129,7 @@ class PostControllerTest {
 		PostComment postComment1 = PostComment.createPostComment(member, post, "댓글1");
 		PostComment postComment2 = PostComment.createPostComment(member, post, "댓글2");
 
-		postCommentRepository.save(postComment1);
-		postCommentRepository.save(postComment2);
+		postCommentRepository.saveAll(List.of(postComment1, postComment2));
 
 		PostComment reply1 = PostComment.createPostComment(member, post, "답글1.");
 		PostComment reply2 = PostComment.createPostComment(member, post, "답글2.");
@@ -147,10 +140,7 @@ class PostControllerTest {
 		postComment2.addReply(reply3);
 		postComment2.addReply(reply4);
 
-		postCommentRepository.save(reply1);
-		postCommentRepository.save(reply2);
-		postCommentRepository.save(reply3);
-		postCommentRepository.save(reply4);
+		postCommentRepository.saveAll(List.of(reply1, reply2, reply3, reply4));
 
 		//when //then
 		mockMvc.perform(get("/posts/{postId}", post.getId())
@@ -176,13 +166,10 @@ class PostControllerTest {
 		Member writer = Member.builder()
 				.username("writer")
 				.build();
-
-		Member member2 = Member.builder()
+		Member member = Member.builder()
 				.username("member")
 				.build();
-
-		memberRepository.save(writer);
-		memberRepository.save(member2);
+		memberRepository.saveAll(List.of(writer, member));
 
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
@@ -200,7 +187,7 @@ class PostControllerTest {
 
 		PostLike postLike = all.get(0);
 		assertThat(postLike.getPost()).isEqualTo(post);
-		assertThat(postLike.getMember()).isEqualTo(member2);
+		assertThat(postLike.getMember()).isEqualTo(member);
 	}
 
 	@WithMockUser(username = "member")
@@ -211,13 +198,10 @@ class PostControllerTest {
 		Member writer = Member.builder()
 				.username("writer")
 				.build();
-
 		Member member = Member.builder()
 				.username("member")
 				.build();
-
-		memberRepository.save(writer);
-		memberRepository.save(member);
+		memberRepository.saveAll(List.of(writer, member));
 
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);

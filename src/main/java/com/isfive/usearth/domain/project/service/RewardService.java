@@ -10,6 +10,7 @@ import com.isfive.usearth.domain.common.Result;
 import com.isfive.usearth.domain.project.dto.RewardSkuResponse;
 import com.isfive.usearth.domain.project.dto.RewardsResponse;
 import com.isfive.usearth.domain.project.entity.*;
+import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class RewardService {
 
     private final RewardRepository rewardRepository;
+    private final RewardSkuRepository rewardSkuRepository;
     private final OptionService optionService;
 
     @Transactional
@@ -45,8 +47,9 @@ public class RewardService {
         return rewards;
     }
 
+    // TODO 조회 방식 개선
     public Result<RewardsResponse> findRewards(Long projectId) {
-        List<Reward> rewards = rewardRepository.findByProject_Id(projectId);
+        List<Reward> rewards = rewardRepository.findByProject_IdWithRewardSkus(projectId);
 
         List<RewardsResponse> rewardsResponses = createRewardsResponse(rewards);
 
@@ -68,15 +71,16 @@ public class RewardService {
     }
 
     private void createRewardsResponseWithRewardSkus(List<Reward> rewards, Map<Long, RewardsResponse> rewardMap) {
-        rewards.forEach(reward -> addRewardSkuResponses(rewardMap, reward));
+        rewards.forEach(reward -> addRewardSkuResponses(reward.getId(), rewardMap));
     }
 
-    private void addRewardSkuResponses(Map<Long, RewardsResponse> rewardMap, Reward reward) {
-        reward.getRewardSkus().forEach(rewardSkus -> {
+    private void addRewardSkuResponses(Long rewardId, Map<Long, RewardsResponse> rewardMap) {
+        List<RewardSku> rewardSkus = rewardSkuRepository.findAllByReward_Id(rewardId);
+        rewardSkus.forEach(rewardSku -> {
             Map<String, String> options = new HashMap<>();
-            putOptionValue(rewardSkus, options);
-            RewardSkuResponse rewardSkuResponse = new RewardSkuResponse(rewardSkus.getId(), rewardSkus.getStock(), options);
-            RewardsResponse rewardsResponse = rewardMap.get(reward.getId());
+            putOptionValue(rewardSku, options);
+            RewardSkuResponse rewardSkuResponse = new RewardSkuResponse(rewardSku.getId(), rewardSku.getStock(), options);
+            RewardsResponse rewardsResponse = rewardMap.get(rewardId);
             rewardsResponse.addRewardSkuResponses(rewardSkuResponse);
         });
     }
