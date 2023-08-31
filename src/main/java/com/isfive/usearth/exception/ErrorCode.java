@@ -18,7 +18,8 @@ public enum ErrorCode {
 
 	BAD_REQUEST_COOKIE(HttpStatus.BAD_REQUEST, "CK_001", "쿠키가 존재하지 않습니다."),
 
-	TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "TK_001", "유효하지 않은 토큰입니다.");
+	TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "TK_001", "유효하지 않은 토큰입니다."),
+	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED,"AF_","권한이 없습니다.");
 
 	ErrorCode(HttpStatus httpStatus, String code, String message) {
 		this.httpStatus = httpStatus;
