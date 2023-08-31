@@ -69,6 +69,7 @@ class ProjectControllerTest {
     @DisplayName("사용자는 프로젝트를 생성할 수 있다.")
     @Test
     void createProject() throws Exception {
+        // given
         Member member = Member.builder()
                 .username("member")
                 .build();
@@ -79,7 +80,6 @@ class ProjectControllerTest {
         individual.setMember(member);
         makerRepository.save(individual);
 
-        // given
         ProjectRegister projectRegister = ProjectRegister.builder()
                 .title("신발")
                 .summary("본인에게 맞는 신발을 찾아보세요.")
@@ -166,7 +166,6 @@ class ProjectControllerTest {
         List<RewardRegister> rewardRegisterList = new ArrayList<>();
         rewardRegisterList.add(rewardRegister1);
         rewardRegisterList.add(rewardRegister2);
-        // when // then
 
 		MockMultipartFile projectDTO = new MockMultipartFile("projectRegister", "projectRegister",
 				"application/json",
@@ -176,7 +175,7 @@ class ProjectControllerTest {
 				"application/json",
 				objectMapper.writeValueAsString(rewardRegisterList).getBytes(StandardCharsets.UTF_8));
 
-
+        // when // then
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/projects")
                         .file(new MockMultipartFile("repImage", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData".getBytes()))
                         .file(new MockMultipartFile("projectImageList", "project_image1.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData1".getBytes()))
