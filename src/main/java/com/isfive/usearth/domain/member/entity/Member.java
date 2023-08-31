@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.isfive.usearth.domain.activity.entity.Activity;
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.common.BaseEntity;
+import com.isfive.usearth.web.member.dto.UpdateRegister;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +38,7 @@ public class Member extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
     private String nickname;
     private String password;
@@ -67,6 +68,13 @@ public class Member extends BaseEntity {
         return this;
     }
 
+    public Member updateInfoByUpdateRegister(UpdateRegister updateRegister) {
+        this.nickname = updateRegister.getNickname();
+        this.phone = updateRegister.getPhone();
+        this.email = updateRegister.getEmail();
+        return this;
+    }
+
     public Member updateRole(Role role) {
         this.role = role;
         return this;
@@ -83,6 +91,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // PR 넣을 때 의논
     @Builder
     private Member(String email, String username, String nickname, String phone, String provider, Role role) {
         this.email = email;
