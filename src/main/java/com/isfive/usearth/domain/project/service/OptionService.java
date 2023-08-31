@@ -67,11 +67,10 @@ public class OptionService {
 
     public List<String> convertValueStrToList(String str) {
         str = str.replace("\"", "");
-        List<String> strList = Arrays.stream(str.split(","))
+        return Arrays.stream(str.split(","))
                 .map(String::trim)
                 .filter(s -> s.length() > 0)
                 .collect(Collectors.toList());
-        return strList;
     }
 
     public List<RewardSku> createRewardSku(Map<String, Integer> optionStocks, Reward reward) {

@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @Table(
-    indexes = @Index(name = "idx_member_email", columnList = "email")
+    indexes = @Index(name = "idx_member_username", columnList = "username")
 )
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

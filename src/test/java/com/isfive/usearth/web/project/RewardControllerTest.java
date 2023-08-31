@@ -46,15 +46,12 @@ class RewardControllerTest {
 
         Reward reward1 = Reward.builder().title("리워드1").project(project).build();
         Reward reward2 = Reward.builder().title("리워드2").project(project).build();
-        rewardRepository.save(reward1);
-        rewardRepository.save(reward2);
+        rewardRepository.saveAll(List.of(reward1, reward2));
 
         Option option1 = Option.builder().name("옵션1").reward(reward1).build();
         Option option2 = Option.builder().name("옵션2").reward(reward1).build();
         Option option3 = Option.builder().name("옵션3").reward(reward2).build();
-        optionRepository.save(option1);
-        optionRepository.save(option2);
-        optionRepository.save(option3);
+        optionRepository.saveAll(List.of(option1, option2, option3));
 
         OptionValue optionValue1 = OptionValue.builder().value("검정").option(option1).build();
         OptionValue optionValue2 = OptionValue.builder().value("빨강").option(option1).build();
@@ -62,12 +59,7 @@ class RewardControllerTest {
         OptionValue optionValue4 = OptionValue.builder().value("250").option(option2).build();
         OptionValue optionValue5 = OptionValue.builder().value("S").option(option3).build();
         OptionValue optionValue6 = OptionValue.builder().value("M").option(option3).build();
-        optionValueRepository.save(optionValue1);
-        optionValueRepository.save(optionValue2);
-        optionValueRepository.save(optionValue3);
-        optionValueRepository.save(optionValue4);
-        optionValueRepository.save(optionValue5);
-        optionValueRepository.save(optionValue6);
+        optionValueRepository.saveAll(List.of(optionValue1, optionValue2, optionValue3, optionValue4, optionValue5, optionValue6));
 
         RewardSku rewardSku1 = RewardSku.builder().reward(reward1).stock(10).initStock(10).build();
         RewardSku rewardSku2 = RewardSku.builder().reward(reward1).stock(11).initStock(11).build();
@@ -75,14 +67,8 @@ class RewardControllerTest {
         RewardSku rewardSku4 = RewardSku.builder().reward(reward1).stock(13).initStock(13).build();
         RewardSku rewardSku5 = RewardSku.builder().reward(reward2).stock(14).initStock(14).build();
         RewardSku rewardSku6 = RewardSku.builder().reward(reward2).stock(15).initStock(15).build();
-        rewardSkuRepository.save(rewardSku1);
-        rewardSkuRepository.save(rewardSku2);
-        rewardSkuRepository.save(rewardSku3);
-        rewardSkuRepository.save(rewardSku4);
-        rewardSkuRepository.save(rewardSku5);
-        rewardSkuRepository.save(rewardSku6);
+        rewardSkuRepository.saveAll(List.of(rewardSku1, rewardSku2, rewardSku3, rewardSku4, rewardSku5, rewardSku6));
 
-        skuValueRepository.save(SkuValue.builder().optionValue(optionValue1).rewardSku(rewardSku1).build());
         skuValueRepository.save(SkuValue.builder().optionValue(optionValue3).rewardSku(rewardSku1).build());
         skuValueRepository.save(SkuValue.builder().optionValue(optionValue1).rewardSku(rewardSku2).build());
         skuValueRepository.save(SkuValue.builder().optionValue(optionValue4).rewardSku(rewardSku2).build());
