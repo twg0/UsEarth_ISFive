@@ -5,27 +5,27 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.isfive.usearth.domain.board.annotation.Retry;
-import com.isfive.usearth.domain.board.dto.PostCommentResponse;
-import com.isfive.usearth.domain.board.entity.PostFileImage;
-import com.isfive.usearth.domain.board.repository.PostFileImageRepository;
-import com.isfive.usearth.domain.common.FileImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.isfive.usearth.domain.board.annotation.Retry;
+import com.isfive.usearth.domain.board.dto.PostCommentResponse;
 import com.isfive.usearth.domain.board.dto.PostResponse;
 import com.isfive.usearth.domain.board.dto.PostsResponse;
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
+import com.isfive.usearth.domain.board.entity.PostFileImage;
 import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.post.PostRepository;
+import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

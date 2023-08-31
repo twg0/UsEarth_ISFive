@@ -1,11 +1,12 @@
 package com.isfive.usearth.domain.project.dto;
 
+import java.util.List;
+
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.project.entity.Project;
-import lombok.Data;
 
-import java.util.List;
+import lombok.Data;
 
 @Data
 public class ProjectResponse {

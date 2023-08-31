@@ -2,6 +2,7 @@ package com.isfive.usearth.domain.project.dto;
 
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.project.entity.Project;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

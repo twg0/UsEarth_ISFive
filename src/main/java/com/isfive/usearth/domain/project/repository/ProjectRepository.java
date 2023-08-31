@@ -1,15 +1,15 @@
 package com.isfive.usearth.domain.project.repository;
 
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.isfive.usearth.domain.project.entity.Project;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Optional;
+import com.isfive.usearth.domain.project.entity.Project;
+import com.isfive.usearth.exception.EntityNotFoundException;
+import com.isfive.usearth.exception.ErrorCode;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 

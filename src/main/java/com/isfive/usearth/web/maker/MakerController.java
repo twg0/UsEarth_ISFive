@@ -1,5 +1,7 @@
 package com.isfive.usearth.web.maker;
 
+import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,8 +28,6 @@ import com.isfive.usearth.web.maker.dto.register_request.BusinessMakerRequest;
 import com.isfive.usearth.web.maker.dto.register_request.MakerRegisterRequest;
 
 import lombok.RequiredArgsConstructor;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/makers")

@@ -1,7 +1,5 @@
 package com.isfive.usearth.web.member.dto;
 
-import com.isfive.usearth.domain.member.entity.Member;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

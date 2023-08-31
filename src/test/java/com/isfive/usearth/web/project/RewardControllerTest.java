@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import java.util.List;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")

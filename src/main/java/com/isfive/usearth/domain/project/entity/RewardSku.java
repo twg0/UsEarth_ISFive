@@ -3,8 +3,6 @@ package com.isfive.usearth.domain.project.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.isfive.usearth.domain.funding.entity.FundingRewardSku;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
