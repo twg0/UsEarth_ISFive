@@ -13,6 +13,7 @@ import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.web.auth.dto.SignUpRegister;
+import com.isfive.usearth.web.member.dto.UpdateRegister;
 
 import lombok.RequiredArgsConstructor;
 
@@ -65,6 +66,13 @@ public class MemberService {
 	}
 
 	@Transactional
+	public MemberResponse updateUserInfoByUpdateRegister(String username, UpdateRegister updateRegister) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		member.updateInfoByUpdateRegister(updateRegister);
+		return MemberResponse.fromEntity(member);
+	}
+
+	@Transactional
 	public void deleteBy(String username) {
 		memberRepository.deleteByUsernameOrThrow(username);
 	}
@@ -85,5 +93,10 @@ public class MemberService {
 
 	public boolean existByEmail(String email) {
 		return memberRepository.existsByEmail(email);
+	}
+
+	public boolean isUserAlright(Long memberId, String username) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		return member.getId() == memberId;
 	}
 }
