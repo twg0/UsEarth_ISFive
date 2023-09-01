@@ -67,7 +67,7 @@ class FundingControllerTest {
         RewardSkuRequest rewardSkuRequest1 = new RewardSkuRequest(rewardSku1.getId(), 2);
         RewardSkuRequest rewardSkuRequest2 = new RewardSkuRequest(rewardSku2.getId(), 5);
         PaymentRequest paymentRequest = new PaymentRequest("0000-0000-0000-0000", "2025-05", "991111", "12");
-        FundingRequest fundingRequest = new FundingRequest(deliveryRequest, List.of(rewardSkuRequest1, rewardSkuRequest2), paymentRequest);
+        FundingRequest fundingRequest = new FundingRequest(deliveryRequest, paymentRequest, List.of(rewardSkuRequest1, rewardSkuRequest2));
 
         //when //then
         mockMvc.perform(MockMvcRequestBuilders.post("/funding")

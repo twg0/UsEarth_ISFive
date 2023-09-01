@@ -1,5 +1,6 @@
 package com.isfive.usearth.web.funding.dto;
 
+import com.isfive.usearth.domain.funding.dto.PaymentRegister;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -22,4 +23,8 @@ public class PaymentRequest {
 
     @Size(min = 2, max = 2, message = "비밀번호 앞자리 2글자여야 합니다.")
     private String pwd_2digit;
+
+    public PaymentRegister toServiceDto() {
+        return new PaymentRegister(cardNumber, expiry, birth, pwd_2digit);
+    }
 }

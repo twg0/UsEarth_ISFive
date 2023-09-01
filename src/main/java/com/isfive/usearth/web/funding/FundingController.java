@@ -17,6 +17,6 @@ public class FundingController {
 
     @PostMapping("/funding")
     public void funding(Authentication auth, @RequestBody @Valid FundingRequest request) {
-        fundingService.funding(auth.getName(), request.toDeliveryRegister(), request.toRewardSkuRegisters());
+        fundingService.funding(auth.getName(), request.toDeliveryRegister(), request.toPaymentRegister(), request.toRewardSkuRegisters());
     }
 }

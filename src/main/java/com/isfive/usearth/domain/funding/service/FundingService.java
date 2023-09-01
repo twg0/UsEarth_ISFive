@@ -1,6 +1,7 @@
 package com.isfive.usearth.domain.funding.service;
 
 import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
+import com.isfive.usearth.domain.funding.dto.PaymentRegister;
 import com.isfive.usearth.domain.funding.dto.RewardSkuRegister;
 import com.isfive.usearth.domain.funding.entity.Delivery;
 import com.isfive.usearth.domain.funding.entity.Funding;
@@ -28,7 +29,9 @@ public class FundingService {
     private final FundingRepository fundingRepository;
 
     @Transactional
-    public void funding(String username, DeliveryRegister deliveryRegister, List<RewardSkuRegister> rewardSkuRegisters) {
+    public void funding(String username, DeliveryRegister deliveryRegister,
+                        PaymentRegister paymentRegister,
+                        List<RewardSkuRegister> rewardSkuRegisters) {
         Member member = memberRepository.findByUsernameOrThrow(username);
 
         Delivery delivery = Delivery.createDelivery(deliveryRegister);
