@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.isfive.usearth.domain.board.annotation.Retry;
+import com.isfive.usearth.annotation.Retry;
 import com.isfive.usearth.domain.board.dto.PostCommentResponse;
 import com.isfive.usearth.domain.board.entity.Post;
 import com.isfive.usearth.domain.board.entity.PostComment;
