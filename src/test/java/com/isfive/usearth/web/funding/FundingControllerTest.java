@@ -14,6 +14,7 @@ import com.isfive.usearth.domain.project.repository.RewardRepository;
 import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
 import com.isfive.usearth.web.funding.dto.DeliveryRequest;
 import com.isfive.usearth.web.funding.dto.FundingRequest;
+import com.isfive.usearth.web.funding.dto.PaymentRequest;
 import com.isfive.usearth.web.funding.dto.RewardSkuRequest;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
@@ -65,7 +66,8 @@ class FundingControllerTest {
         DeliveryRequest deliveryRequest = new DeliveryRequest("name", "010-0000-0000", address);
         RewardSkuRequest rewardSkuRequest1 = new RewardSkuRequest(rewardSku1.getId(), 2);
         RewardSkuRequest rewardSkuRequest2 = new RewardSkuRequest(rewardSku2.getId(), 5);
-        FundingRequest fundingRequest = new FundingRequest(deliveryRequest, List.of(rewardSkuRequest1, rewardSkuRequest2));
+        PaymentRequest paymentRequest = new PaymentRequest("0000-0000-0000-0000", "2025-05", "991111", "12");
+        FundingRequest fundingRequest = new FundingRequest(deliveryRequest, List.of(rewardSkuRequest1, rewardSkuRequest2), paymentRequest);
 
         //when //then
         mockMvc.perform(MockMvcRequestBuilders.post("/funding")
