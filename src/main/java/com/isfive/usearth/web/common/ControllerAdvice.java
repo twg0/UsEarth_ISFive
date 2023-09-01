@@ -28,7 +28,7 @@ public class ControllerAdvice {
 	 * FileControl 에러
 	 */
 	@ExceptionHandler(FileProcessingException.class)
-	public ResponseEntity fildProcessingException(final FileProcessingException exception) {
+	public ResponseEntity fileProcessingException(final FileProcessingException exception) {
 
 		return new ResponseEntity(new Message(exception.getLocalizedMessage()), exception.getStatus());
 	}
