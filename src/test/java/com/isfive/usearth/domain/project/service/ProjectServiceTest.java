@@ -59,8 +59,7 @@ class ProjectServiceTest {
 
         Member member = Member.builder().username("username").build();
         memberRepository.save(member);
-        Individual individual = Individual.builder().name("Individual").build();
-        individual.setMember(member);
+        Individual individual = Individual.builder().name("Individual").member(member).build();
         makerRepository.save(individual);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

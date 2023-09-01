@@ -1,5 +1,7 @@
 package com.isfive.usearth.domain.maker.service;
 
+import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.domain.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,20 +20,24 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class MakerService {
     private final MakerRepository makerRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public void createIndividualBy(IndividualRegister individualRegister) {
-        makerRepository.save(individualRegister.toEntity());
+    public void createIndividualBy(String username, IndividualRegister individualRegister) {
+        Member member = memberRepository.findByUsernameOrThrow(username);
+        makerRepository.save(individualRegister.toEntity(member));
     }
 
     @Transactional
-    public void createCorporateBusinessBy(CorporateRegister corporateRegister) {
-        makerRepository.save(corporateRegister.toEntity());
+    public void createCorporateBusinessBy(String username, CorporateRegister corporateRegister) {
+        Member member = memberRepository.findByUsernameOrThrow(username);
+        makerRepository.save(corporateRegister.toEntity(member));
     }
 
     @Transactional
-    public void createPersonalBusinessBy(PersonalRegister personalRegister) {
-        makerRepository.save(personalRegister.toEntity());
+    public void createPersonalBusinessBy(String username, PersonalRegister personalRegister) {
+        Member member = memberRepository.findByUsernameOrThrow(username);
+        makerRepository.save(personalRegister.toEntity(member));
     }
 
     public MakerResponse readMakerById(Long id) {

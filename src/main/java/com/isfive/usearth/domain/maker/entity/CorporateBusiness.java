@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.maker.entity;
 
+import com.isfive.usearth.domain.member.entity.Member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-// @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CorporateBusiness extends Maker {
 
@@ -18,8 +18,15 @@ public class CorporateBusiness extends Maker {
     private String corporateSealCertificate;
 
     @Builder
-   public CorporateBusiness(String name, String profileImage, String email, String phone, String submitFile, BusinessInformation businessInformation, String corporateSealCertificate) {
-       super(name, profileImage, email, phone, submitFile);
+   public CorporateBusiness(String name,
+                            String profileImage,
+                            String email,
+                            String phone,
+                            String submitFile,
+                            BusinessInformation businessInformation,
+                            String corporateSealCertificate,
+                            Member member) {
+       super(name, profileImage, email, phone, submitFile, member);
        this.businessInformation = businessInformation;
        this.corporateSealCertificate = corporateSealCertificate;
    }
