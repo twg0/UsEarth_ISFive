@@ -18,7 +18,8 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "delivery")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "funding_id")
     private Funding funding;
 
     @Enumerated(EnumType.STRING)
@@ -27,8 +28,10 @@ public class Delivery {
     @Embedded
     private Address address;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, length = 13)
     private String phone;
 
     @Builder

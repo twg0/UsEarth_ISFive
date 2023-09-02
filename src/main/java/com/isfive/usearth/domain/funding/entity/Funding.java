@@ -23,18 +23,21 @@ public class Funding {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "delivery_id")
+    @OneToOne(mappedBy = "funding", cascade = CascadeType.ALL)
     private Delivery delivery;
-
-    @Enumerated(EnumType.STRING)
-    private FundingStatus status;
 
     @OneToMany(mappedBy = "funding", cascade = CascadeType.ALL)
     private List<FundingRewardSku> fundingRewardSkus = new ArrayList<>();
+
+    @OneToOne(mappedBy = "funding", cascade = CascadeType.ALL)
+    private Payment payment;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FundingStatus status;
 
     @Builder
     private Funding(Member member, Delivery delivery, FundingStatus status) {
