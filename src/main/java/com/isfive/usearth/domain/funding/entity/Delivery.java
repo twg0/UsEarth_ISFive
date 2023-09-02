@@ -18,10 +18,6 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funding_id")
-    private Funding funding;
-
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 

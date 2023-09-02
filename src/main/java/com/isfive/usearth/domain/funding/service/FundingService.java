@@ -6,6 +6,7 @@ import com.isfive.usearth.domain.funding.dto.RewardSkuRegister;
 import com.isfive.usearth.domain.funding.entity.Delivery;
 import com.isfive.usearth.domain.funding.entity.Funding;
 import com.isfive.usearth.domain.funding.entity.FundingRewardSku;
+import com.isfive.usearth.domain.funding.entity.Payment;
 import com.isfive.usearth.domain.funding.repository.FundingRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
@@ -29,12 +30,15 @@ public class FundingService {
     private final FundingRepository fundingRepository;
 
     @Transactional
-    public void funding(String username, DeliveryRegister deliveryRegister,
+    public void funding(String username,
+                        DeliveryRegister deliveryRegister,
                         PaymentRegister paymentRegister,
                         List<RewardSkuRegister> rewardSkuRegisters) {
         Member member = memberRepository.findByUsernameOrThrow(username);
 
         Delivery delivery = Delivery.createDelivery(deliveryRegister);
+
+        Payment payment = Payment.createPayment(paymentRegister);
 
         Map<Long, Integer> idCountMap = createidCountMap(rewardSkuRegisters);
 
@@ -42,7 +46,7 @@ public class FundingService {
 
         List<FundingRewardSku> fundingRewardSkus = createFindingRewardSkus(rewardSkus, idCountMap);
 
-        Funding funding = Funding.createFunding(member, delivery, fundingRewardSkus);
+        Funding funding = Funding.createFunding(member, delivery, payment, fundingRewardSkus);
         fundingRepository.save(funding);
     }
 
