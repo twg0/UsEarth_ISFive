@@ -47,4 +47,14 @@ public class Delivery {
                 .phone(deliveryRegister.getPhone())
                 .build();
     }
+
+    public void verifyCancelable() {
+        if (status == DELIVERY_PREPARING || status == DELIVERING) {
+            throw new RuntimeException("배송이 시작되어 상품을 취소할 수 없습니다.");
+        }
+
+        if(status == DELIVERY_COMPLETED) {
+            throw new RuntimeException("배송이 완료된 상품은 취소할 수 없습니다.");
+        }
+    }
 }

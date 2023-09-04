@@ -5,9 +5,7 @@ import com.isfive.usearth.web.funding.dto.FundingRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,5 +16,10 @@ public class FundingController {
     @PostMapping("/funding")
     public void funding(Authentication auth, @RequestBody @Valid FundingRequest request) {
         fundingService.funding(auth.getName(), request.toDeliveryRegister(), request.toPaymentRegister(), request.toRewardSkuRegisters());
+    }
+
+    @DeleteMapping("/funding/{fundingId}")
+    public void cancel(Authentication auth, @PathVariable Long fundingId) {
+        fundingService.cancel(auth.getName(), fundingId);
     }
 }

@@ -2,11 +2,13 @@ package com.isfive.usearth.domain.funding.entity;
 
 import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.isfive.usearth.domain.member.entity.Member;
 
+import com.isfive.usearth.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -61,5 +63,23 @@ public class Funding {
     private void addFundingRewardSku(FundingRewardSku fundingRewardSku) {
         fundingRewardSkus.add(fundingRewardSku);
         fundingRewardSku.setFunding(this);
+    }
+
+    public void verify(String username) {
+        if (!member.isEqualsUsername(username)) {
+            throw new RuntimeException("해당 펀딩의 후원자가 아닙니다.");
+        }
+    }
+
+    public void cancel() {
+        delivery.verifyCancelable();
+
+        if (status == CANCEL) {
+            throw new RuntimeException("이미 취소된 펀딩입니다.");
+        }
+
+        status = CANCEL;
+
+        fundingRewardSkus.forEach(FundingRewardSku::cancel);
     }
 }
