@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface FundingRepository extends JpaRepository<Funding, Long> {
 
-    @Query("select distinct f from Funding f join fetch f.fundingRewardSkus frs join fetch frs.rewardSku")
+    @Query("select distinct f from Funding f join fetch f.member join fetch f.fundingRewardSkus frs join fetch frs.rewardSku")
     Optional<Funding> findFundingToCancel(Long fundingId);
-
 }
