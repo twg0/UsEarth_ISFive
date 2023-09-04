@@ -41,11 +41,13 @@ public class MemberService {
 	public MemberResponse createByAttributes(Map<String, Object> attributes) {
 		Member member = Member.builder()
 			.username("sns-" + UUID.randomUUID())
+			.password(UUID.randomUUID().toString())
 			.email(attributes.get("email").toString())
 			.provider(attributes.get("provider").toString())
 			.providerId(attributes.get("id").toString())
 			.role(Role.USER)
 			.build();
+		member.encodePassword(passwordEncoder);
 		Member save = memberRepository.save(member);
 		return MemberResponse.fromEntity(save);
 	}
@@ -93,6 +95,11 @@ public class MemberService {
 		return MemberResponse.fromEntity(member);
 	}
 
+	public boolean checkUser(String username, String password) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		return passwordEncoder.matches(password, member.getPassword());
+	}
+
 	public boolean existBy(String username) {
 		return memberRepository.existsByUsername(username);
 	}
@@ -101,15 +108,9 @@ public class MemberService {
 		return memberRepository.existsByEmail(email);
 	}
 
-	public boolean isUserAlright(Long memberId, String username) {
-		Member member = memberRepository.findByUsernameOrThrow(username);
-		return member.getId() == memberId;
-	}
-
-	public void sendCodeToEmail(String toEmail) {
+	public void sendCodeToEmail(String toEmail, String code) throws Exception {
 		this.checkDuplicatedEmail(toEmail);
-		String title = "UsEarth 이메일 인증 번호";
-		mailService.sendEmail(toEmail,title,Integer.toString(MailService.createNumber()));
+		mailService.sendEmail(toEmail,code);
 	}
 
 	private void checkDuplicatedEmail(String email) {
