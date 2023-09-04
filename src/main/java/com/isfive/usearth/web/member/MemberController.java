@@ -25,10 +25,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.service.MemberService;
+import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
 import com.isfive.usearth.domain.utils.mail.MailService;
 import com.isfive.usearth.exception.AuthException;
 import com.isfive.usearth.exception.ErrorCode;
 import com.isfive.usearth.exception.InvalidValueException;
+import com.isfive.usearth.web.auth.dto.SignInRequest;
 import com.isfive.usearth.web.auth.dto.SignUpRegister;
 import com.isfive.usearth.web.auth.dto.SignUpRequest;
 import com.isfive.usearth.web.common.dto.Message;
@@ -36,6 +38,7 @@ import com.isfive.usearth.web.member.dto.MailAuthenticationRequest;
 import com.isfive.usearth.web.member.dto.UpdateRequest;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,8 +49,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	private final MemberService memberService;
 	private final StringRedisTemplate redisTemplate;
-	private final MailService mailService;
 	private final ObjectMapper mapper;
+	private final JwtTokenUtils jwtTokenUtils;
 
 	private HashOperations<String, Object, Object> stringObjectObjectHashOperations;
 	private ValueOperations<String, String> stringStringValueOperations;
@@ -61,11 +64,20 @@ public class MemberController {
 		redisTemplate.expire(key, Duration.ofMinutes(5)); // 5분만 저장
 	}
 
-	@GetMapping("/my-page")
-	public ResponseEntity<MemberResponse> getJson(Authentication authentication) {
-		String username = authentication.getName();
-		MemberResponse memberResponse = memberService.readByUsername(username);
-		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
+	@ResponseBody
+	@GetMapping
+	public ResponseEntity<MemberResponse> login(
+		@RequestBody SignInRequest request,
+		HttpServletResponse response
+	) {
+		if (memberService.checkUser(request.getUsername(), request.getPassword())) {
+			MemberResponse memberResponse = memberService.readByUsername(request.getUsername());
+
+			// TODO 쿠키에 토큰 생성
+
+			return new ResponseEntity<>(memberResponse, HttpStatus.OK);
+		}
+		throw new InvalidValueException(ErrorCode.INVALID_PASSWORD);
 	}
 
 	// TODO 회원가입 요청
@@ -73,7 +85,7 @@ public class MemberController {
 	@PostMapping
 	public ResponseEntity<Message> registration(
 		@RequestBody SignUpRequest request
-	) throws JsonProcessingException {
+	) throws Exception {
 		if (!request.pwCheck())
 			throw new InvalidValueException(ErrorCode.INVALID_PASSWORD);
 
@@ -83,7 +95,12 @@ public class MemberController {
 		redisTemplate.expire(request.getEmail(), Duration.ofMinutes(5));
 
 		stringObjectObjectHashOperations.put(key, request.getEmail(), mapper.writeValueAsString(request));
-		stringStringValueOperations.set(request.getEmail(), Integer.toString(MailService.createNumber()));
+
+		String code = Integer.toString(MailService.createNumber());
+
+		stringStringValueOperations.set(request.getEmail(), code);
+
+		memberService.sendCodeToEmail(request.getEmail(),code);
 
 		return new ResponseEntity<>(new Message("이메일 인증을 완료하세요."), HttpStatus.OK);
 	}
@@ -103,7 +120,8 @@ public class MemberController {
 				SignUpRequest signUpRequest = mapper.readValue(stringRequest, SignUpRequest.class);
 
 				if(signUpRequest != null) {
-					memberService.createBy(SignUpRegister.fromRequest(signUpRequest));
+					MemberResponse memberResponse = memberService.createBy(SignUpRegister.fromRequest(signUpRequest));
+					log.info(memberResponse.toString());
 					message = new Message("가입이 완료 되었습니다.");
 					redisTemplate.delete(request.getEmail());
 				}
@@ -121,29 +139,23 @@ public class MemberController {
 	}
 
 	// TODO 회원 정보 수정
-	@PutMapping("{memberId}")
+	@PutMapping
 	public ResponseEntity<MemberResponse> updateInfo(
 		@RequestBody UpdateRequest request,
-		@PathVariable("memberId") Long memberId,
 		Authentication authentication
 	) {
 		String username = authentication.getName();
-		if (!memberService.isUserAlright(memberId, username))
-			throw new AuthException(ErrorCode.AUTHENTICATION_FAILED);
 
 		MemberResponse memberResponse = memberService.updateUserInfoByUpdateRegister(username,request.toRegister());
 		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 	}
 
 	// TODO 회원 삭제 요청
-	@DeleteMapping("{memberId}")
+	@DeleteMapping
 	public ResponseEntity<Message> deleteMember(
-		@PathVariable("memberId") Long memberId,
 		Authentication authentication
 	) {
 		String username = authentication.getName();
-		if (!memberService.isUserAlright(memberId, username))
-			throw new AuthException(ErrorCode.AUTHENTICATION_FAILED);
 
 		memberService.deleteBy(username);
 		return new ResponseEntity<>(new Message("삭제가 완료되었습니다."), HttpStatus.OK);
