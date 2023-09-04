@@ -1,6 +1,7 @@
 package com.isfive.usearth.web.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.domain.maker.entity.Individual;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.member.entity.Member;
@@ -15,9 +16,11 @@ import com.isfive.usearth.web.project.dto.RewardRegister;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -25,6 +28,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -61,6 +65,9 @@ class ProjectControllerTest {
 
     @Autowired
     ProjectService projectService;
+
+    @MockBean
+    private FileImageService fileService;
 
     @Autowired
     EntityManager em;
@@ -110,6 +117,8 @@ class ProjectControllerTest {
         projectImageFileList.add(projectImageFile1);
         projectImageFileList.add(projectImageFile2);
         projectImageFileList.add(projectImageFile3);
+
+        Mockito.when(fileService.createFileImage(Mockito.any(MultipartFile.class))).thenReturn(null);
 
         Map<String, String> options1 = new HashMap<>();
         options1.put("색상", "블랙, 화이트");
@@ -188,8 +197,6 @@ class ProjectControllerTest {
 				.andExpect(status().isCreated());
     }
 
-<<<<<<< HEAD
-
     @DisplayName("사용자는 프로젝트 목록을 조회할 수 있다.")
     @Test
     void findProjects() throws Exception {
@@ -241,33 +248,5 @@ class ProjectControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
-=======
-	@DisplayName("사용자는 프로젝트를 단건 조회할 수 있다.")
-	@Test
-	void findProject() throws Exception {
-		//given
-		Individual individual = Individual.builder().name("개인").build();
-		makerRepository.save(individual);
 
-		Project project = Project.builder().maker(individual).title("프로젝트").build();
-		Reward reward1 = Reward.builder().project(project).title("리워드1").build();
-		Reward reward2 = Reward.builder().project(project).title("리워드2").build();
-		projectRepository.save(project);
-		rewardRepository.saveAll(List.of(reward1, reward2));
-
-		em.flush();
-		em.clear();
-
-		//when //then
-
-		mockMvc.perform(get("/projects/{projectId}", project.getId())
-						.contentType(APPLICATION_JSON))
-				.andExpect(jsonPath("title").value("프로젝트"))
-				.andExpect(jsonPath("rewardsResponses.size()").value(2))
-				.andExpect(jsonPath("rewardsResponses[0].title").value("리워드1"))
-				.andExpect(jsonPath("rewardsResponses[1].title").value("리워드2"))
-				.andExpect(status().isOk())
-				.andDo(print());
-	}
->>>>>>> develop
 }
