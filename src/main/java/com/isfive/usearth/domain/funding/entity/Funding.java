@@ -7,18 +7,7 @@ import java.util.List;
 
 import com.isfive.usearth.domain.member.entity.Member;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,30 +23,35 @@ public class Funding {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    @Enumerated(EnumType.STRING)
-    private FundingStatus status;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Payment payment;
 
     @OneToMany(mappedBy = "funding", cascade = CascadeType.ALL)
     private List<FundingRewardSku> fundingRewardSkus = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FundingStatus status;
+
     @Builder
-    private Funding(Member member, Delivery delivery, FundingStatus status) {
+    private Funding(Member member, Delivery delivery, Payment payment, FundingStatus status) {
         this.member = member;
         this.delivery = delivery;
+        this.payment = payment;
         this.status = status;
     }
 
-    public static Funding createFunding(Member member, Delivery delivery, List<FundingRewardSku> fundingRewardSkus) {
+    public static Funding createFunding(Member member, Delivery delivery, Payment payment, List<FundingRewardSku> fundingRewardSkus) {
         Funding funding = Funding.builder()
                 .member(member)
                 .delivery(delivery)
+                .payment(payment)
                 .status(ORDER)
                 .build();
         fundingRewardSkus.forEach(funding::addFundingRewardSku);

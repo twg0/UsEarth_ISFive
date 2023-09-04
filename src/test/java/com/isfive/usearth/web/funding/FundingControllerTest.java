@@ -14,7 +14,9 @@ import com.isfive.usearth.domain.project.repository.RewardRepository;
 import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
 import com.isfive.usearth.web.funding.dto.DeliveryRequest;
 import com.isfive.usearth.web.funding.dto.FundingRequest;
+import com.isfive.usearth.web.funding.dto.PaymentRequest;
 import com.isfive.usearth.web.funding.dto.RewardSkuRequest;
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -65,7 +67,8 @@ class FundingControllerTest {
         DeliveryRequest deliveryRequest = new DeliveryRequest("name", "010-0000-0000", address);
         RewardSkuRequest rewardSkuRequest1 = new RewardSkuRequest(rewardSku1.getId(), 2);
         RewardSkuRequest rewardSkuRequest2 = new RewardSkuRequest(rewardSku2.getId(), 5);
-        FundingRequest fundingRequest = new FundingRequest(deliveryRequest, List.of(rewardSkuRequest1, rewardSkuRequest2));
+        PaymentRequest paymentRequest = new PaymentRequest("0000-0000-0000-0000", "2025-05", "991111", "12");
+        FundingRequest fundingRequest = new FundingRequest(deliveryRequest, paymentRequest, List.of(rewardSkuRequest1, rewardSkuRequest2));
 
         //when //then
         mockMvc.perform(MockMvcRequestBuilders.post("/funding")
@@ -81,6 +84,10 @@ class FundingControllerTest {
         assertThat(funding.getDelivery())
                 .extracting("address.detail", "address.zipcode", "name", "phone")
                 .contains("서울", "1번지", "name", "010-0000-0000");
+
+        assertThat(funding.getPayment())
+                .extracting("cardNumber", "cardExpiry", "birth", "pwd_2digit")
+                .contains("0000-0000-0000-0000", "2025-05", "991111", "12");
 
         List<FundingRewardSku> fundingRewardSkus = funding.getFundingRewardSkus();
         assertThat(fundingRewardSkus).hasSize(2);
