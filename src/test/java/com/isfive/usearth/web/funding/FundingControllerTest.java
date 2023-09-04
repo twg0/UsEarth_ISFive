@@ -1,15 +1,16 @@
 package com.isfive.usearth.web.funding;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.isfive.usearth.domain.funding.entity.Address;
-import com.isfive.usearth.domain.funding.entity.Delivery;
-import com.isfive.usearth.domain.funding.entity.Funding;
-import com.isfive.usearth.domain.funding.entity.FundingRewardSku;
+import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
+import com.isfive.usearth.domain.funding.dto.PaymentRegister;
+import com.isfive.usearth.domain.funding.entity.*;
 import com.isfive.usearth.domain.funding.repository.FundingRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import com.isfive.usearth.domain.project.entity.Project;
 import com.isfive.usearth.domain.project.entity.Reward;
 import com.isfive.usearth.domain.project.entity.RewardSku;
+import com.isfive.usearth.domain.project.repository.ProjectRepository;
 import com.isfive.usearth.domain.project.repository.RewardRepository;
 import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
 import com.isfive.usearth.web.funding.dto.DeliveryRequest;
@@ -36,6 +37,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -50,6 +53,7 @@ class FundingControllerTest {
     @Autowired RewardRepository rewardRepository;
     @Autowired RewardSkuRepository rewardSkuRepository;
     @Autowired FundingRepository fundingRepository;
+    @Autowired ProjectRepository projectRepository;
 
     @WithMockUser(username = "member")
     @DisplayName("사용자는 펀딩을 할 수있다.")
@@ -71,12 +75,12 @@ class FundingControllerTest {
         FundingRequest fundingRequest = new FundingRequest(deliveryRequest, paymentRequest, List.of(rewardSkuRequest1, rewardSkuRequest2));
 
         //when //then
-        mockMvc.perform(MockMvcRequestBuilders.post("/funding")
+        mockMvc.perform(post("/funding")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(fundingRequest))
                 )
                 .andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print());
+                .andDo(print());
 
         List<Funding> all = fundingRepository.findAll();
         assertThat(all).hasSize(1);
@@ -103,5 +107,48 @@ class FundingControllerTest {
         RewardSku findRewardSku2 = rewardSkuRepository.findById(rewardSku2.getId()).orElseThrow();
         assertThat(findRewardSku1.getStock()).isEqualTo(3);
         assertThat(findRewardSku2.getStock()).isEqualTo(5);
+    }
+
+    @WithMockUser(username = "member")
+    @DisplayName("사용자는 펀딩을 취소할 수있다.")
+    @Test
+    void cancel() throws Exception {
+        //given
+        Member member = Member.builder().username("member").build();
+        memberRepository.save(member);
+        Project project = Project.builder().title("프로젝트").build();
+        projectRepository.save(project);
+
+        Reward reward1 = Reward.builder().title("리워드1").project(project).build();
+        Reward reward2 = Reward.builder().title("리워드2").project(project).build();
+        rewardRepository.saveAll(List.of(reward1, reward2));
+
+        Address address = new Address("서울", "1번지");
+        Delivery delivery = Delivery.createDelivery(new DeliveryRegister("name", "010-0000-0000", address));
+        Payment payment = Payment.createPayment(new PaymentRegister("0000-0000-0000-0000", "2025-05", "991111", "12"));
+
+        RewardSku rewardSku1 = RewardSku.builder().reward(reward1).stock(10).initStock(10).build();
+        RewardSku rewardSku2 = RewardSku.builder().reward(reward2).stock(20).initStock(20).build();
+        rewardSkuRepository.saveAll(List.of(rewardSku1, rewardSku2));
+
+        FundingRewardSku fundingRewardSku1 = FundingRewardSku.createFundingRewardSku(rewardSku1, 5, 10000);
+        FundingRewardSku fundingRewardSku2 = FundingRewardSku.createFundingRewardSku(rewardSku2, 5, 10000);
+        Funding funding = Funding.createFunding(member, delivery, payment, List.of(fundingRewardSku1, fundingRewardSku2));
+        fundingRepository.save(funding);
+
+        //when //then
+        mockMvc.perform(delete("/funding/{fundingId}", funding.getId())
+                        .contentType(APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        Funding findFunding = fundingRepository.findById(funding.getId()).orElseThrow();
+        assertThat(findFunding.getStatus()).isEqualTo(FundingStatus.CANCEL);
+
+        RewardSku findRewardSku1 = rewardSkuRepository.findById(rewardSku1.getId()).orElseThrow();
+        RewardSku findRewardSku2 = rewardSkuRepository.findById(rewardSku2.getId()).orElseThrow();
+        assertThat(findRewardSku1.getStock()).isEqualTo(10);
+        assertThat(findRewardSku2.getStock()).isEqualTo(20);
     }
 }
