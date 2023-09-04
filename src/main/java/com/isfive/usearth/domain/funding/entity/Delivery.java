@@ -4,14 +4,7 @@ import static com.isfive.usearth.domain.funding.entity.DeliveryStatus.*;
 
 import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,17 +19,16 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "delivery")
-    private Funding funding;
-
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
     @Embedded
     private Address address;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, length = 13)
     private String phone;
 
     @Builder
