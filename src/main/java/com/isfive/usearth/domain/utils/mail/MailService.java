@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.utils.mail;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -7,6 +8,9 @@ import org.springframework.stereotype.Service;
 import com.isfive.usearth.exception.BusinessException;
 import com.isfive.usearth.exception.ErrorCode;
 
+import jakarta.mail.Message;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,32 +20,37 @@ import lombok.extern.slf4j.Slf4j;
 public class MailService{
 	private final JavaMailSender javaMailSender;
 
+	@Value("${spring.mail.username}")
+	private String username;
+
 	public static int createNumber(){
 		return (int)(Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
 	}
 
 	public void sendEmail(
 		String toEmail,
-		String title,
-		String text
-	) {
-		SimpleMailMessage emailForm = createEmailForm(toEmail, title, text);
+		String code
+	) throws Exception {
+		// SimpleMailMessage emailForm = createEmailForm(toEmail, title, text);
+		MimeMessage message = createMessage(toEmail, code);
 		try {
-			javaMailSender.send(emailForm);
+			javaMailSender.send(message);
 		} catch (RuntimeException e) {
 			log.error("MailService.sendEmail exception occur toEmail: {}, " +
-				"title: {}, text: {}", toEmail, title, text);
+				"code: {}", toEmail, code);
 			throw new BusinessException(ErrorCode.SEND_EMAIL_FAILED);
 		}
 	}
 
-	private SimpleMailMessage createEmailForm(String toEmail, String title, String text) {
+	private MimeMessage createMessage(String email, String code) throws Exception{
+		MimeMessage message = javaMailSender.createMimeMessage();
 
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(toEmail);
-		message.setSubject(title);
-		message.setText(text);
+		message.addRecipients(Message.RecipientType.TO, email);
+		message.setSubject("UsEarth 이메일 인증 코드입니다.");
+		message.setText("이메일 인증코드: " + code);
 
-		return message;
+		message.setFrom(new InternetAddress(username + "@naver.com", "UsEarth"));
+
+		return  message;
 	}
 }
