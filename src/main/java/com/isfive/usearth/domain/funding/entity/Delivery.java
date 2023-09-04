@@ -1,9 +1,12 @@
 package com.isfive.usearth.domain.funding.entity;
 
 import static com.isfive.usearth.domain.funding.entity.DeliveryStatus.*;
+import static com.isfive.usearth.exception.ErrorCode.ALREADY_DELIVERY_COMPLETED;
+import static com.isfive.usearth.exception.ErrorCode.ALREADY_START_DELIVERY;
 
 import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
 
+import com.isfive.usearth.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -50,11 +53,11 @@ public class Delivery {
 
     public void verifyCancelable() {
         if (status == DELIVERY_PREPARING || status == DELIVERING) {
-            throw new RuntimeException("배송이 시작되어 상품을 취소할 수 없습니다.");
+            throw new BusinessException(ALREADY_START_DELIVERY);
         }
 
         if(status == DELIVERY_COMPLETED) {
-            throw new RuntimeException("배송이 완료된 상품은 취소할 수 없습니다.");
+            throw new BusinessException(ALREADY_DELIVERY_COMPLETED);
         }
     }
 }

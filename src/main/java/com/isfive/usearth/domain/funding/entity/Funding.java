@@ -1,6 +1,8 @@
 package com.isfive.usearth.domain.funding.entity;
 
 import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
+import static com.isfive.usearth.exception.ErrorCode.ALREADY_CANCEL;
+import static com.isfive.usearth.exception.ErrorCode.NOT_MATCHED_FUNDING_USER;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class Funding {
 
     public void verify(String username) {
         if (!member.isEqualsUsername(username)) {
-            throw new RuntimeException("해당 펀딩의 후원자가 아닙니다.");
+            throw new BusinessException(NOT_MATCHED_FUNDING_USER);
         }
     }
 
@@ -75,7 +77,7 @@ public class Funding {
         delivery.verifyCancelable();
 
         if (status == CANCEL) {
-            throw new RuntimeException("이미 취소된 펀딩입니다.");
+            throw new BusinessException(ALREADY_CANCEL);
         }
 
         status = CANCEL;
