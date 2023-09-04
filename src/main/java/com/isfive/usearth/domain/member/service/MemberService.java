@@ -12,17 +12,23 @@ import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import com.isfive.usearth.domain.utils.mail.MailService;
+import com.isfive.usearth.exception.BusinessException;
+import com.isfive.usearth.exception.ErrorCode;
 import com.isfive.usearth.web.auth.dto.SignUpRegister;
 import com.isfive.usearth.web.member.dto.UpdateRegister;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final MailService mailService;
 
 	@Transactional
 	public MemberResponse createBy(SignUpRegister signUpRegister) {
@@ -98,5 +104,18 @@ public class MemberService {
 	public boolean isUserAlright(Long memberId, String username) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
 		return member.getId() == memberId;
+	}
+
+	public void sendCodeToEmail(String toEmail) {
+		this.checkDuplicatedEmail(toEmail);
+		String title = "UsEarth 이메일 인증 번호";
+		mailService.sendEmail(toEmail,title,Integer.toString(MailService.createNumber()));
+	}
+
+	private void checkDuplicatedEmail(String email) {
+		if (memberRepository.existsByEmail(email)) {
+			log.debug("MemberService.checkDuplicatedEmail exception occur email: {}", email);
+			throw new BusinessException(ErrorCode.MEMBER_CONFLICT);
+		}
 	}
 }
