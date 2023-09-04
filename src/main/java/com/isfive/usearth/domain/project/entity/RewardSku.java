@@ -57,4 +57,8 @@ public class RewardSku {
         }
         stock -= count;
     }
+
+    public void addStock(Integer count) {
+        stock += count;
+    }
 }

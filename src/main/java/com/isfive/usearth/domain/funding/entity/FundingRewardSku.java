@@ -51,4 +51,8 @@ public class FundingRewardSku {
     public void setFunding(Funding funding) {
         this.funding = funding;
     }
+
+    public void cancel() {
+        rewardSku.addStock(count);
+    }
 }
