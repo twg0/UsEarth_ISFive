@@ -42,22 +42,21 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(authHttp -> authHttp
 				.requestMatchers(
-					new AntPathRequestMatcher("/token/**"),
-					new AntPathRequestMatcher("/views/**"),
 					new AntPathRequestMatcher("/login/**"),
 					new AntPathRequestMatcher("/projects", "GET"),
 					new AntPathRequestMatcher("/projects/{projectId}", "GET"),
 					new AntPathRequestMatcher("/members","POST"),
+					new AntPathRequestMatcher("/members","GET"),
 					new AntPathRequestMatcher("/members/email","POST")
 				).permitAll()
 				.requestMatchers(
-					new AntPathRequestMatcher("/members/my-page")
+					new AntPathRequestMatcher("/members/**")
 				).hasRole("USER")
 				.anyRequest()
 				.authenticated()
 			)
 			.oauth2Login(oauth2Login -> oauth2Login
-				.loginPage("/api/login/view")
+				.loginPage("/login")
 				.successHandler(oAuth2SuccessHandler)
 				.userInfoEndpoint(userInfo -> userInfo
 					.userService(oAuth2UserServiceImpl)
