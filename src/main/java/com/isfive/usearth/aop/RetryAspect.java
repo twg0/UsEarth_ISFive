@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.board.aop;
+package com.isfive.usearth.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -7,7 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.isfive.usearth.domain.board.annotation.Retry;
+import com.isfive.usearth.annotation.Retry;
 
 import lombok.extern.slf4j.Slf4j;
 

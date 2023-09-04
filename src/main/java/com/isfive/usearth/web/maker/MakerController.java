@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,11 +40,12 @@ public class MakerController {
 
     @PostMapping("/individual")
     public ResponseEntity<String> createIndividual(
+            Authentication auth,
             @RequestPart("MakerRegisterRequest") MakerRegisterRequest request,
             @RequestPart("profileImage") MultipartFile profileImage,
             @RequestPart("submitFile") MultipartFile submitFile,
             @RequestPart("idCard") MultipartFile idCard
-            ) throws IOException {
+            ) {
         FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
         FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
         FileImage savedIdCard = fileImageService.createFileImage(idCard);
@@ -54,18 +56,19 @@ public class MakerController {
                 savedSubmitFile,
                 savedIdCard);
 
-        makerService.createIndividualBy(register);
+        makerService.createIndividualBy(auth.getName(), register);
 
         return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
     }
 
     @PostMapping("/personal-business")
     public ResponseEntity<String> createPersonalBusiness(
+            Authentication auth,
             @RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
             @RequestPart("profileImage") MultipartFile profileImage,
             @RequestPart("submitFile") MultipartFile submitFile,
             @RequestPart("registration") MultipartFile registration
-    ) throws IOException {
+    ) {
         FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
         FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
         FileImage savedRegistration = fileImageService.createFileImage(registration);
@@ -75,19 +78,20 @@ public class MakerController {
                 savedprofileImage,
                 savedSubmitFile,
                 savedRegistration);
-        makerService.createPersonalBusinessBy(register);
+        makerService.createPersonalBusinessBy(auth.getName(), register);
 
         return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
     }
 
     @PostMapping("/corporate-business")
     public ResponseEntity<String> createCorporateBusiness(
+            Authentication auth,
             @RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
             @RequestPart("profileImage") MultipartFile profileImage,
             @RequestPart("submitFile") MultipartFile submitFile,
             @RequestPart("registration") MultipartFile registration,
             @RequestPart("corporateSealCertificate") MultipartFile corporateSealCertificate
-    ) throws IOException {
+    ) {
         FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
         FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
         FileImage savedRegistration = fileImageService.createFileImage(registration);
@@ -99,7 +103,7 @@ public class MakerController {
                 savedSubmitFile,
                 savedRegistration,
                 savedCorporateSealCertificate);
-        makerService.createCorporateBusinessBy(register);
+        makerService.createCorporateBusinessBy(auth.getName(), register);
 
         return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
     }

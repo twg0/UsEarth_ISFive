@@ -3,6 +3,7 @@ package com.isfive.usearth.web.maker.dto.register;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.maker.entity.BusinessInformation;
 import com.isfive.usearth.domain.maker.entity.PersonalBusiness;
+import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.web.maker.dto.register_request.BusinessMakerRequest;
 
 
@@ -26,7 +27,7 @@ public class PersonalRegister extends MakerRegister {
         return new PersonalRegister(request, profileImage, submitFile, registration);
     }
 
-    public PersonalBusiness toEntity() {
+    public PersonalBusiness toEntity(Member member) {
         return PersonalBusiness.builder()
                 .name(this.getName())
                 .profileImage(this.getProfileImage().getStoredName())
@@ -40,6 +41,7 @@ public class PersonalRegister extends MakerRegister {
                                 .registration(this.registration.getStoredName())
                                 .build()
                 )
+                .member(member)
                 .build();
     }
 }

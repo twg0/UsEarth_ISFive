@@ -51,12 +51,13 @@ public class Maker {
     @JoinColumn(name = "member_id")
     private Member member;
 
-   public Maker(String name, String profileImage, String email, String phone, String submitFile) {
+   public Maker(String name, String profileImage, String email, String phone, String submitFile, Member member) {
        this.name = name;
        this.profileImage = profileImage;
        this.phone = phone;
        this.email = email;
        this.submitFile = submitFile;
+       this.member = member;
    }
 
     public void update(MakerUpdate makerUpdate) {

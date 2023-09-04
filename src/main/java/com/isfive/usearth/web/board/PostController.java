@@ -3,6 +3,7 @@ package com.isfive.usearth.web.board;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class PostController {
     @PostMapping("/boards/{boardId}/posts")
     public void writePost(Authentication auth,
                           @PathVariable Long boardId,
-                          @RequestBody PostCreateRequest request,
+                          @RequestBody @Valid PostCreateRequest request,
                           @RequestPart(required = false) List<MultipartFile> postImages) {
         List<FileImage> fileImages = new ArrayList<>();
         if (postImages != null) {

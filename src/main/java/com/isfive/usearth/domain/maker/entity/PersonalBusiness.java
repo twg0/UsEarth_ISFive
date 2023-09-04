@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.maker.entity;
 
+import com.isfive.usearth.domain.member.entity.Member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
@@ -15,8 +16,14 @@ public class PersonalBusiness extends Maker {
     private BusinessInformation businessInformation;
 
    @Builder
-   public PersonalBusiness(String name, String profileImage, String email, String phone, String submitFile, BusinessInformation businessInformation) {
-       super(name, profileImage, email, phone, submitFile);
+   public PersonalBusiness(String name,
+                           String profileImage,
+                           String email,
+                           String phone,
+                           String submitFile,
+                           BusinessInformation businessInformation,
+                           Member member) {
+       super(name, profileImage, email, phone, submitFile, member);
        this.businessInformation = businessInformation;
    }
 }
