@@ -1,8 +1,8 @@
 package com.isfive.usearth.domain.common;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class Result<T> {

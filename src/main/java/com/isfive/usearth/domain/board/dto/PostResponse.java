@@ -1,15 +1,14 @@
 package com.isfive.usearth.domain.board.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.isfive.usearth.domain.board.entity.Post;
-
-import com.isfive.usearth.domain.common.FileImage;
-import lombok.Data;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
+import com.isfive.usearth.domain.board.entity.Post;
+import com.isfive.usearth.domain.common.FileImage;
+
+import lombok.Data;
 
 @Data
 public class PostResponse {

@@ -1,13 +1,14 @@
 package com.isfive.usearth.domain.funding.entity;
 
+import static com.isfive.usearth.domain.funding.entity.DeliveryStatus.*;
+
 import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static com.isfive.usearth.domain.funding.entity.DeliveryStatus.PRODUCT_PREPARING;
 
 @Entity
 @Getter

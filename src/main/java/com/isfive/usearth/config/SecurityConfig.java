@@ -1,5 +1,7 @@
 package com.isfive.usearth.config;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.*;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,8 +19,6 @@ import com.isfive.usearth.web.auth.oauth.OAuth2SuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @Slf4j
 @Configuration

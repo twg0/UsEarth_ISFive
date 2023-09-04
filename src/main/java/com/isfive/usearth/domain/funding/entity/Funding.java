@@ -1,5 +1,7 @@
 package com.isfive.usearth.domain.funding.entity;
 
+import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +12,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
 
 @Entity
 @Getter

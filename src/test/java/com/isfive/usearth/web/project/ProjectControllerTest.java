@@ -188,6 +188,7 @@ class ProjectControllerTest {
 				.andExpect(status().isCreated());
     }
 
+<<<<<<< HEAD
 
     @DisplayName("사용자는 프로젝트 목록을 조회할 수 있다.")
     @Test
@@ -240,4 +241,33 @@ class ProjectControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+=======
+	@DisplayName("사용자는 프로젝트를 단건 조회할 수 있다.")
+	@Test
+	void findProject() throws Exception {
+		//given
+		Individual individual = Individual.builder().name("개인").build();
+		makerRepository.save(individual);
+
+		Project project = Project.builder().maker(individual).title("프로젝트").build();
+		Reward reward1 = Reward.builder().project(project).title("리워드1").build();
+		Reward reward2 = Reward.builder().project(project).title("리워드2").build();
+		projectRepository.save(project);
+		rewardRepository.saveAll(List.of(reward1, reward2));
+
+		em.flush();
+		em.clear();
+
+		//when //then
+
+		mockMvc.perform(get("/projects/{projectId}", project.getId())
+						.contentType(APPLICATION_JSON))
+				.andExpect(jsonPath("title").value("프로젝트"))
+				.andExpect(jsonPath("rewardsResponses.size()").value(2))
+				.andExpect(jsonPath("rewardsResponses[0].title").value("리워드1"))
+				.andExpect(jsonPath("rewardsResponses[1].title").value("리워드2"))
+				.andExpect(status().isOk())
+				.andDo(print());
+	}
+>>>>>>> develop
 }
