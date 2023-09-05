@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.isfive.usearth.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,8 @@ import com.isfive.usearth.domain.project.entity.RewardSku;
 import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import static com.isfive.usearth.exception.ErrorCode.FUNDING_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)
@@ -50,6 +53,15 @@ public class FundingService {
 
         Funding funding = Funding.createFunding(member, delivery, payment, fundingRewardSkus);
         fundingRepository.save(funding);
+    }
+
+    @Transactional
+    public void cancel(String username, Long fundingId) {
+        Funding funding = fundingRepository.findFundingToCancel(fundingId)
+                .orElseThrow(() -> new EntityNotFoundException(FUNDING_NOT_FOUND));
+
+        funding.verify(username);
+        funding.cancel();
     }
 
     private Map<Long, Integer> createidCountMap(List<RewardSkuRegister> rewardSkuRegisters) {
