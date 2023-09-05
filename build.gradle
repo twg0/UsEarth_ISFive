@@ -35,8 +35,10 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
 
     // redis 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -48,6 +50,9 @@ dependencies {
 
     // jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
+
+    // spring mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // querydsl 추가
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
