@@ -1,17 +1,16 @@
 package com.isfive.usearth.domain.funding.entity;
 
-import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.isfive.usearth.domain.member.entity.Member;
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.isfive.usearth.domain.funding.entity.FundingStatus.ORDER;
 
 @Entity
 @Getter
@@ -61,5 +60,9 @@ public class Funding {
     private void addFundingRewardSku(FundingRewardSku fundingRewardSku) {
         fundingRewardSkus.add(fundingRewardSku);
         fundingRewardSku.setFunding(this);
+    }
+
+    public void setStatus(FundingStatus status) {
+        this.status = status;
     }
 }

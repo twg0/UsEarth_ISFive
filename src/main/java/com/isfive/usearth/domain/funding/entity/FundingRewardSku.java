@@ -51,4 +51,13 @@ public class FundingRewardSku {
     public void setFunding(Funding funding) {
         this.funding = funding;
     }
+
+    public Double getAmount() {
+        return (double) (price * count);
+    }
+
+    public String getRewardName() {
+        return rewardSku.getReward().getTitle();
+    }
+
 }
