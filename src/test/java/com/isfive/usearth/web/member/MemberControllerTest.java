@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import com.isfive.usearth.domain.utils.mail.MailService;
 import com.isfive.usearth.web.auth.dto.SignUpRequest;
 import com.isfive.usearth.web.member.dto.MailAuthenticationRequest;
 
@@ -42,6 +44,9 @@ class MemberControllerTest {
 
 	@Autowired
 	MemberRepository memberRepository;
+
+	@MockBean
+	MailService mailService;
 
 	@Value("${spring.data.redis.email-key}")
 	private String key;
