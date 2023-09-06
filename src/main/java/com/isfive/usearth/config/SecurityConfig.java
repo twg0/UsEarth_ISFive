@@ -46,7 +46,10 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/projects/{projectId}", "GET"),
                                 new AntPathRequestMatcher("/members", "POST"),
                                 new AntPathRequestMatcher("/members", "GET"),
-                                new AntPathRequestMatcher("/members/email", "POST")
+                                new AntPathRequestMatcher("/members/email", "POST"),
+                                new AntPathRequestMatcher("/makers/{makerId}", "GET"),
+                                new AntPathRequestMatcher("/members/{makerId}", "PUT"),
+                                new AntPathRequestMatcher("/members/{makerId}", "DELETE")
                         ).permitAll()
                         .requestMatchers(
                                 new AntPathRequestMatcher("/members/**"),
@@ -54,7 +57,11 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/boards/{boardId}/posts", "POST"),
                                 new AntPathRequestMatcher("/boards/{boardId}/posts", "GET"),
                                 new AntPathRequestMatcher("/posts/{postId}", "GET"),
-                                new AntPathRequestMatcher("/posts/{postId}/like", "POST")
+                                new AntPathRequestMatcher("/posts/{postId}/like", "POST"),
+                                new AntPathRequestMatcher("/makers/individual", "POST"),
+                                new AntPathRequestMatcher("/makers/personal-business", "POST"),
+                                new AntPathRequestMatcher("/makers/corporate-business", "POST")
+
                         )
                         .hasRole("USER")
                         .anyRequest()
