@@ -1,6 +1,17 @@
 package com.isfive.usearth.domain.funding.entity;
 
+
+import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
+import static com.isfive.usearth.exception.ErrorCode.ALREADY_CANCEL;
+import static com.isfive.usearth.exception.ErrorCode.NOT_MATCHED_FUNDING_USER;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.isfive.usearth.domain.member.entity.Member;
+
+import com.isfive.usearth.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -62,7 +73,26 @@ public class Funding {
         fundingRewardSku.setFunding(this);
     }
 
+
     public void setStatus(FundingStatus status) {
         this.status = status;
+
+    public void verify(String username) {
+        if (!member.isEqualsUsername(username)) {
+            throw new BusinessException(NOT_MATCHED_FUNDING_USER);
+        }
+    }
+
+    public void cancel() {
+        delivery.verifyCancelable();
+
+        if (status == CANCEL) {
+            throw new BusinessException(ALREADY_CANCEL);
+        }
+
+        status = CANCEL;
+
+        fundingRewardSkus.forEach(FundingRewardSku::cancel);
+
     }
 }

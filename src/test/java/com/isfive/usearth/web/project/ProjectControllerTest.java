@@ -54,20 +54,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class ProjectControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    ProjectRepository projectRepository;
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    MakerRepository makerRepository;
-    @Autowired
-    RewardRepository rewardRepository;
+    @Autowired MockMvc mockMvc;
+    @Autowired ObjectMapper objectMapper;
+    @Autowired ProjectRepository projectRepository;
+    @Autowired MemberRepository memberRepository;
+    @Autowired MakerRepository makerRepository;
+    @Autowired RewardRepository rewardRepository;
 
     @Autowired
     ProjectService projectService;
@@ -343,6 +335,5 @@ class ProjectControllerTest {
         LocalDateTime currentDateTime = LocalDateTime.now();
         assertTrue(deletedAt.isBefore(currentDateTime));
     }
-
 
 }

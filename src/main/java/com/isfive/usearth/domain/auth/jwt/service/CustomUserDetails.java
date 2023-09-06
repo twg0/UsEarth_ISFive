@@ -78,18 +78,6 @@ public class CustomUserDetails implements UserDetails {
 			.build();
 	}
 
-	public static CustomUserDetails fromMemberResponse(MemberResponse memberResponse) {
-		return CustomUserDetails.builder()
-			.username(memberResponse.getUsername())
-			.password(memberResponse.getPassword())
-			.email(memberResponse.getEmail())
-			.phone(memberResponse.getPhone())
-			.provider(memberResponse.getProvider())
-			.providerId(memberResponse.getProviderId())
-			.role(memberResponse.getRole())
-			.build();
-	}
-
 	public Member newEntity() {
 		return Member.builder()
 			.username(this.username)

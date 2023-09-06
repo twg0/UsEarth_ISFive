@@ -52,12 +52,18 @@ public class FundingRewardSku {
         this.funding = funding;
     }
 
+
     public Double getAmount() {
         return (double) (price * count);
     }
 
     public String getRewardName() {
         return rewardSku.getReward().getTitle();
+    }
+
+
+    public void cancel() {
+        rewardSku.addStock(count);
     }
 
 }
