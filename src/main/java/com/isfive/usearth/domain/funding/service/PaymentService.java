@@ -57,8 +57,8 @@ public class PaymentService {
         return result;
     }
 
-    @Scheduled(cron = "0/30 * * * * ?")
-//    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     public void findProject() throws Exception {
         List<Project> projects = projectRepository.findAll();
