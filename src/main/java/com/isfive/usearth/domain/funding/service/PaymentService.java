@@ -1,13 +1,18 @@
 package com.isfive.usearth.domain.funding.service;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.isfive.usearth.domain.funding.entity.Funding;
+import com.isfive.usearth.domain.funding.entity.FundingRewardSku;
+import com.isfive.usearth.domain.funding.entity.FundingStatus;
+import com.isfive.usearth.domain.funding.repository.FundingRepository;
+import com.isfive.usearth.domain.project.entity.Project;
+import com.isfive.usearth.domain.project.repository.ProjectRepository;
+import com.isfive.usearth.domain.utils.mail.MailService;
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,26 +22,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.isfive.usearth.domain.funding.entity.Funding;
-import com.isfive.usearth.domain.funding.entity.FundingRewardSku;
-import com.isfive.usearth.domain.funding.entity.FundingStatus;
-import com.isfive.usearth.domain.funding.repository.FundingRepository;
-import com.isfive.usearth.domain.project.entity.Project;
-import com.isfive.usearth.domain.project.repository.ProjectRepository;
-import com.siot.IamportRestClient.IamportClient;
-import com.siot.IamportRestClient.exception.IamportResponseException;
-
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PaymentService {
 
+    private final MailService mailService;
     private final FundingRepository fundingRepository;
     private final ProjectRepository projectRepository;
 
@@ -54,13 +53,14 @@ public class PaymentService {
         int endIndex = errorMessage.indexOf(",", startIndex2);
         String error = errorMessage.substring(startIndex2 + "pgMessage=".length(), endIndex);
 
-        String result = paymentFail + " <" + error + "> 문제가 발생하였으니 결제 정보 입력값을 다시 확인해주세요.";
+        String result = paymentFail + "\n" + "<" + error + "> 문제가 발생하였으니 결제 정보 입력값을 다시 확인해주세요.";
         return result;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
+//    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
-    public void findProject() throws JsonProcessingException {
+    public void findProject() throws Exception {
         List<Project> projects = projectRepository.findAll();
         for (Project project : projects) {
             LocalDate nextDay = project.getFundingDate().getDueDate().plus(1, ChronoUnit.DAYS);
@@ -69,7 +69,7 @@ public class PaymentService {
         }
     }
 
-    private void createPayment(Project project) throws JsonProcessingException {
+    private void createPayment(Project project) throws Exception {
         List<Funding> fundingList = fundingRepository.findByFundingRewardSkus_RewardSku_Reward_Project(project);
 
         for (Funding funding : fundingList) {
@@ -81,7 +81,8 @@ public class PaymentService {
                 else {
                     funding.setStatus(FundingStatus.REJECT);
                     String errorMessage = extractPaymentFail(response.getMessage());
-                    System.out.println(errorMessage);
+                    String receiver = funding.getMember().getEmail();
+                    mailService.sendErrorEmail(receiver, errorMessage);
                 }
             }
         }
