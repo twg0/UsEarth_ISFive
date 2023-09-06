@@ -1,14 +1,13 @@
 package com.isfive.usearth.domain.funding.repository;
 
-import com.isfive.usearth.domain.funding.entity.Funding;
-import com.isfive.usearth.domain.project.entity.Project;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Optional;
+import com.isfive.usearth.domain.funding.entity.Funding;
+import com.isfive.usearth.domain.project.entity.Project;
 
 public interface FundingRepository extends JpaRepository<Funding, Long> {
 

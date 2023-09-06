@@ -3,7 +3,6 @@ package com.isfive.usearth.web.board;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.web.board.dto.PostCreateRequest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController

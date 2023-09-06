@@ -1,6 +1,7 @@
 package com.isfive.usearth.domain.maker.entity;
 
 import com.isfive.usearth.domain.member.entity.Member;
+
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Builder;

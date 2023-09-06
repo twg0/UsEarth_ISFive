@@ -1,7 +1,8 @@
 package com.isfive.usearth.web.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,8 +19,7 @@ import com.isfive.usearth.exception.FileProcessingException;
 import com.isfive.usearth.exception.InvalidValueException;
 import com.isfive.usearth.web.common.dto.Message;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.Data;
 
 
 @RestControllerAdvice

@@ -1,27 +1,31 @@
 package com.isfive.usearth.domain.funding.entity;
 
-
 import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
-import static com.isfive.usearth.exception.ErrorCode.ALREADY_CANCEL;
-import static com.isfive.usearth.exception.ErrorCode.NOT_MATCHED_FUNDING_USER;
+import static com.isfive.usearth.exception.ErrorCode.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.isfive.usearth.domain.member.entity.Member;
-
 import com.isfive.usearth.exception.BusinessException;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.isfive.usearth.domain.funding.entity.FundingStatus.ORDER;
 
 @Entity
 @Getter

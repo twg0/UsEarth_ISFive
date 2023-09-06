@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
 

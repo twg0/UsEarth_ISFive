@@ -1,6 +1,5 @@
 package com.isfive.usearth.web.board;
 
-import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isfive.usearth.domain.board.service.PostCommentService;
 import com.isfive.usearth.web.board.dto.PostCommentCreateRequest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController

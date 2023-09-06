@@ -1,10 +1,7 @@
 package com.isfive.usearth.config;
 
-import com.isfive.usearth.domain.auth.oauth.service.OAuth2UserServiceImpl;
-import com.isfive.usearth.domain.utils.jwt.JwtTokenFilter;
-import com.isfive.usearth.web.auth.oauth.OAuth2SuccessHandler;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.*;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -16,7 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import com.isfive.usearth.domain.auth.oauth.service.OAuth2UserServiceImpl;
+import com.isfive.usearth.domain.utils.jwt.JwtTokenFilter;
+import com.isfive.usearth.web.auth.oauth.OAuth2SuccessHandler;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
