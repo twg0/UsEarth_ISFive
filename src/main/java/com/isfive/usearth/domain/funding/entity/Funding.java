@@ -80,6 +80,7 @@ public class Funding {
 
     public void setStatus(FundingStatus status) {
         this.status = status;
+    }
 
     public void verify(String username) {
         if (!member.isEqualsUsername(username)) {
