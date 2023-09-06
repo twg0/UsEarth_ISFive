@@ -1,6 +1,7 @@
 package com.isfive.usearth.web.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.isfive.usearth.domain.common.FileImageService;
 import com.isfive.usearth.domain.maker.entity.Individual;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.member.entity.Member;
@@ -10,14 +11,18 @@ import com.isfive.usearth.domain.project.entity.Reward;
 import com.isfive.usearth.domain.project.repository.ProjectRepository;
 import com.isfive.usearth.domain.project.repository.RewardRepository;
 import com.isfive.usearth.domain.project.service.ProjectService;
+import com.isfive.usearth.web.project.dto.ProjectModify;
 import com.isfive.usearth.web.project.dto.ProjectRegister;
 import com.isfive.usearth.web.project.dto.RewardRegister;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -25,14 +30,19 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -53,9 +63,10 @@ class ProjectControllerTest {
 
     @Autowired
     ProjectService projectService;
-
     @Autowired
     EntityManager em;
+    @MockBean
+    private FileImageService fileService;
 
     @WithMockUser(username = "member")
     @DisplayName("사용자는 프로젝트를 생성할 수 있다.")
@@ -102,6 +113,8 @@ class ProjectControllerTest {
         projectImageFileList.add(projectImageFile1);
         projectImageFileList.add(projectImageFile2);
         projectImageFileList.add(projectImageFile3);
+
+        Mockito.when(fileService.createFileImage(Mockito.any(MultipartFile.class))).thenReturn(null);
 
         Map<String, String> options1 = new HashMap<>();
         options1.put("색상", "블랙, 화이트");
@@ -159,25 +172,25 @@ class ProjectControllerTest {
         rewardRegisterList.add(rewardRegister1);
         rewardRegisterList.add(rewardRegister2);
 
-		MockMultipartFile projectDTO = new MockMultipartFile("projectRegister", "projectRegister",
-				"application/json",
-				objectMapper.writeValueAsString(projectRegister).getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile projectDTO = new MockMultipartFile("projectRegister", "projectRegister",
+                "application/json",
+                objectMapper.writeValueAsString(projectRegister).getBytes(StandardCharsets.UTF_8));
 
-		MockMultipartFile rewardDTO = new MockMultipartFile("rewardRegisterList", "rewardRegisterList",
-				"application/json",
-				objectMapper.writeValueAsString(rewardRegisterList).getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile rewardDTO = new MockMultipartFile("rewardRegisterList", "rewardRegisterList",
+                "application/json",
+                objectMapper.writeValueAsString(rewardRegisterList).getBytes(StandardCharsets.UTF_8));
 
         // when // then
-		mockMvc.perform(MockMvcRequestBuilders.multipart("/projects")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/projects")
                         .file(new MockMultipartFile("repImage", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData".getBytes()))
                         .file(new MockMultipartFile("projectImageList", "project_image1.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData1".getBytes()))
                         .file(new MockMultipartFile("projectImageList", "project_image2.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData2".getBytes()))
                         .file(projectDTO)
                         .file(rewardDTO)
-						.contentType(MediaType.MULTIPART_FORM_DATA)
-				)
-				.andDo(print())
-				.andExpect(status().isCreated());
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                )
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 
     @DisplayName("사용자는 프로젝트 목록을 조회할 수 있다.")
@@ -231,4 +244,96 @@ class ProjectControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @WithMockUser(username = "member")
+    @DisplayName("사용자는 프로젝트를 수정할 수 있다.")
+    @Test
+    void updateProject() throws Exception {
+        // given
+        Member member = Member.builder()
+                .username("member")
+                .build();
+        memberRepository.save(member);
+
+        Individual individual = Individual.builder().name("abc마트").build();
+        individual.setMember(member);
+        makerRepository.save(individual);
+
+        Project project = Project.builder()
+                .member(member)
+                .maker(individual)
+                .title("프로젝트")
+                .summary("프로젝트 내용을 짧게 요약")
+                .build();
+        Reward reward1 = Reward.builder().project(project).title("리워드1").build();
+        Reward reward2 = Reward.builder().project(project).title("리워드2").build();
+        projectRepository.save(project);
+        rewardRepository.save(reward1);
+        rewardRepository.save(reward2);
+
+        ProjectModify projectModify = ProjectModify.builder()
+                .title("수정된 제목")
+                .summary("수정된 요약")
+                .build();
+
+        MockMultipartFile projectModifyDto = new MockMultipartFile("projectModify", "projectModify",
+                "application/json",
+                objectMapper.writeValueAsString(projectModify).getBytes(StandardCharsets.UTF_8));
+
+        // when // then
+        mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/projects/{projectId}", project.getId())
+                        .file(new MockMultipartFile("repImage", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData".getBytes()))
+                        .file(new MockMultipartFile("projectImageList", "project_image1.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData1".getBytes()))
+                        .file(new MockMultipartFile("projectImageList", "project_image2.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData2".getBytes()))
+                        .file(projectModifyDto)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @WithMockUser(username = "member")
+    @DisplayName("사용자는 프로젝트를 삭제할 수 있다.")
+    @Test
+    void deleteProject() throws Exception {
+        // given
+        Member member = Member.builder()
+                .username("member")
+                .build();
+        memberRepository.save(member);
+
+        Individual individual = Individual.builder().name("abc마트").build();
+        individual.setMember(member);
+        makerRepository.save(individual);
+
+        Project project = Project.builder()
+                .member(member)
+                .maker(individual)
+                .title("프로젝트")
+                .summary("프로젝트 내용을 짧게 요약")
+                .build();
+        Reward reward1 = Reward.builder().project(project).title("리워드1").build();
+        Reward reward2 = Reward.builder().project(project).title("리워드2").build();
+        projectRepository.save(project);
+        rewardRepository.save(reward1);
+        rewardRepository.save(reward2);
+
+        // when // then
+        mockMvc.perform(delete("/projects/{projectId}", project.getId())
+                        .contentType(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        // 프로젝트 삭제 후 deletedAt 필드 확인
+        Project pro = projectRepository.findById(project.getId()).orElse(null);
+        assertNotNull(pro); // 프로젝트가 존재해야 함
+
+        LocalDateTime deletedAt = pro.getDeletedAt();
+        assertNotNull(deletedAt); // deletedAt 필드는 null이 아니어야 함
+
+        // 특정 조건을 만족하는지 확인 (예: deletedAt 필드가 현재 시간 이전인지 확인)
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        assertTrue(deletedAt.isBefore(currentDateTime));
+    }
+
 }

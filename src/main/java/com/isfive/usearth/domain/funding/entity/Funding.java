@@ -1,5 +1,6 @@
 package com.isfive.usearth.domain.funding.entity;
 
+
 import static com.isfive.usearth.domain.funding.entity.FundingStatus.*;
 import static com.isfive.usearth.exception.ErrorCode.ALREADY_CANCEL;
 import static com.isfive.usearth.exception.ErrorCode.NOT_MATCHED_FUNDING_USER;
@@ -16,6 +17,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.isfive.usearth.domain.funding.entity.FundingStatus.ORDER;
 
 @Entity
 @Getter
@@ -67,6 +73,10 @@ public class Funding {
         fundingRewardSku.setFunding(this);
     }
 
+
+    public void setStatus(FundingStatus status) {
+        this.status = status;
+
     public void verify(String username) {
         if (!member.isEqualsUsername(username)) {
             throw new BusinessException(NOT_MATCHED_FUNDING_USER);
@@ -83,5 +93,6 @@ public class Funding {
         status = CANCEL;
 
         fundingRewardSkus.forEach(FundingRewardSku::cancel);
+
     }
 }
