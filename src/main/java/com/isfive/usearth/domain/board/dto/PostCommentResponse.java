@@ -1,12 +1,11 @@
 package com.isfive.usearth.domain.board.dto;
 
+import com.isfive.usearth.domain.board.entity.PostComment;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.isfive.usearth.domain.board.entity.PostComment;
-
-import lombok.Data;
 
 @Data
 public class PostCommentResponse {
@@ -22,7 +21,7 @@ public class PostCommentResponse {
         this.id = postComment.getId();
         this.content = postComment.getContent();
         this.writer = postComment.getMember().getUsername();
-        this.delete = postComment.isDelete();
+        this.delete = postComment.isDeleted();
         this.createDate = postComment.getCreatedDate();
     }
 
