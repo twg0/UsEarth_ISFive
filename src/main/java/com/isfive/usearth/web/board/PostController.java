@@ -26,7 +26,7 @@ public class PostController {
     private final FileImageService fileImageService;
 
     @PostMapping("/boards/{boardId}/posts")
-    public void writePost(Authentication auth,
+    public ResponseEntity<Void> writePost(Authentication auth,
                           @PathVariable Long boardId,
                           @RequestPart @Valid PostCreateRequest request,
                           @RequestPart(required = false) List<MultipartFile> postImages) {
@@ -35,6 +35,7 @@ public class PostController {
             fileImages = fileImageService.createFileImageList(postImages);
         }
         postService.createPost(boardId, auth.getName(), request.getTitle(), request.getContent(), fileImages);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/boards/{boardId}/posts")
@@ -52,7 +53,8 @@ public class PostController {
     }
 
     @PostMapping("/posts/{postId}/like")
-    public void like(Authentication auth, @PathVariable Long postId) {
+    public ResponseEntity<Void> like(Authentication auth, @PathVariable Long postId) {
         postService.like(postId, auth.getName());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

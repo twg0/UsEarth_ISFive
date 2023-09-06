@@ -1,5 +1,7 @@
 package com.isfive.usearth.web.board;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,21 +22,24 @@ public class PostCommentController {
     private final PostCommentService postCommentService;
 
     @PostMapping("/posts/{postId}/comments")
-    public void writeComment(Authentication auth,
-                             @PathVariable Long postId,
-                             @RequestBody @Valid PostCommentCreateRequest request) {
+    public ResponseEntity<Void> writeComment(Authentication auth,
+                                             @PathVariable Long postId,
+                                             @RequestBody @Valid PostCommentCreateRequest request) {
         postCommentService.createComment(postId, request.getContent(), auth.getName());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/comments/{commentId}/reply")
-    public void writeReply(Authentication auth,
-                           @PathVariable Long commentId,
-                           @RequestBody @Valid PostCommentCreateRequest request) {
+    public ResponseEntity<Void> writeReply(Authentication auth,
+                                           @PathVariable Long commentId,
+                                           @RequestBody @Valid PostCommentCreateRequest request) {
         postCommentService.createReply(commentId, request.getContent(), auth.getName());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public void deleteComment(Authentication auth, @PathVariable Long commentId) {
+    public ResponseEntity<Void> deleteComment(Authentication auth, @PathVariable Long commentId) {
         postCommentService.deleteComment(commentId, auth.getName());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
