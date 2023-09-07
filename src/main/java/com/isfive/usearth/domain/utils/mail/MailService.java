@@ -16,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MailService{
+public class MailService {
 	private final JavaMailSender javaMailSender;
 
 	@Value("${spring.mail.username}")
 	private String username;
 
-	public static int createNumber(){
+	public static int createNumber() {
 		return (int)(Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
 	}
 
@@ -41,7 +41,7 @@ public class MailService{
 		}
 	}
 
-	private MimeMessage createMessage(String email, String code) throws Exception{
+	private MimeMessage createMessage(String email, String code) throws Exception {
 		MimeMessage message = javaMailSender.createMimeMessage();
 
 		message.addRecipients(Message.RecipientType.TO, email);
@@ -50,7 +50,7 @@ public class MailService{
 
 		message.setFrom(new InternetAddress(username + "@naver.com", "UsEarth"));
 
-		return  message;
+		return message;
 	}
 
 	public void sendErrorEmail(String toEmail, String code) throws Exception {
@@ -59,12 +59,12 @@ public class MailService{
 			javaMailSender.send(message);
 		} catch (RuntimeException e) {
 			log.error("MailService.sendEmail exception occur toEmail: {}, " +
-					"code: {}", toEmail, code);
+				"code: {}", toEmail, code);
 			throw new BusinessException(ErrorCode.SEND_EMAIL_FAILED);
 		}
 	}
 
-	private MimeMessage createErrorMessage(String email, String code) throws Exception{
+	private MimeMessage createErrorMessage(String email, String code) throws Exception {
 		MimeMessage message = javaMailSender.createMimeMessage();
 
 		message.addRecipients(Message.RecipientType.TO, email);
@@ -72,7 +72,7 @@ public class MailService{
 		message.setText(code);
 		message.setFrom(new InternetAddress(username + "@naver.com", "UsEarth"));
 
-		return  message;
+		return message;
 	}
 
 }

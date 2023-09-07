@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BusinessMakerRequest extends MakerRegisterRequest{
-    private String registrationNumber;
-    private String corporateName;
+public class BusinessMakerRequest extends MakerRegisterRequest {
+	private String registrationNumber;
+	private String corporateName;
 }

@@ -12,8 +12,6 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.isfive.usearth.domain.member.repository.MemberRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +25,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 		OAuth2User oAuth2User = super.loadUser(userRequest); // 가져온 유저 정보가 담겨있음
 
 		Map<String, Object> additionalParameters = userRequest.getAdditionalParameters();
-		if(additionalParameters.isEmpty())
+		if (additionalParameters.isEmpty())
 			log.info("비어있음");
 		else
 			log.info("뭔가 있음");

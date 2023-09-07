@@ -11,17 +11,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BusinessInformation {
 
-    private String registrationNumber;
+	private String registrationNumber;
 
-    private String corporateName;
+	private String corporateName;
 
-    private String registration;
+	private String registration;
 
-    @Builder
-    public BusinessInformation(String registrationNumber, String corporateName, String registration) {
-        this.registrationNumber = registrationNumber;
-        this.corporateName = corporateName;
-        this.registration = registration;
-    }
+	@Builder
+	public BusinessInformation(String registrationNumber, String corporateName, String registration) {
+		this.registrationNumber = registrationNumber;
+		this.corporateName = corporateName;
+		this.registration = registration;
+	}
 
 }

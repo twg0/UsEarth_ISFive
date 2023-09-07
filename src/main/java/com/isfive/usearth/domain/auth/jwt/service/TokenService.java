@@ -4,17 +4,14 @@ import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.utils.cookie.CookieUtils;
 import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
-import com.isfive.usearth.exception.EntityNotFoundException;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,16 +38,16 @@ public class TokenService {
 	public String setTokenAndCookie(String email, HttpServletRequest request, HttpServletResponse response) {
 
 		// 쿠키 비우기
-		if (CookieUtils.getCookie(request,"serialAT").isPresent()) {
-			CookieUtils.deleteCookie(request,response,"serialAT");
+		if (CookieUtils.getCookie(request, "serialAT").isPresent()) {
+			CookieUtils.deleteCookie(request, response, "serialAT");
 		}
-		if (CookieUtils.getCookie(request,"serialRT").isPresent()) {
-			CookieUtils.deleteCookie(request,response,"serialRT");
+		if (CookieUtils.getCookie(request, "serialRT").isPresent()) {
+			CookieUtils.deleteCookie(request, response, "serialRT");
 		}
 
 		Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
-		if(optionalMember.isEmpty())
+		if (optionalMember.isEmpty())
 			return null;
 
 		Member member = optionalMember.get();
@@ -65,16 +62,16 @@ public class TokenService {
 		String serialAT = CookieUtils.serialize(accessToken);
 		String serialRT = CookieUtils.serialize(refreshToken);
 
-		CookieUtils.addCookie(response,"serialAT", serialAT, AT_COOKIE_EXPIRE_SECONDS);
-		CookieUtils.addCookie(response,"serialRT", serialRT, RT_COOKIE_EXPIRE_SECONDS);
+		CookieUtils.addCookie(response, "serialAT", serialAT, AT_COOKIE_EXPIRE_SECONDS);
+		CookieUtils.addCookie(response, "serialRT", serialRT, RT_COOKIE_EXPIRE_SECONDS);
 
 		return accessToken;
 	}
 
 	// TODO 로그아웃
 	public void logout(String email, HttpServletRequest request, HttpServletResponse response) {
-		CookieUtils.deleteCookie(request,response,"serialAT");
-		CookieUtils.deleteCookie(request,response,"serialRT");
+		CookieUtils.deleteCookie(request, response, "serialAT");
+		CookieUtils.deleteCookie(request, response, "serialRT");
 		redisTemplate.opsForHash().delete(key, email);
 	}
 }

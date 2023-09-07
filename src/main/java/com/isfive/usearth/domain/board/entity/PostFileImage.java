@@ -15,25 +15,25 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostFileImage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Embedded
-    private FileImage fileImage;
+	@Embedded
+	private FileImage fileImage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Post post;
 
-    public PostFileImage(FileImage fileImage) {
-        this.fileImage = fileImage;
-    }
+	public PostFileImage(FileImage fileImage) {
+		this.fileImage = fileImage;
+	}
 
-    public FileImage getFileImage() {
-        return fileImage;
-    }
+	public FileImage getFileImage() {
+		return fileImage;
+	}
 
-    public void setPost(Post post) {
-        this.post = post;
-    }
+	public void setPost(Post post) {
+		this.post = post;
+	}
 }

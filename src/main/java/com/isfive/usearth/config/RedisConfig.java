@@ -22,11 +22,11 @@ public class RedisConfig {
 	// lettuce 사용
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
-		return new LettuceConnectionFactory(host,port);
+		return new LettuceConnectionFactory(host, port);
 	}
 
 	@Bean
-	public RedisTemplate<?,?> redisTemplate() {
+	public RedisTemplate<?, ?> redisTemplate() {
 		RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory());
 		return redisTemplate;

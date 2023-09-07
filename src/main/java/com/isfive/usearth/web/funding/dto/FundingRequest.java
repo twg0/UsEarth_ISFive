@@ -17,28 +17,29 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FundingRequest {
 
-    @Valid
-    @NotNull(message = "배송지를 입력해야 합니다.")
-    private DeliveryRequest deliveryRequest;
+	@Valid
+	@NotNull(message = "배송지를 입력해야 합니다.")
+	private DeliveryRequest deliveryRequest;
 
-    @Valid
-    @NotNull(message = "결제정보를 입력해야 합니다.")
-    private PaymentRequest paymentRequest;
+	@Valid
+	@NotNull(message = "결제정보를 입력해야 합니다.")
+	private PaymentRequest paymentRequest;
 
-    @Valid
-    @NotNull(message = "상품을 1개이상 선택해야합니다.")
-    private List<RewardSkuRequest> rewardSkuRequests;
+	@Valid
+	@NotNull(message = "상품을 1개이상 선택해야합니다.")
+	private List<RewardSkuRequest> rewardSkuRequests;
 
-    public DeliveryRegister toDeliveryRegister() {
-        return deliveryRequest.toServiceDto();
-    }
+	public DeliveryRegister toDeliveryRegister() {
+		return deliveryRequest.toServiceDto();
+	}
 
-    public PaymentRegister toPaymentRegister() {
-        return paymentRequest.toServiceDto();
-    }
-    public List<RewardSkuRegister> toRewardSkuRegisters() {
-        return rewardSkuRequests.stream()
-                .map(RewardSkuRequest::toServiceDto)
-                .toList();
-    }
+	public PaymentRegister toPaymentRegister() {
+		return paymentRequest.toServiceDto();
+	}
+
+	public List<RewardSkuRegister> toRewardSkuRegisters() {
+		return rewardSkuRequests.stream()
+			.map(RewardSkuRequest::toServiceDto)
+			.toList();
+	}
 }

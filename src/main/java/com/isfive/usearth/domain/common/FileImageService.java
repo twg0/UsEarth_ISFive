@@ -20,43 +20,42 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class FileImageService {
 
-    public FileImage createFileImage(MultipartFile file) {
-        String profileDir = String.format("./src/main/resources/projectImg/");
-        try {
-             Files.createDirectories(Path.of(profileDir));
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+	public FileImage createFileImage(MultipartFile file) {
+		String profileDir = String.format("./src/main/resources/projectImg/");
+		try {
+			Files.createDirectories(Path.of(profileDir));
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
-        String originalName = file.getOriginalFilename();
-        String[] fileNameSplit = originalName.split("\\.");
-        String extension = fileNameSplit[fileNameSplit.length - 1]; // 확장자
+		String originalName = file.getOriginalFilename();
+		String[] fileNameSplit = originalName.split("\\.");
+		String extension = fileNameSplit[fileNameSplit.length - 1]; // 확장자
 
-        UUID uuid = UUID.randomUUID();
-        String storedName = uuid + "." + extension;
-        String profilePath = profileDir + storedName;
+		UUID uuid = UUID.randomUUID();
+		String storedName = uuid + "." + extension;
+		String profilePath = profileDir + storedName;
 
-        try {
-            file.transferTo(Path.of(profilePath));
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        FileImage fileImage = FileImage.builder()
-                .originalName(originalName)
-                .storedName(storedName)
-                .build();
+		try {
+			file.transferTo(Path.of(profilePath));
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		FileImage fileImage = FileImage.builder()
+			.originalName(originalName)
+			.storedName(storedName)
+			.build();
 
-        return fileImage;
-    }
+		return fileImage;
+	}
 
-    public List<FileImage> createFileImageList(List<MultipartFile> fileList) {
-        List<FileImage> fileImageList = new ArrayList<>();
-        for (MultipartFile file : fileList) {
-            FileImage fileImage = createFileImage(file);
-            fileImageList.add(fileImage);
-        }
-        return fileImageList;
-    }
-
+	public List<FileImage> createFileImageList(List<MultipartFile> fileList) {
+		List<FileImage> fileImageList = new ArrayList<>();
+		for (MultipartFile file : fileList) {
+			FileImage fileImage = createFileImage(file);
+			fileImageList.add(fileImage);
+		}
+		return fileImageList;
+	}
 
 }

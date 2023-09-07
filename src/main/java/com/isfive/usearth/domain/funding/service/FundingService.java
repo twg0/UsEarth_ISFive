@@ -30,52 +30,52 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FundingService {
 
-    private final MemberRepository memberRepository;
-    private final RewardSkuRepository rewardSkuRepository;
-    private final FundingRepository fundingRepository;
+	private final MemberRepository memberRepository;
+	private final RewardSkuRepository rewardSkuRepository;
+	private final FundingRepository fundingRepository;
 
-    @Transactional
-    public void funding(String username,
-                        DeliveryRegister deliveryRegister,
-                        PaymentRegister paymentRegister,
-                        List<RewardSkuRegister> rewardSkuRegisters) {
-        Member member = memberRepository.findByUsernameOrThrow(username);
+	@Transactional
+	public void funding(String username,
+		DeliveryRegister deliveryRegister,
+		PaymentRegister paymentRegister,
+		List<RewardSkuRegister> rewardSkuRegisters) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
 
-        Delivery delivery = Delivery.createDelivery(deliveryRegister);
+		Delivery delivery = Delivery.createDelivery(deliveryRegister);
 
-        Payment payment = Payment.createPayment(paymentRegister);
+		Payment payment = Payment.createPayment(paymentRegister);
 
-        Map<Long, Integer> idCountMap = createidCountMap(rewardSkuRegisters);
+		Map<Long, Integer> idCountMap = createidCountMap(rewardSkuRegisters);
 
-        List<RewardSku> rewardSkus = rewardSkuRepository.findAllByIdWithReward(idCountMap.keySet());
+		List<RewardSku> rewardSkus = rewardSkuRepository.findAllByIdWithReward(idCountMap.keySet());
 
-        List<FundingRewardSku> fundingRewardSkus = createFindingRewardSkus(rewardSkus, idCountMap);
+		List<FundingRewardSku> fundingRewardSkus = createFindingRewardSkus(rewardSkus, idCountMap);
 
-        Funding funding = Funding.createFunding(member, delivery, payment, fundingRewardSkus);
-        fundingRepository.save(funding);
-    }
+		Funding funding = Funding.createFunding(member, delivery, payment, fundingRewardSkus);
+		fundingRepository.save(funding);
+	}
 
-    @Transactional
-    public void cancel(String username, Long fundingId) {
-        Funding funding = fundingRepository.findFundingToCancel(fundingId)
-                .orElseThrow(() -> new EntityNotFoundException(FUNDING_NOT_FOUND));
+	@Transactional
+	public void cancel(String username, Long fundingId) {
+		Funding funding = fundingRepository.findFundingToCancel(fundingId)
+			.orElseThrow(() -> new EntityNotFoundException(FUNDING_NOT_FOUND));
 
-        funding.verify(username);
-        funding.cancel();
-    }
+		funding.verify(username);
+		funding.cancel();
+	}
 
-    private Map<Long, Integer> createidCountMap(List<RewardSkuRegister> rewardSkuRegisters) {
-        return rewardSkuRegisters.stream()
-                .collect(Collectors.toMap(RewardSkuRegister::getRewardSkuId, RewardSkuRegister::getCount));
-    }
+	private Map<Long, Integer> createidCountMap(List<RewardSkuRegister> rewardSkuRegisters) {
+		return rewardSkuRegisters.stream()
+			.collect(Collectors.toMap(RewardSkuRegister::getRewardSkuId, RewardSkuRegister::getCount));
+	}
 
-    private List<FundingRewardSku> createFindingRewardSkus(List<RewardSku> rewardSkus, Map<Long, Integer> idCountMap) {
-        return rewardSkus.stream()
-                .map(rewardSku -> {
-                    Integer count = idCountMap.get(rewardSku.getId());
-                    Integer price = rewardSku.getPrice();
-                    return FundingRewardSku.createFundingRewardSku(rewardSku, count, price);
-                })
-                .toList();
-    }
+	private List<FundingRewardSku> createFindingRewardSkus(List<RewardSku> rewardSkus, Map<Long, Integer> idCountMap) {
+		return rewardSkus.stream()
+			.map(rewardSku -> {
+				Integer count = idCountMap.get(rewardSku.getId());
+				Integer price = rewardSku.getPrice();
+				return FundingRewardSku.createFundingRewardSku(rewardSku, count, price);
+			})
+			.toList();
+	}
 }

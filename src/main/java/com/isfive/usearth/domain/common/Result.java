@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 public class Result<T> {
-    private List<T> data;
+	private List<T> data;
 
-    public Result(List<T> data) {
-        this.data = data;
-    }
+	public Result(List<T> data) {
+		this.data = data;
+	}
 }

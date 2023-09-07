@@ -9,23 +9,18 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.auth.jwt.service.TokenService;
 import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.service.MemberService;
-import com.isfive.usearth.domain.utils.cookie.CookieUtils;
-import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
 import com.isfive.usearth.domain.utils.mail.MailService;
 import com.isfive.usearth.exception.ErrorCode;
 import com.isfive.usearth.exception.InvalidValueException;
@@ -96,7 +91,7 @@ public class MemberController {
 	) {
 		String username = authentication.getName();
 		String email = memberService.readByUsername(username).getEmail();
-		tokenService.logout(email,request, response);
+		tokenService.logout(email, request, response);
 		return new ResponseEntity<>(new Message("로그아웃이 완료되었습니다."), HttpStatus.OK);
 	}
 
@@ -118,7 +113,7 @@ public class MemberController {
 
 		stringStringValueOperations.set(request.getEmail(), code);
 
-		memberService.sendCodeToEmail(request.getEmail(),code);
+		memberService.sendCodeToEmail(request.getEmail(), code);
 
 		return new ResponseEntity<>(new Message("이메일 인증을 완료하세요."), HttpStatus.OK);
 	}
@@ -135,13 +130,12 @@ public class MemberController {
 
 				SignUpRequest signUpRequest = mapper.readValue(stringRequest, SignUpRequest.class);
 
-				if(signUpRequest != null) {
+				if (signUpRequest != null) {
 					MemberResponse memberResponse = memberService.createBy(SignUpRegister.fromRequest(signUpRequest));
 					log.info(memberResponse.toString());
 					message = new Message("가입이 완료 되었습니다.");
 					redisTemplate.delete(request.getEmail());
-				}
-				else {
+				} else {
 					message = new Message("인증 시간이 초과하였습니다.");
 				}
 			} else {
@@ -161,7 +155,7 @@ public class MemberController {
 	) {
 		String username = authentication.getName();
 
-		MemberResponse memberResponse = memberService.updateUserInfoByUpdateRegister(username,request.toRegister());
+		MemberResponse memberResponse = memberService.updateUserInfoByUpdateRegister(username, request.toRegister());
 		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 	}
 

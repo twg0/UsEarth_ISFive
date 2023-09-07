@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileImage {
-    private String originalName;
-    private String storedName;
+	private String originalName;
+	private String storedName;
 }

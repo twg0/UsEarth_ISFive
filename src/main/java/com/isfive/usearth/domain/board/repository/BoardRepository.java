@@ -8,8 +8,10 @@ import com.isfive.usearth.exception.ErrorCode;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    default Board findByIdOrThrow(Long id) {
-        return findById(id).orElseThrow(
-                () -> new EntityNotFoundException(ErrorCode.BOARD_NOT_FOUND));
-    };
+	default Board findByIdOrThrow(Long id) {
+		return findById(id).orElseThrow(
+			() -> new EntityNotFoundException(ErrorCode.BOARD_NOT_FOUND));
+	}
+
+	;
 }

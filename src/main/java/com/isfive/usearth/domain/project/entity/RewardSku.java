@@ -24,41 +24,41 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RewardSku {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private Integer stock;
+	private Integer stock;
 
-    private Integer initStock;
+	private Integer initStock;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reward_id")
-    private Reward reward;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "reward_id")
+	private Reward reward;
 
-    @OneToMany(mappedBy = "rewardSku")
-    @Builder.Default
-    private List<SkuValue> skuValues = new ArrayList<>();
+	@OneToMany(mappedBy = "rewardSku")
+	@Builder.Default
+	private List<SkuValue> skuValues = new ArrayList<>();
 
-    public void setReward(Reward reward) {
-        this.reward = reward;
-        if (!reward.getRewardSkus().contains(this))
-            reward.getRewardSkus().add(this);
-    }
+	public void setReward(Reward reward) {
+		this.reward = reward;
+		if (!reward.getRewardSkus().contains(this))
+			reward.getRewardSkus().add(this);
+	}
 
-    public Integer getPrice() {
-        return reward.getPrice();
-    }
+	public Integer getPrice() {
+		return reward.getPrice();
+	}
 
-    public void removeStock(Integer count) {
-        if (stock < count) {
-            // TODO 예외 변경
-            throw new RuntimeException("재고가 부족합니다.");
-        }
-        stock -= count;
-    }
+	public void removeStock(Integer count) {
+		if (stock < count) {
+			// TODO 예외 변경
+			throw new RuntimeException("재고가 부족합니다.");
+		}
+		stock -= count;
+	}
 
-    public void addStock(Integer count) {
-        stock += count;
-    }
+	public void addStock(Integer count) {
+		stock += count;
+	}
 }

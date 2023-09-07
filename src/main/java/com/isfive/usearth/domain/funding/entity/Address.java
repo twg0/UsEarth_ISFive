@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Address {
 
-    private String detail;
+	private String detail;
 
-    private String zipcode;
+	private String zipcode;
 }

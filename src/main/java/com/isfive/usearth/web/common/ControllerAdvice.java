@@ -21,7 +21,6 @@ import com.isfive.usearth.web.common.dto.Message;
 
 import lombok.Data;
 
-
 @RestControllerAdvice
 public class ControllerAdvice {
 	/**
@@ -79,7 +78,8 @@ public class ControllerAdvice {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ValidExceptionMessage> methodArgumentNotValidException(final MethodArgumentNotValidException exception) {
+	public ResponseEntity<ValidExceptionMessage> methodArgumentNotValidException(
+		final MethodArgumentNotValidException exception) {
 		BindingResult bindingResult = exception.getBindingResult();
 		ValidExceptionMessage validExceptionMessage = new ValidExceptionMessage();
 

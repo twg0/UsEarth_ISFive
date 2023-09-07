@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class DeliveryRegister {
-    private String name;
-    private String phone;
-    private Address address;
+	private String name;
+	private String phone;
+	private Address address;
 }

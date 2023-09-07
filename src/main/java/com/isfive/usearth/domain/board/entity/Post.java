@@ -31,96 +31,96 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "board_id")
+	private Board board;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id")
+	private Member member;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostFileImage> postFileImages = new ArrayList<>();
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<PostFileImage> postFileImages = new ArrayList<>();
 
-    @Column(length = 100, nullable = false)
-    private String title;
+	@Column(length = 100, nullable = false)
+	private String title;
 
-    @Lob
-    @Column(nullable = false)
-    private String content;
+	@Lob
+	@Column(nullable = false)
+	private String content;
 
-    @Column(nullable = false)
-    private Integer views;
+	@Column(nullable = false)
+	private Integer views;
 
-    @Column(nullable = false)
-    private Integer likeCount;
+	@Column(nullable = false)
+	private Integer likeCount;
 
-    @Column(nullable = false)
-    private Integer commentCount;
+	@Column(nullable = false)
+	private Integer commentCount;
 
-    @Version
-    private Long version;
+	@Version
+	private Long version;
 
-    @Builder
-    private Post(Board board, Member member, String title, String content) {
-        this.board = board;
-        this.member = member;
-        this.title = title;
-        this.content = content;
-        this.views = 0;
-        this.likeCount = 0;
-        this.commentCount = 0;
-    }
+	@Builder
+	private Post(Board board, Member member, String title, String content) {
+		this.board = board;
+		this.member = member;
+		this.title = title;
+		this.content = content;
+		this.views = 0;
+		this.likeCount = 0;
+		this.commentCount = 0;
+	}
 
-    public static Post createPost(Member member, Board board, String title, String content) {
-        return Post.builder()
-                .member(member)
-                .board(board)
-                .title(title)
-                .content(content)
-                .build();
-    }
+	public static Post createPost(Member member, Board board, String title, String content) {
+		return Post.builder()
+			.member(member)
+			.board(board)
+			.title(title)
+			.content(content)
+			.build();
+	}
 
-    public void addImage(PostFileImage postFileImage) {
-        postFileImages.add(postFileImage);
-        postFileImage.setPost(this);
-    }
+	public void addImage(PostFileImage postFileImage) {
+		postFileImages.add(postFileImage);
+		postFileImage.setPost(this);
+	}
 
-    public String getWriterNickname() {
-        return member.getNickname();
-    }
+	public String getWriterNickname() {
+		return member.getNickname();
+	}
 
-    public List<FileImage> getFileImages() {
-        return postFileImages.stream()
-                .map(PostFileImage::getFileImage)
-                .toList();
-    }
+	public List<FileImage> getFileImages() {
+		return postFileImages.stream()
+			.map(PostFileImage::getFileImage)
+			.toList();
+	}
 
-    public void verifyNotWriter(String username) {
-        if (member.isEqualsUsername(username)) {
-            throw new BusinessException(ErrorCode.POST_WRITER_NOT_ALLOW);
-        }
-    }
+	public void verifyNotWriter(String username) {
+		if (member.isEqualsUsername(username)) {
+			throw new BusinessException(ErrorCode.POST_WRITER_NOT_ALLOW);
+		}
+	}
 
-    public void increaseView() {
-        views++;
-    }
+	public void increaseView() {
+		views++;
+	}
 
-    public void increaseLikeCount() {
-        likeCount ++;
-    }
+	public void increaseLikeCount() {
+		likeCount++;
+	}
 
-    public void increaseCommentCount() {
-        commentCount ++;
-    }
+	public void increaseCommentCount() {
+		commentCount++;
+	}
 
-    public void cancelLike() {
-        if (likeCount > 0) {
-            likeCount--;
-        }
-    }
+	public void cancelLike() {
+		if (likeCount > 0) {
+			likeCount--;
+		}
+	}
 }

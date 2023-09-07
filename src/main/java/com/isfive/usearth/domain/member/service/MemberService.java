@@ -98,7 +98,7 @@ public class MemberService {
 
 	public void sendCodeToEmail(String toEmail, String code) throws Exception {
 		this.checkDuplicatedEmail(toEmail);
-		mailService.sendEmail(toEmail,code);
+		mailService.sendEmail(toEmail, code);
 	}
 
 	private void checkDuplicatedEmail(String email) {

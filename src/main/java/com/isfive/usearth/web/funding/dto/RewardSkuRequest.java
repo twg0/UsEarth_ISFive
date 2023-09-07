@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RewardSkuRequest {
 
-    private Long rewardSkuId;
-    private Integer count;
+	private Long rewardSkuId;
+	private Integer count;
 
-    public RewardSkuRegister toServiceDto() {
-        return new RewardSkuRegister(rewardSkuId, count);
-    }
+	public RewardSkuRegister toServiceDto() {
+		return new RewardSkuRegister(rewardSkuId, count);
+	}
 }
 

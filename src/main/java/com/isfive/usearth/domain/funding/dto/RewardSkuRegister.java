@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class RewardSkuRegister {
-    private Long rewardSkuId;
-    private Integer count;
+	private Long rewardSkuId;
+	private Integer count;
 }

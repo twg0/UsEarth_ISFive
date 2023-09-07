@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Period {
-    private LocalDate startDate;
-    private LocalDate dueDate;
+	private LocalDate startDate;
+	private LocalDate dueDate;
 }

@@ -12,13 +12,14 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CookieUtils {
 
 	private CookieUtils() {
-		throw new IllegalStateException("인스턴스화 할 수 없습니다.");}
+		throw new IllegalStateException("인스턴스화 할 수 없습니다.");
+	}
 
 	public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
 		Cookie[] cookies = request.getCookies();
-		if(cookies != null) {
+		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if(cookie.getName().equals(name))
+				if (cookie.getName().equals(name))
 					return Optional.of(cookie);
 			}
 		}

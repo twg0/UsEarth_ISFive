@@ -13,15 +13,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectUpdate {
-    private String title;
-    private String summary;
-    private FileImage repImage;
+	private String title;
+	private String summary;
+	private FileImage repImage;
 
-    public Project toEntity() {
-        return Project.builder()
-                .title(title)
-                .summary(summary)
-                .repImage(repImage)
-                .build();
-    }
+	public Project toEntity() {
+		return Project.builder()
+			.title(title)
+			.summary(summary)
+			.repImage(repImage)
+			.build();
+	}
 }

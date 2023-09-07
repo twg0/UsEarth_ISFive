@@ -38,13 +38,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		// OAuth2UserServiceImpl에서 반환한 DefaultOAuth2User
 		// 가 저장된다.
 		OAuth2User oAuth2User
-			= (OAuth2User) authentication.getPrincipal();
+			= (OAuth2User)authentication.getPrincipal();
 
 		Map<String, Object> attributes = oAuth2User.getAttributes();
 
 		String email = attributes.get("email").toString();
 
-		if(!memberService.existByEmail(email)){
+		if (!memberService.existByEmail(email)) {
 			memberService.createByAttributes(attributes);
 		}
 

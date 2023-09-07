@@ -1,18 +1,8 @@
 package com.isfive.usearth.domain.utils.jwt;
 
-import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
-import com.isfive.usearth.domain.auth.jwt.service.TokenService;
-import com.isfive.usearth.domain.utils.cookie.CookieUtils;
-import com.isfive.usearth.exception.AuthException;
-import com.isfive.usearth.exception.ErrorCode;
-import com.isfive.usearth.exception.InvalidValueException;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Optional;
+
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,8 +11,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.Optional;
+import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
+import com.isfive.usearth.domain.auth.jwt.service.TokenService;
+import com.isfive.usearth.domain.utils.cookie.CookieUtils;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -56,16 +55,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			String email = jwtTokenUtils.validateRefreshToken(oldRefreshToken);
 
 			// Refresh Token validate 실패시
-			if(email == null) {
+			if (email == null) {
 				log.info("Refresh Token validate 실패");
-				CookieUtils.deleteCookie(request,response,"serialRT");
+				CookieUtils.deleteCookie(request, response, "serialRT");
 				response.sendError(401);
 				filterChain.doFilter(request, response);
 				return;
 			}// Token 재발급 필요시
 			else {
 				log.info("Token 재발급 필요");
-				token = tokenService.setTokenAndCookie(email,request, response);
+				token = tokenService.setTokenAndCookie(email, request, response);
 			}
 		}// Access Token 검증
 		else {
@@ -76,9 +75,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			Access Token validate 실패시
 			쿠키 삭제 및 에러 전송
 			 */
-			if(email == null) {
+			if (email == null) {
 				log.info("Access Token validate 실패");
-				CookieUtils.deleteCookie(request,response,"serialAT");
+				CookieUtils.deleteCookie(request, response, "serialAT");
 				response.sendError(401);
 				filterChain.doFilter(request, response);
 				return;
@@ -106,7 +105,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		UserDetails userDetails = jwtTokenUtils
 			.getUserDetails(token);
 
-		if(userDetails == null) {
+		if (userDetails == null) {
 			log.info("userDetails == null 다음 filter");
 			filterChain.doFilter(request, response);
 			return;
@@ -119,7 +118,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 				.build(),
 			token, userDetails.getAuthorities()
 		);
-		log.info("((CustomUserDetails)userDetails).getEmail() = {}",((CustomUserDetails)userDetails).getEmail());
+		log.info("((CustomUserDetails)userDetails).getEmail() = {}", ((CustomUserDetails)userDetails).getEmail());
 
 		// SecurityContext에 사용자 정보 설정
 		context.setAuthentication(authenticationToken);

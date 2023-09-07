@@ -26,29 +26,29 @@ import lombok.NoArgsConstructor;
 @Table(name = "options")
 public class Option {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name; // 색상, 사이즈
+	private String name; // 색상, 사이즈
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reward_id")
-    private Reward reward;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "reward_id")
+	private Reward reward;
 
-    @OneToMany(mappedBy = "option")
-    @Builder.Default
-    private List<OptionValue> optionValues = new ArrayList<>();
+	@OneToMany(mappedBy = "option")
+	@Builder.Default
+	private List<OptionValue> optionValues = new ArrayList<>();
 
-    public void setReward(Reward reward) {
-        this.reward = reward;
-        if (!reward.getOptions().contains(this))
-            reward.getOptions().add(this);
-    }
+	public void setReward(Reward reward) {
+		this.reward = reward;
+		if (!reward.getOptions().contains(this))
+			reward.getOptions().add(this);
+	}
 
-    public void addOptionValue(OptionValue optionValue) {
-        this.getOptionValues().add(optionValue);
-        if (optionValue.getOption() != this)
-            optionValue.setOption(this);
-    }
+	public void addOptionValue(OptionValue optionValue) {
+		this.getOptionValues().add(optionValue);
+		if (optionValue.getOption() != this)
+			optionValue.setOption(this);
+	}
 }

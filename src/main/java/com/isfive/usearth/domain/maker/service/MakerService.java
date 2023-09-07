@@ -19,45 +19,45 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MakerService {
-    private final MakerRepository makerRepository;
-    private final MemberRepository memberRepository;
+	private final MakerRepository makerRepository;
+	private final MemberRepository memberRepository;
 
-    @Transactional
-    public void createIndividualBy(String username, IndividualRegister individualRegister) {
-        Member member = memberRepository.findByUsernameOrThrow(username);
-        makerRepository.save(individualRegister.toEntity(member));
-    }
+	@Transactional
+	public void createIndividualBy(String username, IndividualRegister individualRegister) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		makerRepository.save(individualRegister.toEntity(member));
+	}
 
-    @Transactional
-    public void createCorporateBusinessBy(String username, CorporateRegister corporateRegister) {
-        Member member = memberRepository.findByUsernameOrThrow(username);
-        makerRepository.save(corporateRegister.toEntity(member));
-    }
+	@Transactional
+	public void createCorporateBusinessBy(String username, CorporateRegister corporateRegister) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		makerRepository.save(corporateRegister.toEntity(member));
+	}
 
-    @Transactional
-    public void createPersonalBusinessBy(String username, PersonalRegister personalRegister) {
-        Member member = memberRepository.findByUsernameOrThrow(username);
-        makerRepository.save(personalRegister.toEntity(member));
-    }
+	@Transactional
+	public void createPersonalBusinessBy(String username, PersonalRegister personalRegister) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		makerRepository.save(personalRegister.toEntity(member));
+	}
 
-    public MakerResponse readMakerById(Long id) {
-        Maker maker = makerRepository.findByIdOrThrow(id);
-        if (maker.getDeletedAt() != null) {
-            throw new RuntimeException();
-        }
-        return MakerResponse.fromEntity(maker);
-    }
+	public MakerResponse readMakerById(Long id) {
+		Maker maker = makerRepository.findByIdOrThrow(id);
+		if (maker.getDeletedAt() != null) {
+			throw new RuntimeException();
+		}
+		return MakerResponse.fromEntity(maker);
+	}
 
-    @Transactional
-    public MakerResponse updateMakerById(Long id, MakerUpdate makerUpdate) {
-        Maker maker = makerRepository.findByIdOrThrow(id);
-        maker.update(makerUpdate);
-        return MakerResponse.fromEntity(makerRepository.save(maker));
-    }
+	@Transactional
+	public MakerResponse updateMakerById(Long id, MakerUpdate makerUpdate) {
+		Maker maker = makerRepository.findByIdOrThrow(id);
+		maker.update(makerUpdate);
+		return MakerResponse.fromEntity(makerRepository.save(maker));
+	}
 
-    @Transactional
-    public void removeMakerById(Long id) {
-        Maker maker = makerRepository.findByIdOrThrow(id);
-        maker.delete();
-    }
+	@Transactional
+	public void removeMakerById(Long id) {
+		Maker maker = makerRepository.findByIdOrThrow(id);
+		maker.delete();
+	}
 }

@@ -1,6 +1,6 @@
 package com.isfive.usearth.exception;
 
-public class InvalidValueException extends BusinessException{
+public class InvalidValueException extends BusinessException {
 
 	public InvalidValueException(ErrorCode errorCode, String detail) {
 		super(errorCode, detail);

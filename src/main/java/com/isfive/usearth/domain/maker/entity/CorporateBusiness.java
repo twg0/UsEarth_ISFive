@@ -14,21 +14,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CorporateBusiness extends Maker {
 
-    @Embedded
-    private BusinessInformation businessInformation;
-    private String corporateSealCertificate;
+	@Embedded
+	private BusinessInformation businessInformation;
+	private String corporateSealCertificate;
 
-    @Builder
-   public CorporateBusiness(String name,
-                            String profileImage,
-                            String email,
-                            String phone,
-                            String submitFile,
-                            BusinessInformation businessInformation,
-                            String corporateSealCertificate,
-                            Member member) {
-       super(name, profileImage, email, phone, submitFile, member);
-       this.businessInformation = businessInformation;
-       this.corporateSealCertificate = corporateSealCertificate;
-   }
+	@Builder
+	public CorporateBusiness(String name,
+		String profileImage,
+		String email,
+		String phone,
+		String submitFile,
+		BusinessInformation businessInformation,
+		String corporateSealCertificate,
+		Member member) {
+		super(name, profileImage, email, phone, submitFile, member);
+		this.businessInformation = businessInformation;
+		this.corporateSealCertificate = corporateSealCertificate;
+	}
 }

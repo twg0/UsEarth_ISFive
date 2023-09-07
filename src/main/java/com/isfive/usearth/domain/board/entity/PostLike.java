@@ -17,22 +17,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Post post;
 
-    public PostLike(Member member, Post post) {
-        this.member = member;
-        this.post = post;
-    }
+	public PostLike(Member member, Post post) {
+		this.member = member;
+		this.post = post;
+	}
 
-    public Long getPostId() {
-        return post.getId();
-    }
+	public Long getPostId() {
+		return post.getId();
+	}
 }

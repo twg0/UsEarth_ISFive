@@ -14,22 +14,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RewardCreate {
-    private String title;
-    private String description;
-    private Integer price;
-    private String expectedSendDate;
-    private Integer deliveryFee;
-    private Map<String, String> options;
-    private Map<String, Integer> optionStocks;
+	private String title;
+	private String description;
+	private Integer price;
+	private String expectedSendDate;
+	private Integer deliveryFee;
+	private Map<String, String> options;
+	private Map<String, Integer> optionStocks;
 
-    public Reward toEntity() {
-        return Reward.builder()
-                .title(title)
-                .description(description)
-                .price(price)
-                .expectedSendDate(expectedSendDate)
-                .deliveryFee(deliveryFee)
-                .build();
-    }
+	public Reward toEntity() {
+		return Reward.builder()
+			.title(title)
+			.description(description)
+			.price(price)
+			.expectedSendDate(expectedSendDate)
+			.deliveryFee(deliveryFee)
+			.build();
+	}
 
 }

@@ -37,61 +37,63 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/projects")
 public class ProjectController {
 
-    private final ProjectService projectService;
-    private final FileImageService fileImageService;
+	private final ProjectService projectService;
+	private final FileImageService fileImageService;
 
-    @PostMapping
-    public ResponseEntity<ProjectResponse> createProject(
-            Authentication auth,
-            @RequestPart ProjectRegister projectRegister,           // 프로젝트 정보
-            @RequestPart MultipartFile repImage,                    // 대표 이미지
-            @RequestPart List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
-            @RequestPart List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트
-    ) {
-        FileImage fileImage = fileImageService.createFileImage(repImage);
-        List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
-        List<RewardCreate> rewardCreateList = rewardRegisterList.stream()
-                .map(RewardRegister::toService).collect(Collectors.toList());
-        ProjectCreate projectCreate = projectRegister.toService(fileImage);
-        ProjectResponse projectResponse = projectService.createProject(auth.getName(), projectCreate, rewardCreateList, fileImageList);
+	@PostMapping
+	public ResponseEntity<ProjectResponse> createProject(
+		Authentication auth,
+		@RequestPart ProjectRegister projectRegister,           // 프로젝트 정보
+		@RequestPart MultipartFile repImage,                    // 대표 이미지
+		@RequestPart List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
+		@RequestPart List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트
+	) {
+		FileImage fileImage = fileImageService.createFileImage(repImage);
+		List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
+		List<RewardCreate> rewardCreateList = rewardRegisterList.stream()
+			.map(RewardRegister::toService).collect(Collectors.toList());
+		ProjectCreate projectCreate = projectRegister.toService(fileImage);
+		ProjectResponse projectResponse = projectService.createProject(auth.getName(), projectCreate, rewardCreateList,
+			fileImageList);
 
-        return new ResponseEntity<>(projectResponse, HttpStatus.CREATED);
-    }
+		return new ResponseEntity<>(projectResponse, HttpStatus.CREATED);
+	}
 
-    @GetMapping
-    public ResponseEntity<Page<ProjectsResponse>> findProjects(Pageable pageable) {
-        Page<ProjectsResponse> projectsResponses = projectService.readProjects(pageable);
-        return new ResponseEntity<>(projectsResponses, HttpStatus.OK);
-    }
+	@GetMapping
+	public ResponseEntity<Page<ProjectsResponse>> findProjects(Pageable pageable) {
+		Page<ProjectsResponse> projectsResponses = projectService.readProjects(pageable);
+		return new ResponseEntity<>(projectsResponses, HttpStatus.OK);
+	}
 
-    @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectResponse> findProject(@PathVariable Long projectId) {
-        ProjectResponse projectResponse = projectService.readProject(projectId);
-        return new ResponseEntity<>(projectResponse, HttpStatus.OK);
-    }
+	@GetMapping("/{projectId}")
+	public ResponseEntity<ProjectResponse> findProject(@PathVariable Long projectId) {
+		ProjectResponse projectResponse = projectService.readProject(projectId);
+		return new ResponseEntity<>(projectResponse, HttpStatus.OK);
+	}
 
-    @PatchMapping("/{projectId}")
-    public ResponseEntity<ProjectResponse> updateProject(
-            Authentication auth,
-            @PathVariable Long projectId,
-            @RequestPart ProjectModify projectModify,
-            @RequestPart MultipartFile repImage,
-            @RequestPart List<MultipartFile> projectImageList
-    ) {
-        FileImage fileImage = fileImageService.createFileImage(repImage);
-        List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
-        ProjectUpdate projectUpdate = projectModify.toService(fileImage);
-        ProjectResponse projectResponse = projectService.updateProject(auth.getName(), projectId, projectUpdate, fileImageList);
-        return new ResponseEntity<>(projectResponse, HttpStatus.OK);
-    }
+	@PatchMapping("/{projectId}")
+	public ResponseEntity<ProjectResponse> updateProject(
+		Authentication auth,
+		@PathVariable Long projectId,
+		@RequestPart ProjectModify projectModify,
+		@RequestPart MultipartFile repImage,
+		@RequestPart List<MultipartFile> projectImageList
+	) {
+		FileImage fileImage = fileImageService.createFileImage(repImage);
+		List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
+		ProjectUpdate projectUpdate = projectModify.toService(fileImage);
+		ProjectResponse projectResponse = projectService.updateProject(auth.getName(), projectId, projectUpdate,
+			fileImageList);
+		return new ResponseEntity<>(projectResponse, HttpStatus.OK);
+	}
 
-    @DeleteMapping("/{projectId}")
-    public ResponseEntity<Void> deleteProject(
-            Authentication auth,
-            @PathVariable Long projectId
-    ) {
-        projectService.deleteProject(auth, projectId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@DeleteMapping("/{projectId}")
+	public ResponseEntity<Void> deleteProject(
+		Authentication auth,
+		@PathVariable Long projectId
+	) {
+		projectService.deleteProject(auth, projectId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 }

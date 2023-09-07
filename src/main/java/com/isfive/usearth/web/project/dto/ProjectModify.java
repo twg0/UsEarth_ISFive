@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectModify {
-    private String title;
-    private String summary;
+	private String title;
+	private String summary;
 
-    public ProjectUpdate toService(FileImage file) {
-        return ProjectUpdate.builder()
-                .title(title)
-                .summary(summary)
-                .repImage(file)
-                .build();
-    }
+	public ProjectUpdate toService(FileImage file) {
+		return ProjectUpdate.builder()
+			.title(title)
+			.summary(summary)
+			.repImage(file)
+			.build();
+	}
 }

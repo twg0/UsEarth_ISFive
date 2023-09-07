@@ -14,26 +14,26 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(nullable = false)
-    private String summary;
+	@Column(nullable = false)
+	private String summary;
 
-    @Builder
-    private Board(String title, String summary) {
-        this.title = title;
-        this.summary = summary;
-    }
+	@Builder
+	private Board(String title, String summary) {
+		this.title = title;
+		this.summary = summary;
+	}
 
-    public static Board createBoard(String title, String summary) {
-        return Board.builder()
-                .title(title)
-                .summary(summary)
-                .build();
-    }
+	public static Board createBoard(String title, String summary) {
+		return Board.builder()
+			.title(title)
+			.summary(summary)
+			.build();
+	}
 }

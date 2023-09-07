@@ -24,46 +24,46 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Delivery {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private DeliveryStatus status;
+	@Enumerated(EnumType.STRING)
+	private DeliveryStatus status;
 
-    @Embedded
-    private Address address;
+	@Embedded
+	private Address address;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false, length = 13)
-    private String phone;
+	@Column(nullable = false, length = 13)
+	private String phone;
 
-    @Builder
-    private Delivery(DeliveryStatus status, Address address, String name, String phone) {
-        this.status = status;
-        this.address = address;
-        this.name = name;
-        this.phone = phone;
-    }
+	@Builder
+	private Delivery(DeliveryStatus status, Address address, String name, String phone) {
+		this.status = status;
+		this.address = address;
+		this.name = name;
+		this.phone = phone;
+	}
 
-    public static Delivery createDelivery(DeliveryRegister deliveryRegister) {
-        return Delivery.builder()
-                .status(PRODUCT_PREPARING)
-                .address(deliveryRegister.getAddress())
-                .name(deliveryRegister.getName())
-                .phone(deliveryRegister.getPhone())
-                .build();
-    }
+	public static Delivery createDelivery(DeliveryRegister deliveryRegister) {
+		return Delivery.builder()
+			.status(PRODUCT_PREPARING)
+			.address(deliveryRegister.getAddress())
+			.name(deliveryRegister.getName())
+			.phone(deliveryRegister.getPhone())
+			.build();
+	}
 
-    public void verifyCancelable() {
-        if (status == DELIVERY_PREPARING || status == DELIVERING) {
-            throw new BusinessException(ALREADY_START_DELIVERY);
-        }
+	public void verifyCancelable() {
+		if (status == DELIVERY_PREPARING || status == DELIVERING) {
+			throw new BusinessException(ALREADY_START_DELIVERY);
+		}
 
-        if(status == DELIVERY_COMPLETED) {
-            throw new BusinessException(ALREADY_DELIVERY_COMPLETED);
-        }
-    }
+		if (status == DELIVERY_COMPLETED) {
+			throw new BusinessException(ALREADY_DELIVERY_COMPLETED);
+		}
+	}
 }

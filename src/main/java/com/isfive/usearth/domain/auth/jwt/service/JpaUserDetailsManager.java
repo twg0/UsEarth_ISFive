@@ -32,7 +32,7 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 	// 실제로 Spring Security 내부에서 사용하는 반드시 구현해야 정상동작을 기대할 수 있는 메소드
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<Member> optionalMember = memberRepository.findByEmail(email);
-		if(optionalMember.isEmpty())
+		if (optionalMember.isEmpty())
 			return null;
 		Member member = optionalMember.get();
 		return CustomUserDetails.fromEntity(member);

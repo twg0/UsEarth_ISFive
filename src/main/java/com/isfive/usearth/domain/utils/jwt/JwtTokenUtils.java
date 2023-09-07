@@ -74,7 +74,7 @@ public class JwtTokenUtils {
 			String email = claims.getBody().getSubject();
 
 			// Redis에 저장한 refresh token 과 동일한가?
-			if(!redisTemplate.opsForHash().get("refresh",email).equals(token))
+			if (!redisTemplate.opsForHash().get("refresh", email).equals(token))
 				return null;
 
 			// refresh 토큰의 만료시간이 지나지 않았을 경우 재발급을 위한 email 반환

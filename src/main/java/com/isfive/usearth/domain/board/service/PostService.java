@@ -33,106 +33,106 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class PostService {
 
-    private final PostCommentService postCommentService;
-    private final BoardRepository boardRepository;
-    private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
-    private final PostLikeRepository postLikeRepository;
+	private final PostCommentService postCommentService;
+	private final BoardRepository boardRepository;
+	private final PostRepository postRepository;
+	private final MemberRepository memberRepository;
+	private final PostLikeRepository postLikeRepository;
 
-    @Transactional
-    public void createPost(Long boardId, String username, String title, String content, List<FileImage> fileImages) {
-        Member member = memberRepository.findByUsernameOrThrow(username);
-        Board board = boardRepository.findByIdOrThrow(boardId);
-        Post post = Post.createPost(member, board, title, content);
-        saveImages(post, fileImages);
-        postRepository.save(post);
-    }
+	@Transactional
+	public void createPost(Long boardId, String username, String title, String content, List<FileImage> fileImages) {
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		Board board = boardRepository.findByIdOrThrow(boardId);
+		Post post = Post.createPost(member, board, title, content);
+		saveImages(post, fileImages);
+		postRepository.save(post);
+	}
 
-    /**
-     * Page<Post>를 조회 한 후 List<PostsResponse> 로 만든다.
-     * 로그인 한 사용자가 좋아요를 누른 Post에 일치하는 PostsResponse에는
-     * 좋아요 표시를 할 수 있도록 true 값을 설정해주고 Page<> 타입으로 변환 후 반환한다.
-     */
-    public Page<PostsResponse> readPosts(Long boardId, Integer page, String username) {
-        PageRequest pageRequest = PageRequest.of(page - 1, 10);
-        Page<Post> posts = postRepository.findPosts(boardId, pageRequest);
-        List<PostsResponse> postsResponses = createPostResponses(posts);
+	/**
+	 * Page<Post>를 조회 한 후 List<PostsResponse> 로 만든다.
+	 * 로그인 한 사용자가 좋아요를 누른 Post에 일치하는 PostsResponse에는
+	 * 좋아요 표시를 할 수 있도록 true 값을 설정해주고 Page<> 타입으로 변환 후 반환한다.
+	 */
+	public Page<PostsResponse> readPosts(Long boardId, Integer page, String username) {
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
+		Page<Post> posts = postRepository.findPosts(boardId, pageRequest);
+		List<PostsResponse> postsResponses = createPostResponses(posts);
 
-        List<PostLike> postLikes = postLikeRepository.findByMember_UsernameAndPostIn(username, posts.getContent());
+		List<PostLike> postLikes = postLikeRepository.findByMember_UsernameAndPostIn(username, posts.getContent());
 
-        Set<Long> postIdSet = createPostIdSetBy(postLikes);
-        setLikedByUser(postsResponses, postIdSet);
+		Set<Long> postIdSet = createPostIdSetBy(postLikes);
+		setLikedByUser(postsResponses, postIdSet);
 
-        return new PageImpl<>(postsResponses, pageRequest, posts.getTotalElements());
-    }
+		return new PageImpl<>(postsResponses, pageRequest, posts.getTotalElements());
+	}
 
-    @Transactional
-    public PostResponse readPost(Long postId, String username) {
-        Post post = postRepository.findByIdOrThrow(postId);
-        post.increaseView();
+	@Transactional
+	public PostResponse readPost(Long postId, String username) {
+		Post post = postRepository.findByIdOrThrow(postId);
+		post.increaseView();
 
-        PostResponse postResponse = new PostResponse(post);
+		PostResponse postResponse = new PostResponse(post);
 
-        boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, username);
-        postResponse.setLikedByUser(likedByUser);
+		boolean likedByUser = postLikeRepository.existsByPost_IdAndMember_Email(postId, username);
+		postResponse.setLikedByUser(likedByUser);
 
-        Page<PostCommentResponse> postCommentResponses = postCommentService.findComments(postId, 1);
-        postResponse.setPostCommentResponse(postCommentResponses);
+		Page<PostCommentResponse> postCommentResponses = postCommentService.findComments(postId, 1);
+		postResponse.setPostCommentResponse(postCommentResponses);
 
-        return postResponse;
-    }
+		return postResponse;
+	}
 
-    @Retry
-    @Transactional
-    public void like(Long postId, String username) {
-        Post post = postRepository.findByIdWithMember(postId);
-        post.verifyNotWriter(username);
+	@Retry
+	@Transactional
+	public void like(Long postId, String username) {
+		Post post = postRepository.findByIdWithMember(postId);
+		post.verifyNotWriter(username);
 
-        Member member = memberRepository.findByUsernameOrThrow(username);
-        Optional<PostLike> optionalPostLike = postLikeRepository.findByPostAndMember(post, member);
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		Optional<PostLike> optionalPostLike = postLikeRepository.findByPostAndMember(post, member);
 
-        if (optionalPostLike.isPresent()) {
-            cancelLike(post, optionalPostLike.get());
-        } else {
-            like(post, member);
-        }
-    }
+		if (optionalPostLike.isPresent()) {
+			cancelLike(post, optionalPostLike.get());
+		} else {
+			like(post, member);
+		}
+	}
 
-    private void saveImages(Post post, List<FileImage> fileImages) {
-        fileImages.forEach(fileImage -> {
-            post.addImage(new PostFileImage(fileImage));
-        });
-    }
+	private void saveImages(Post post, List<FileImage> fileImages) {
+		fileImages.forEach(fileImage -> {
+			post.addImage(new PostFileImage(fileImage));
+		});
+	}
 
-    private List<PostsResponse> createPostResponses(Page<Post> posts) {
-        return posts.stream()
-                .map(PostsResponse::new)
-                .toList();
-    }
+	private List<PostsResponse> createPostResponses(Page<Post> posts) {
+		return posts.stream()
+			.map(PostsResponse::new)
+			.toList();
+	}
 
-    private  Set<Long> createPostIdSetBy(List<PostLike> postLikes) {
-        Set<Long> postIdSet = new HashSet<>();
-        postLikes.forEach(postLike ->
-                postIdSet.add(postLike.getPostId()));
-        return postIdSet;
-    }
+	private Set<Long> createPostIdSetBy(List<PostLike> postLikes) {
+		Set<Long> postIdSet = new HashSet<>();
+		postLikes.forEach(postLike ->
+			postIdSet.add(postLike.getPostId()));
+		return postIdSet;
+	}
 
-    private void setLikedByUser(List<PostsResponse> postsResponses, Set<Long> postIdSet) {
-        postsResponses.forEach(postsResponse -> {
-            if (postIdSet.contains(postsResponse.getId())) {
-                postsResponse.setLikedByUser(true);
-            }
-        });
-    }
+	private void setLikedByUser(List<PostsResponse> postsResponses, Set<Long> postIdSet) {
+		postsResponses.forEach(postsResponse -> {
+			if (postIdSet.contains(postsResponse.getId())) {
+				postsResponse.setLikedByUser(true);
+			}
+		});
+	}
 
-    private void cancelLike(Post post, PostLike postLike) {
-        postLikeRepository.delete(postLike);
-        post.cancelLike();
-    }
+	private void cancelLike(Post post, PostLike postLike) {
+		postLikeRepository.delete(postLike);
+		post.cancelLike();
+	}
 
-    private void like(Post post, Member member) {
-        PostLike postLike = new PostLike(member, post);
-        postLikeRepository.save(postLike);
-        post.increaseLikeCount();
-    }
+	private void like(Post post, Member member) {
+		PostLike postLike = new PostLike(member, post);
+		postLikeRepository.save(postLike);
+		post.increaseLikeCount();
+	}
 }

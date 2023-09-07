@@ -26,70 +26,71 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class RewardService {
 
-    private final RewardRepository rewardRepository;
-    private final RewardSkuRepository rewardSkuRepository;
-    private final OptionService optionService;
+	private final RewardRepository rewardRepository;
+	private final RewardSkuRepository rewardSkuRepository;
+	private final OptionService optionService;
 
-    @Transactional
-    public List<Reward> createReward(List<RewardCreate> rewardCreateList) {
-        List<Reward> rewards = new ArrayList<>();
-        for (RewardCreate rewardCreate : rewardCreateList) {
-            Reward reward = rewardCreate.toEntity();
-            List<Option> options = optionService.convertOption(rewardCreate.getOptions(), reward);
-            for (Option option : options)
-                reward.addOption(option);
+	@Transactional
+	public List<Reward> createReward(List<RewardCreate> rewardCreateList) {
+		List<Reward> rewards = new ArrayList<>();
+		for (RewardCreate rewardCreate : rewardCreateList) {
+			Reward reward = rewardCreate.toEntity();
+			List<Option> options = optionService.convertOption(rewardCreate.getOptions(), reward);
+			for (Option option : options)
+				reward.addOption(option);
 
-            List<RewardSku> rewardSkus = optionService.createRewardSku(rewardCreate.getOptionStocks(), reward);
-            for (RewardSku rewardSku : rewardSkus)
-                reward.addRewardSku(rewardSku);
+			List<RewardSku> rewardSkus = optionService.createRewardSku(rewardCreate.getOptionStocks(), reward);
+			for (RewardSku rewardSku : rewardSkus)
+				reward.addRewardSku(rewardSku);
 
-            rewards.add(reward);
-        }
-        rewardRepository.saveAll(rewards);
-        return rewards;
-    }
+			rewards.add(reward);
+		}
+		rewardRepository.saveAll(rewards);
+		return rewards;
+	}
 
-    // TODO 조회 방식 개선
-    public Result<RewardsResponse> findRewards(Long projectId) {
-        List<Reward> rewards = rewardRepository.findByProject_IdWithRewardSkus(projectId);
+	// TODO 조회 방식 개선
+	public Result<RewardsResponse> findRewards(Long projectId) {
+		List<Reward> rewards = rewardRepository.findByProject_IdWithRewardSkus(projectId);
 
-        List<RewardsResponse> rewardsResponses = createRewardsResponse(rewards);
+		List<RewardsResponse> rewardsResponses = createRewardsResponse(rewards);
 
-        Map<Long, RewardsResponse> rewardMap = createRewardsResponseMap(rewardsResponses);
+		Map<Long, RewardsResponse> rewardMap = createRewardsResponseMap(rewardsResponses);
 
-        createRewardsResponseWithRewardSkus(rewards, rewardMap);
-        return new Result<>(new ArrayList<>(rewardMap.values()));
-    }
+		createRewardsResponseWithRewardSkus(rewards, rewardMap);
+		return new Result<>(new ArrayList<>(rewardMap.values()));
+	}
 
-    private List<RewardsResponse> createRewardsResponse(List<Reward> rewards) {
-        return rewards.stream()
-                .map(RewardsResponse::new)
-                .toList();
-    }
+	private List<RewardsResponse> createRewardsResponse(List<Reward> rewards) {
+		return rewards.stream()
+			.map(RewardsResponse::new)
+			.toList();
+	}
 
-    private Map<Long, RewardsResponse> createRewardsResponseMap(List<RewardsResponse> rewardsResponses) {
-        return rewardsResponses.stream()
-                .collect(Collectors.toMap(RewardsResponse::getId, reward -> reward));
-    }
+	private Map<Long, RewardsResponse> createRewardsResponseMap(List<RewardsResponse> rewardsResponses) {
+		return rewardsResponses.stream()
+			.collect(Collectors.toMap(RewardsResponse::getId, reward -> reward));
+	}
 
-    private void createRewardsResponseWithRewardSkus(List<Reward> rewards, Map<Long, RewardsResponse> rewardMap) {
-        rewards.forEach(reward -> addRewardSkuResponses(reward.getId(), rewardMap));
-    }
+	private void createRewardsResponseWithRewardSkus(List<Reward> rewards, Map<Long, RewardsResponse> rewardMap) {
+		rewards.forEach(reward -> addRewardSkuResponses(reward.getId(), rewardMap));
+	}
 
-    private void addRewardSkuResponses(Long rewardId, Map<Long, RewardsResponse> rewardMap) {
-        List<RewardSku> rewardSkus = rewardSkuRepository.findAllByReward_Id(rewardId);
-        rewardSkus.forEach(rewardSku -> {
-            Map<String, String> options = new HashMap<>();
-            putOptionValue(rewardSku, options);
-            RewardSkuResponse rewardSkuResponse = new RewardSkuResponse(rewardSku.getId(), rewardSku.getStock(), options);
-            RewardsResponse rewardsResponse = rewardMap.get(rewardId);
-            rewardsResponse.addRewardSkuResponses(rewardSkuResponse);
-        });
-    }
+	private void addRewardSkuResponses(Long rewardId, Map<Long, RewardsResponse> rewardMap) {
+		List<RewardSku> rewardSkus = rewardSkuRepository.findAllByReward_Id(rewardId);
+		rewardSkus.forEach(rewardSku -> {
+			Map<String, String> options = new HashMap<>();
+			putOptionValue(rewardSku, options);
+			RewardSkuResponse rewardSkuResponse = new RewardSkuResponse(rewardSku.getId(), rewardSku.getStock(),
+				options);
+			RewardsResponse rewardsResponse = rewardMap.get(rewardId);
+			rewardsResponse.addRewardSkuResponses(rewardSkuResponse);
+		});
+	}
 
-    private void putOptionValue(RewardSku rewardSkus, Map<String, String> options) {
-        rewardSkus.getSkuValues().forEach(skuValue -> {
-            options.put(skuValue.getOptionName(), skuValue.getValue());
-        });
-    }
+	private void putOptionValue(RewardSku rewardSkus, Map<String, String> options) {
+		rewardSkus.getSkuValues().forEach(skuValue -> {
+			options.put(skuValue.getOptionName(), skuValue.getValue());
+		});
+	}
 }

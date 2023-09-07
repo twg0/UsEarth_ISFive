@@ -32,57 +32,58 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn
 public class Maker {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
+	private String name;
 
-    private String profileImage;
+	private String profileImage;
 
-    private String email;
+	private String email;
 
-    private String phone;
+	private String phone;
 
-    private String submitFile;
+	private String submitFile;
 
-    private LocalDateTime deletedAt;
+	private LocalDateTime deletedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id")
+	private Member member;
 
-   public Maker(String name, String profileImage, String email, String phone, String submitFile, Member member) {
-       this.name = name;
-       this.profileImage = profileImage;
-       this.phone = phone;
-       this.email = email;
-       this.submitFile = submitFile;
-       this.member = member;
-   }
+	public Maker(String name, String profileImage, String email, String phone, String submitFile, Member member) {
+		this.name = name;
+		this.profileImage = profileImage;
+		this.phone = phone;
+		this.email = email;
+		this.submitFile = submitFile;
+		this.member = member;
+	}
 
-    public void update(MakerUpdate makerUpdate) {
-       if (makerUpdate.getPhone() != null) {
-           this.phone = makerUpdate.getPhone();
-       }
-       if (makerUpdate.getEmail() != null) {
-           this.email = makerUpdate.getEmail();
-       }
-    }
+	public void update(MakerUpdate makerUpdate) {
+		if (makerUpdate.getPhone() != null) {
+			this.phone = makerUpdate.getPhone();
+		}
+		if (makerUpdate.getEmail() != null) {
+			this.email = makerUpdate.getEmail();
+		}
+	}
 
-    public void delete() {
-        deletedAt = LocalDateTime.now();
-    }
+	public void delete() {
+		deletedAt = LocalDateTime.now();
+	}
 
-    @OneToMany(mappedBy = "maker")
-    private List<Project> projects = new ArrayList<>();
+	@OneToMany(mappedBy = "maker")
+	private List<Project> projects = new ArrayList<>();
 
-   public void addProject(Project project) {
-       this.getProjects().add(project);
-       if (project.getMaker() != this)
-           project.setMaker(this);
-   }
+	public void addProject(Project project) {
+		this.getProjects().add(project);
+		if (project.getMaker() != this)
+			project.setMaker(this);
+	}
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
+	public void setMember(Member member) {
+		this.member = member;
+	}
 }

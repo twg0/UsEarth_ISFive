@@ -19,27 +19,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostCommentController {
 
-    private final PostCommentService postCommentService;
+	private final PostCommentService postCommentService;
 
-    @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<Void> writeComment(Authentication auth,
-                                             @PathVariable Long postId,
-                                             @RequestBody @Valid PostCommentCreateRequest request) {
-        postCommentService.createComment(postId, request.getContent(), auth.getName());
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+	@PostMapping("/posts/{postId}/comments")
+	public ResponseEntity<Void> writeComment(Authentication auth,
+		@PathVariable Long postId,
+		@RequestBody @Valid PostCommentCreateRequest request) {
+		postCommentService.createComment(postId, request.getContent(), auth.getName());
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
 
-    @PostMapping("/comments/{commentId}/reply")
-    public ResponseEntity<Void> writeReply(Authentication auth,
-                                           @PathVariable Long commentId,
-                                           @RequestBody @Valid PostCommentCreateRequest request) {
-        postCommentService.createReply(commentId, request.getContent(), auth.getName());
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+	@PostMapping("/comments/{commentId}/reply")
+	public ResponseEntity<Void> writeReply(Authentication auth,
+		@PathVariable Long commentId,
+		@RequestBody @Valid PostCommentCreateRequest request) {
+		postCommentService.createReply(commentId, request.getContent(), auth.getName());
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
 
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(Authentication auth, @PathVariable Long commentId) {
-        postCommentService.deleteComment(commentId, auth.getName());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@DeleteMapping("/comments/{commentId}")
+	public ResponseEntity<Void> deleteComment(Authentication auth, @PathVariable Long commentId) {
+		postCommentService.deleteComment(commentId, auth.getName());
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

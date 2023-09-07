@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PaymentRegister {
-    private String cardNumber;
-    private String expiry;
-    private String birth;
-    private String pwd_2digit;
+	private String cardNumber;
+	private String expiry;
+	private String birth;
+	private String pwd_2digit;
 }

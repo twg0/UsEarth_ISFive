@@ -15,23 +15,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectCreate {
-    private String title;
-    private String summary;
-    private String story;
-    private Integer targetAmount;
-    private Period fundingDate;
-    private String hashTag;
-    private String makerName;
-    private FileImage repImage;
+	private String title;
+	private String summary;
+	private String story;
+	private Integer targetAmount;
+	private Period fundingDate;
+	private String hashTag;
+	private String makerName;
+	private FileImage repImage;
 
-    public Project toEntity(Member member) {
-        return Project.builder()
-                .member(member)
-                .title(title)
-                .summary(summary)
-                .story(story)
-                .targetAmount(targetAmount)
-                .fundingDate(fundingDate)
-                .build();
-    }
+	public Project toEntity(Member member) {
+		return Project.builder()
+			.member(member)
+			.title(title)
+			.summary(summary)
+			.story(story)
+			.targetAmount(targetAmount)
+			.fundingDate(fundingDate)
+			.build();
+	}
 }

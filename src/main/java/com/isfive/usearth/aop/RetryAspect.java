@@ -17,20 +17,20 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 public class RetryAspect {
 
-    @Around("@annotation(retry)")
-    public Object doRetry(ProceedingJoinPoint joinPoint, Retry retry) throws Throwable {
+	@Around("@annotation(retry)")
+	public Object doRetry(ProceedingJoinPoint joinPoint, Retry retry) throws Throwable {
 
-        int maxRetry = retry.value();
+		int maxRetry = retry.value();
 
-        Exception exceptionHolder = null;
-        for (int retryCount = 1; retryCount <= maxRetry; retryCount++) {
-            try{
-                return joinPoint.proceed();
-            } catch (Exception e){
-                log.error("[retry] try count ={}/{}", retryCount, maxRetry);
-                exceptionHolder = e;
-            }
-        }
-        throw exceptionHolder;
-    }
+		Exception exceptionHolder = null;
+		for (int retryCount = 1; retryCount <= maxRetry; retryCount++) {
+			try {
+				return joinPoint.proceed();
+			} catch (Exception e) {
+				log.error("[retry] try count ={}/{}", retryCount, maxRetry);
+				exceptionHolder = e;
+			}
+		}
+		throw exceptionHolder;
+	}
 }

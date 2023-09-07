@@ -10,8 +10,10 @@ import com.isfive.usearth.exception.ErrorCode;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, PostQueryRepository {
 
-    default Post findByIdOrThrow(Long id) {
-        return findById(id).orElseThrow(
-                () -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
-    };
+	default Post findByIdOrThrow(Long id) {
+		return findById(id).orElseThrow(
+			() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+	}
+
+	;
 }

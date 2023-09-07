@@ -19,17 +19,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FundingController {
 
-    private final FundingService fundingService;
+	private final FundingService fundingService;
 
-    @PostMapping("/funding")
-    public ResponseEntity<Void> funding(Authentication auth, @RequestBody @Valid FundingRequest request) {
-        fundingService.funding(auth.getName(), request.toDeliveryRegister(), request.toPaymentRegister(), request.toRewardSkuRegisters());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@PostMapping("/funding")
+	public ResponseEntity<Void> funding(Authentication auth, @RequestBody @Valid FundingRequest request) {
+		fundingService.funding(auth.getName(), request.toDeliveryRegister(), request.toPaymentRegister(),
+			request.toRewardSkuRegisters());
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
-    @DeleteMapping("/funding/{fundingId}")
-    public ResponseEntity<Void> cancel(Authentication auth, @PathVariable Long fundingId) {
-        fundingService.cancel(auth.getName(), fundingId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@DeleteMapping("/funding/{fundingId}")
+	public ResponseEntity<Void> cancel(Authentication auth, @PathVariable Long fundingId) {
+		fundingService.cancel(auth.getName(), fundingId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

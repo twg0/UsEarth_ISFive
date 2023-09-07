@@ -20,23 +20,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SkuValue {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_value_id")
-    private OptionValue optionValue;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "option_value_id")
+	private OptionValue optionValue;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reward_sku_id")
-    private RewardSku rewardSku;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "reward_sku_id")
+	private RewardSku rewardSku;
 
-    public String getValue() {
-        return optionValue.getValue();
-    }
+	public String getValue() {
+		return optionValue.getValue();
+	}
 
-    public String getOptionName() {
-        return optionValue.getOptionName();
-    }
+	public String getOptionName() {
+		return optionValue.getOptionName();
+	}
 }

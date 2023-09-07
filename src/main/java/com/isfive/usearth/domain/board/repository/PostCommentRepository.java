@@ -12,12 +12,12 @@ import com.isfive.usearth.domain.board.entity.PostComment;
 
 public interface PostCommentRepository extends JpaRepository<PostComment, Long> {
 
-    @Query("select pc from PostComment pc join fetch pc.post where pc.id = :id")
-    Optional<PostComment> findByIdWithPost(@Param("id") Long id);
+	@Query("select pc from PostComment pc join fetch pc.post where pc.id = :id")
+	Optional<PostComment> findByIdWithPost(@Param("id") Long id);
 
-    @Query("select pc from PostComment pc join fetch pc.member where pc.id = :id")
-    Optional<PostComment> findByIdWithMember(@Param("id") Long commentId);
+	@Query("select pc from PostComment pc join fetch pc.member where pc.id = :id")
+	Optional<PostComment> findByIdWithMember(@Param("id") Long commentId);
 
-    @Query("select pc from PostComment pc join fetch pc.member where pc.post.id = :postId")
-    Page<PostComment> findAllByPost_Id(@Param("postId") Long postId, Pageable pageable);
+	@Query("select pc from PostComment pc join fetch pc.member where pc.post.id = :postId")
+	Page<PostComment> findAllByPost_Id(@Param("postId") Long postId, Pageable pageable);
 }

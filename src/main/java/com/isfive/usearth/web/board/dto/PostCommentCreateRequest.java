@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostCommentCreateRequest {
 
-    @NotBlank(message = "댓글 내용은 필수 입니다.")
-    private String content;
+	@NotBlank(message = "댓글 내용은 필수 입니다.")
+	private String content;
 
-    public PostCommentCreateRequest(String content) {
-        this.content = content;
-    }
+	public PostCommentCreateRequest(String content) {
+		this.content = content;
+	}
 }

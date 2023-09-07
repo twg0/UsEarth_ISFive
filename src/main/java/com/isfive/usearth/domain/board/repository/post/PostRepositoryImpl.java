@@ -22,28 +22,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostQueryRepository {
 
-    private final JPAQueryFactory query;
+	private final JPAQueryFactory query;
 
-    @Override
-    public Page<Post> findPosts(Long boardId, Pageable pageable) {
-        List<Post> posts = query.selectFrom(post)
-                .leftJoin(post.member, member).fetchJoin()
-                .where(post.board.id.eq(boardId))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(post.id.desc())
-                .fetch();
+	@Override
+	public Page<Post> findPosts(Long boardId, Pageable pageable) {
+		List<Post> posts = query.selectFrom(post)
+			.leftJoin(post.member, member).fetchJoin()
+			.where(post.board.id.eq(boardId))
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.orderBy(post.id.desc())
+			.fetch();
 
-        return new PageImpl<>(posts, pageable, posts.size());
-    }
+		return new PageImpl<>(posts, pageable, posts.size());
+	}
 
-    @Override
-    public Post findByIdWithMember(Long postId) {
-         return Optional.ofNullable(
-                 query.selectFrom(post)
-                         .join(post.member, member)
-                         .where(post.id.eq(postId))
-                         .fetchOne())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
-    }
+	@Override
+	public Post findByIdWithMember(Long postId) {
+		return Optional.ofNullable(
+				query.selectFrom(post)
+					.join(post.member, member)
+					.where(post.id.eq(postId))
+					.fetchOne())
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.POST_NOT_FOUND));
+	}
 }

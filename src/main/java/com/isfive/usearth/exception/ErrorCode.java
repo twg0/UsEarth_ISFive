@@ -25,7 +25,7 @@ public enum ErrorCode {
 
 	SEND_EMAIL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E_001", "이메일을 전송할 수 없습니다."),
 	TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "TK_001", "유효하지 않은 토큰입니다."),
-	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED,"AF_","권한이 없습니다.");
+	AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "AF_", "권한이 없습니다.");
 
 	ErrorCode(HttpStatus httpStatus, String code, String message) {
 		this.httpStatus = httpStatus;

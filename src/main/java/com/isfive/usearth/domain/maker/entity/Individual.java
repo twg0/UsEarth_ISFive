@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Individual extends Maker {
-    private String idCard;
-   @Builder
-   public Individual(String name, String profileImage, String email, String phone, String submitFile, String idCard, Member member) {
-       super(name, profileImage, email, phone, submitFile, member);
-       this.idCard = idCard;
-   }
+	private String idCard;
+
+	@Builder
+	public Individual(String name, String profileImage, String email, String phone, String submitFile, String idCard,
+		Member member) {
+		super(name, profileImage, email, phone, submitFile, member);
+		this.idCard = idCard;
+	}
 }

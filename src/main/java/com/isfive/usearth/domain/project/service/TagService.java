@@ -19,31 +19,31 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class TagService {
 
-    private final ProjectRepository projectRepository;
-    private final TagRepository tagRepository;
+	private final ProjectRepository projectRepository;
+	private final TagRepository tagRepository;
 
-    public List<String> createTagList(String hashTag) {
-        hashTag = hashTag.replace("\"", "");
-        List<String> hashList = Arrays.stream(hashTag.split("#"))
-                .map(String::trim)
-                .filter(s -> s.length() > 0)
-                .collect(Collectors.toList());
+	public List<String> createTagList(String hashTag) {
+		hashTag = hashTag.replace("\"", "");
+		List<String> hashList = Arrays.stream(hashTag.split("#"))
+			.map(String::trim)
+			.filter(s -> s.length() > 0)
+			.collect(Collectors.toList());
 
-        return hashList;
-    }
+		return hashList;
+	}
 
-    public List<Tag> convertTagStrToEntity(List<String> hashList) {
-        List<Tag> tagList = new ArrayList<>();
-        for (String hash : hashList) {
-            Tag tag = Tag.builder()
-                    .name(hash)
-                    .build();
-            tagRepository.save(tag);
-            tagList.add(tag);
-        }
-        tagRepository.saveAll(tagList);
+	public List<Tag> convertTagStrToEntity(List<String> hashList) {
+		List<Tag> tagList = new ArrayList<>();
+		for (String hash : hashList) {
+			Tag tag = Tag.builder()
+				.name(hash)
+				.build();
+			tagRepository.save(tag);
+			tagList.add(tag);
+		}
+		tagRepository.saveAll(tagList);
 
-        return tagList;
-    }
+		return tagList;
+	}
 
 }

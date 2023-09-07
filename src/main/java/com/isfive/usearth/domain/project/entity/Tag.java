@@ -20,19 +20,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Tag {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
+	private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
-    private Project project;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "project_id")
+	private Project project;
 
-    public void setProject(Project project) {
-        this.project = project;
-        if (!project.getSearchTags().contains(this))
-            project.getSearchTags().add(this);
-    }
+	public void setProject(Project project) {
+		this.project = project;
+		if (!project.getSearchTags().contains(this))
+			project.getSearchTags().add(this);
+	}
 }

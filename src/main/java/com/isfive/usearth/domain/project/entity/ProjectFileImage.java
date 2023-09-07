@@ -22,19 +22,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectFileImage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Embedded
-    private FileImage fileImage;
+	@Embedded
+	private FileImage fileImage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Project project;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Project project;
 
-    public void setProject(Project project) {
-        this.project = project;
-        if (!project.getProjectImages().contains(this))
-            project.getProjectImages().add(this);
-    }
+	public void setProject(Project project) {
+		this.project = project;
+		if (!project.getProjectImages().contains(this))
+			project.getProjectImages().add(this);
+	}
 }

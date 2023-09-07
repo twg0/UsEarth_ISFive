@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProjectLike {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Project project;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Project project;
 }
