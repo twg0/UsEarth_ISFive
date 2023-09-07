@@ -33,6 +33,10 @@ public class PostFileImage {
 		return fileImage;
 	}
 
+	public String getStoredName() {
+		return fileImage.getStoredName();
+	}
+
 	public void setPost(Post post) {
 		this.post = post;
 	}

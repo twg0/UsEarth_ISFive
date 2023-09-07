@@ -43,8 +43,10 @@ public class PostService {
 	public void createPost(Long boardId, String username, String title, String content, List<FileImage> fileImages) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
 		Board board = boardRepository.findByIdOrThrow(boardId);
-		Post post = Post.createPost(member, board, title, content);
-		saveImages(post, fileImages);
+
+		List<PostFileImage> postFileImages = createPostFileImages(fileImages);
+
+		Post post = Post.createPost(member, board, title, content, postFileImages);
 		postRepository.save(post);
 	}
 
@@ -82,6 +84,15 @@ public class PostService {
 		return postResponse;
 	}
 
+	@Transactional
+	public void updatePost(Long postId, String username, String title, String content, List<FileImage> fileImages) {
+		Post post = postRepository.findByIdWithMember(postId);
+		post.verifyWriter(username);
+
+		List<PostFileImage> postFileImages = createPostFileImages(fileImages);
+		post.update(title, content, postFileImages);
+	}
+
 	@Retry
 	@Transactional
 	public void like(Long postId, String username) {
@@ -98,10 +109,10 @@ public class PostService {
 		}
 	}
 
-	private void saveImages(Post post, List<FileImage> fileImages) {
-		fileImages.forEach(fileImage -> {
-			post.addImage(new PostFileImage(fileImage));
-		});
+	private List<PostFileImage> createPostFileImages(List<FileImage> fileImages) {
+		return fileImages.stream()
+				.map(PostFileImage::new)
+				.toList();
 	}
 
 	private List<PostsResponse> createPostResponses(Page<Post> posts) {
