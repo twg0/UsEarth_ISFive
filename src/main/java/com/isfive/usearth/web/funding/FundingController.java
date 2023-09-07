@@ -1,5 +1,7 @@
 package com.isfive.usearth.web.funding;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,12 +22,14 @@ public class FundingController {
     private final FundingService fundingService;
 
     @PostMapping("/funding")
-    public void funding(Authentication auth, @RequestBody @Valid FundingRequest request) {
+    public ResponseEntity<Void> funding(Authentication auth, @RequestBody @Valid FundingRequest request) {
         fundingService.funding(auth.getName(), request.toDeliveryRegister(), request.toPaymentRegister(), request.toRewardSkuRegisters());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/funding/{fundingId}")
-    public void cancel(Authentication auth, @PathVariable Long fundingId) {
+    public ResponseEntity<Void> cancel(Authentication auth, @PathVariable Long fundingId) {
         fundingService.cancel(auth.getName(), fundingId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

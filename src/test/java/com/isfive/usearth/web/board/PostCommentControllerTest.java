@@ -144,7 +144,7 @@ class PostCommentControllerTest {
                 .andDo(MockMvcResultHandlers.print());
 
         PostComment comment = postCommentRepository.findById(postComment.getId()).orElseThrow();
-        assertThat(comment.isDelete()).isTrue();
+        assertThat(comment.isDeleted()).isTrue();
     }
 
 }

@@ -56,7 +56,7 @@ public class MakerController {
 
         makerService.createIndividualBy(auth.getName(), register);
 
-        return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
+        return new ResponseEntity<>("메이커 신청이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     @PostMapping("/personal-business")
@@ -78,7 +78,7 @@ public class MakerController {
                 savedRegistration);
         makerService.createPersonalBusinessBy(auth.getName(), register);
 
-        return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
+        return new ResponseEntity<>("메이커 신청이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     @PostMapping("/corporate-business")
@@ -103,7 +103,7 @@ public class MakerController {
                 savedCorporateSealCertificate);
         makerService.createCorporateBusinessBy(auth.getName(), register);
 
-        return ResponseEntity.ok("메이커 신청이 완료되었습니다.");
+        return new ResponseEntity<>("메이커 신청이 완료되었습니다.", HttpStatus.CREATED);
     }
 
     @GetMapping("/{makerId}")
@@ -129,7 +129,7 @@ public class MakerController {
             @PathVariable("makerId") Long id
     ) {
         makerService.removeMakerById(id);
-        return ResponseEntity.ok("메이커가 삭제되었습니다.");
+        return new ResponseEntity<>("메이커가 삭제되었습니다.", HttpStatus.CREATED);
     }
 
 }

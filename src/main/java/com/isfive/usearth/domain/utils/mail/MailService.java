@@ -52,4 +52,27 @@ public class MailService{
 
 		return  message;
 	}
+
+	public void sendErrorEmail(String toEmail, String code) throws Exception {
+		MimeMessage message = createErrorMessage(toEmail, code);
+		try {
+			javaMailSender.send(message);
+		} catch (RuntimeException e) {
+			log.error("MailService.sendEmail exception occur toEmail: {}, " +
+					"code: {}", toEmail, code);
+			throw new BusinessException(ErrorCode.SEND_EMAIL_FAILED);
+		}
+	}
+
+	private MimeMessage createErrorMessage(String email, String code) throws Exception{
+		MimeMessage message = javaMailSender.createMimeMessage();
+
+		message.addRecipients(Message.RecipientType.TO, email);
+		message.setSubject("UsEarth 결제 관련 오류 메일입니다.");
+		message.setText(code);
+		message.setFrom(new InternetAddress(username + "@naver.com", "UsEarth"));
+
+		return  message;
+	}
+
 }
