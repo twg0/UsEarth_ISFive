@@ -98,6 +98,15 @@ public class PostService {
 		}
 	}
 
+	@Transactional
+	public void deletePost(Long postId, String username) {
+		Post post = postRepository.findByIdWithMember(postId);
+		post.verifyNotDeleted();
+		post.verifyWriter(username);
+
+		postRepository.delete(post);
+	}
+
 	private void saveImages(Post post, List<FileImage> fileImages) {
 		fileImages.forEach(fileImage -> {
 			post.addImage(new PostFileImage(fileImage));

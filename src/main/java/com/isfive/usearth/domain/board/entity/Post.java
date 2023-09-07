@@ -25,10 +25,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE post SET deleted = true WHERE id = ? and version = ?")
+@Where(clause = "deleted = false")
 public class Post extends BaseEntity {
 
 	@Id
@@ -62,7 +66,11 @@ public class Post extends BaseEntity {
 	@Column(nullable = false)
 	private Integer commentCount;
 
+	@Column(nullable = false)
+	private boolean deleted = false;
+
 	@Version
+	@Column(nullable = false)
 	private Long version;
 
 	@Builder
@@ -100,9 +108,21 @@ public class Post extends BaseEntity {
 			.toList();
 	}
 
+	public void verifyWriter(String username) {
+		if (!member.isEqualsUsername(username)) {
+			throw new BusinessException(ErrorCode.POST_WRITER_ALLOW);
+		}
+	}
+
 	public void verifyNotWriter(String username) {
 		if (member.isEqualsUsername(username)) {
 			throw new BusinessException(ErrorCode.POST_WRITER_NOT_ALLOW);
+		}
+	}
+
+	public void verifyNotDeleted() {
+		if (deleted) {
+			throw new BusinessException(ErrorCode.ALREADY_DELETED_POST);
 		}
 	}
 
