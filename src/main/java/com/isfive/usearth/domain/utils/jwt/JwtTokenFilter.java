@@ -114,11 +114,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		AbstractAuthenticationToken authenticationToken
 			= new UsernamePasswordAuthenticationToken(
 			CustomUserDetails.builder()
-				.email(((CustomUserDetails)userDetails).getEmail())
+				.username(userDetails.getUsername())
 				.build(),
 			token, userDetails.getAuthorities()
 		);
-		log.info("((CustomUserDetails)userDetails).getEmail() = {}", ((CustomUserDetails)userDetails).getEmail());
+
+		log.info("userDetails.getUsername() = {}", userDetails.getUsername());
 
 		// SecurityContext에 사용자 정보 설정
 		context.setAuthentication(authenticationToken);
