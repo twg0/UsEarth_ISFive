@@ -70,6 +70,13 @@ public class PostController {
 		postService.updatePost(postId, auth.getName(), request.getTitle(), request.getContent(), fileImages);
 
 		deleteFileImages(postFileImages);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@DeleteMapping("/posts/{postId}")
+	public ResponseEntity<Void> deletePost(Authentication auth, @PathVariable Long postId) {
+		postService.deletePost(postId, auth.getName());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

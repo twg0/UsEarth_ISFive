@@ -1,36 +1,24 @@
 package com.isfive.usearth.web.project;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.isfive.usearth.domain.common.FileImage;
+import com.isfive.usearth.domain.common.FileImageService;
+import com.isfive.usearth.domain.project.dto.*;
+import com.isfive.usearth.domain.project.service.ProjectService;
+import com.isfive.usearth.web.project.dto.ProjectModify;
+import com.isfive.usearth.web.project.dto.ProjectRegister;
+import com.isfive.usearth.web.project.dto.RewardRegister;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.isfive.usearth.domain.common.FileImage;
-import com.isfive.usearth.domain.common.FileImageService;
-import com.isfive.usearth.domain.project.dto.ProjectCreate;
-import com.isfive.usearth.domain.project.dto.ProjectResponse;
-import com.isfive.usearth.domain.project.dto.ProjectUpdate;
-import com.isfive.usearth.domain.project.dto.ProjectsResponse;
-import com.isfive.usearth.domain.project.dto.RewardCreate;
-import com.isfive.usearth.domain.project.service.ProjectService;
-import com.isfive.usearth.web.project.dto.ProjectModify;
-import com.isfive.usearth.web.project.dto.ProjectRegister;
-import com.isfive.usearth.web.project.dto.RewardRegister;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,11 +30,11 @@ public class ProjectController {
 
 	@PostMapping
 	public ResponseEntity<ProjectResponse> createProject(
-		Authentication auth,
-		@RequestPart ProjectRegister projectRegister,           // 프로젝트 정보
-		@RequestPart MultipartFile repImage,                    // 대표 이미지
-		@RequestPart List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
-		@RequestPart List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트
+			Authentication auth,
+			@RequestPart @Valid ProjectRegister projectRegister,           // 프로젝트 정보
+			@RequestPart MultipartFile repImage,                    // 대표 이미지
+			@RequestPart List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
+			@RequestPart @Valid List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트
 	) {
 		FileImage fileImage = fileImageService.createFileImage(repImage);
 		List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
@@ -75,7 +63,7 @@ public class ProjectController {
 	public ResponseEntity<ProjectResponse> updateProject(
 		Authentication auth,
 		@PathVariable Long projectId,
-		@RequestPart ProjectModify projectModify,
+		@RequestPart @Valid ProjectModify projectModify,
 		@RequestPart MultipartFile repImage,
 		@RequestPart List<MultipartFile> projectImageList
 	) {

@@ -16,6 +16,7 @@ public enum ErrorCode {
 	POST_WRITER_ALLOW(HttpStatus.BAD_REQUEST, "PW_001", "다른 사용자는 해당 기능을 사용할 수 없습니다."),
 	NOT_MATCHED_FUNDING_USER(HttpStatus.BAD_REQUEST, "NMFU_001", "해당 펀딩의 후원자가 아닙니다."),
 	ALREADY_CANCEL(HttpStatus.BAD_REQUEST, "AC_001", "이미 취소된 펀딩입니다."),
+	ALREADY_DELETED_POST(HttpStatus.BAD_REQUEST, "AD_001", "이미 삭제된 게시글입니다."),
 	MEMBER_CONFLICT(HttpStatus.CONFLICT, "M_002", "이미 등록된 사용자입니다."),
 	ALREADY_START_DELIVERY(HttpStatus.CONFLICT, "ASD_001", "배송이 시작되어 상품을 취소할 수 없습니다."),
 	ALREADY_DELIVERY_COMPLETED(HttpStatus.CONFLICT, "ADC_001", "배송이 완료된 상품은 취소할 수 없습니다."),

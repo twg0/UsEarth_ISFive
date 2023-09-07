@@ -114,8 +114,16 @@ public class PostService {
 
 	private List<PostFileImage> createPostFileImages(List<FileImage> fileImages) {
 		return fileImages.stream()
-				.map(PostFileImage::new)
-				.toList();
+			.map(PostFileImage::new)
+			.toList();
+	}
+	@Transactional
+	public void deletePost(Long postId, String username) {
+		Post post = postRepository.findByIdWithMember(postId);
+		post.verifyNotDeleted();
+		post.verifyWriter(username);
+
+		postRepository.delete(post);
 	}
 
 	private List<PostsResponse> createPostResponses(Page<Post> posts) {
