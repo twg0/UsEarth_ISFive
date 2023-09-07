@@ -152,7 +152,7 @@ class PostCommentServiceTest {
                 .member(writer)
                 .post(post)
                 .content("댓글입니다.")
-                .delete(true)
+                .deleted(true)
                 .build();
         postCommentRepository.save(postComment);
 

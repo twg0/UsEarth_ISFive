@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import com.isfive.usearth.domain.board.entity.PostComment;
@@ -17,9 +18,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,12 +68,27 @@ class PostControllerTest {
 			.content("내용")
 			.build();
 
+		MockMultipartFile requestDTO = new MockMultipartFile("request", "request",
+			"application/json",
+			objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
+
+		// mockMvc.perform(MockMvcRequestBuilders.multipart("/projects")
+		// 		.file(new MockMultipartFile("repImage", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData".getBytes()))
+		// 		.file(new MockMultipartFile("projectImageList", "project_image1.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData1".getBytes()))
+		// 		.file(new MockMultipartFile("projectImageList", "project_image2.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData2".getBytes()))
+		// 		.file(projectDTO)
+		// 		.file(rewardDTO)
+		// 		.contentType(MediaType.MULTIPART_FORM_DATA)
+		// 	)
+		// 	.andDo(print())
+		// 	.andExpect(status().isCreated());
+
 		//when   //then
-		mockMvc.perform(post("/boards/{boardId}/posts", board.getId())
-				.contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request))
+		mockMvc.perform(MockMvcRequestBuilders.multipart("/boards/{boardId}/posts", board.getId())
+				.file(requestDTO)
+				.contentType(MediaType.MULTIPART_FORM_DATA)
 			)
-			.andExpect(status().isOk())
+			.andExpect(status().isCreated())
 			.andDo(print());
 
 		List<Post> all = postRepository.findAll();
