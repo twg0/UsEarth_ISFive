@@ -36,14 +36,16 @@ public class PostController {
 										  @RequestPart @Valid PostCreateRequest request,
 										  @RequestPart(required = false) List<MultipartFile> postImages) {
 		List<FileImage> fileImages = createFileImageList(postImages);
+
 		postService.createPost(boardId, auth.getName(), request.getTitle(), request.getContent(), fileImages);
+
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@GetMapping("/boards/{boardId}/posts")
 	public ResponseEntity<Page<PostsResponse>> findPosts(Authentication auth,
-														 @PathVariable Long boardId,
-														 @RequestParam(defaultValue = "1") Integer page) {
+			@PathVariable Long boardId,
+			@RequestParam(defaultValue = "1") Integer page) {
 		String username = auth == null ? "" : auth.getName();
 		Page<PostsResponse> postsResponses = postService.readPosts(boardId, page, username);
 		return new ResponseEntity<>(postsResponses, HttpStatus.OK);
@@ -61,12 +63,13 @@ public class PostController {
 										   @PathVariable Long postId,
 										   @RequestPart @Valid PostCreateRequest request,
 										   @RequestPart(required = false) List<MultipartFile> postImages) {
-		List<PostFileImage> postFileImages = postFileImageRepository.findAllByPost_Id(postId);
-		deleteFileImages(postFileImages);
 
+		List<PostFileImage> postFileImages = postFileImageRepository.findAllByPost_Id(postId);
 		List<FileImage> fileImages = createFileImageList(postImages);
 
 		postService.updatePost(postId, auth.getName(), request.getTitle(), request.getContent(), fileImages);
+
+		deleteFileImages(postFileImages);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

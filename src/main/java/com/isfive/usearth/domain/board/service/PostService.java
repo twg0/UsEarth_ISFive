@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.isfive.usearth.annotation.FilesDelete;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +40,7 @@ public class PostService {
 	private final MemberRepository memberRepository;
 	private final PostLikeRepository postLikeRepository;
 
+	@FilesDelete
 	@Transactional
 	public void createPost(Long boardId, String username, String title, String content, List<FileImage> fileImages) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
@@ -84,6 +86,7 @@ public class PostService {
 		return postResponse;
 	}
 
+	@FilesDelete
 	@Transactional
 	public void updatePost(Long postId, String username, String title, String content, List<FileImage> fileImages) {
 		Post post = postRepository.findByIdWithMember(postId);
