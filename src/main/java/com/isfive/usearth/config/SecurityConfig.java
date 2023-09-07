@@ -36,7 +36,6 @@ public class SecurityConfig {
 			.requestMatchers(toH2Console());
 	}
 
-
 	@Bean
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		http
@@ -46,15 +45,15 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/login"),
 					new AntPathRequestMatcher("/projects", "GET"),
 					new AntPathRequestMatcher("/projects/{projectId}", "GET"),
-					new AntPathRequestMatcher("/members","POST"),
-					new AntPathRequestMatcher("/members","GET"),
-					new AntPathRequestMatcher("/members/login","GET"),
-					new AntPathRequestMatcher("/members/logout","GET"),
-					new AntPathRequestMatcher("/members/email","POST")
+					new AntPathRequestMatcher("/members", "POST"),
+					new AntPathRequestMatcher("/members", "GET"),
+					new AntPathRequestMatcher("/members/login", "GET"),
+					new AntPathRequestMatcher("/members/email", "POST")
 				).permitAll()
 				.requestMatchers(
+					new AntPathRequestMatcher("/members/logout", "POST"),
 					new AntPathRequestMatcher("/members/**"),
-          new AntPathRequestMatcher("/projects", "POST")
+					new AntPathRequestMatcher("/projects", "POST")
 				).hasRole("USER")
 				.anyRequest()
 				.authenticated()
