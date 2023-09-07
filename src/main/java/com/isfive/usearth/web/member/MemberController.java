@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
@@ -42,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
@@ -63,7 +64,6 @@ public class MemberController {
 		redisTemplate.expire(key, Duration.ofMinutes(5)); // 5분만 저장
 	}
 
-	@ResponseBody
 	@GetMapping
 	public ResponseEntity<MemberResponse> getMemberInfo(
 		Authentication authentication
@@ -72,7 +72,6 @@ public class MemberController {
 		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 	}
 
-	@ResponseBody
 	@GetMapping("login")
 	public ResponseEntity<MemberResponse> login(
 		@RequestBody SignInRequest signInRequest,
@@ -89,7 +88,7 @@ public class MemberController {
 		throw new InvalidValueException(ErrorCode.INVALID_PASSWORD);
 	}
 
-	@GetMapping("logout")
+	@PostMapping("logout")
 	public ResponseEntity<Message> logout(
 		Authentication authentication,
 		HttpServletRequest request,
@@ -101,8 +100,6 @@ public class MemberController {
 		return new ResponseEntity<>(new Message("로그아웃이 완료되었습니다."), HttpStatus.OK);
 	}
 
-	// TODO 회원가입 요청
-	@ResponseBody
 	@PostMapping
 	public ResponseEntity<Message> registration(
 		@RequestBody SignUpRequest request
@@ -126,8 +123,6 @@ public class MemberController {
 		return new ResponseEntity<>(new Message("이메일 인증을 완료하세요."), HttpStatus.OK);
 	}
 
-	// TODO email 인증
-	@ResponseBody
 	@PostMapping("email")
 	public ResponseEntity<Message> emailAuth(
 		@RequestBody MailAuthenticationRequest request
@@ -159,7 +154,6 @@ public class MemberController {
 		}
 	}
 
-	// TODO 회원 정보 수정
 	@PutMapping
 	public ResponseEntity<MemberResponse> updateInfo(
 		@RequestBody UpdateRequest request,
@@ -171,7 +165,6 @@ public class MemberController {
 		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 	}
 
-	// TODO 회원 삭제 요청
 	@DeleteMapping
 	public ResponseEntity<Message> deleteMember(
 		Authentication authentication
