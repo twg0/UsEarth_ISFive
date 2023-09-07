@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
+import com.isfive.usearth.domain.auth.jwt.service.TokenService;
 import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.service.MemberService;
+import com.isfive.usearth.domain.utils.cookie.CookieUtils;
 import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
 import com.isfive.usearth.domain.utils.mail.MailService;
 import com.isfive.usearth.exception.ErrorCode;
@@ -33,19 +37,20 @@ import com.isfive.usearth.web.member.dto.MailAuthenticationRequest;
 import com.isfive.usearth.web.member.dto.UpdateRequest;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
 	private final MemberService memberService;
 	private final StringRedisTemplate redisTemplate;
 	private final ObjectMapper mapper;
-	private final JwtTokenUtils jwtTokenUtils;
+	private final TokenService tokenService;
 
 	private HashOperations<String, Object, Object> stringObjectObjectHashOperations;
 	private ValueOperations<String, String> stringStringValueOperations;
@@ -59,24 +64,42 @@ public class MemberController {
 		redisTemplate.expire(key, Duration.ofMinutes(5)); // 5분만 저장
 	}
 
-	@ResponseBody
 	@GetMapping
+	public ResponseEntity<MemberResponse> getMemberInfo(
+		Authentication authentication
+	) {
+		MemberResponse memberResponse = memberService.readByUsername(authentication.getName());
+		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
+	}
+
+	@GetMapping("login")
 	public ResponseEntity<MemberResponse> login(
-		@RequestBody SignInRequest request,
+		@RequestBody SignInRequest signInRequest,
+		HttpServletRequest request,
 		HttpServletResponse response
 	) {
-		if (memberService.checkUser(request.getUsername(), request.getPassword())) {
-			MemberResponse memberResponse = memberService.readByUsername(request.getUsername());
+		if (memberService.checkUser(signInRequest.getUsername(), signInRequest.getPassword())) {
+			MemberResponse memberResponse = memberService.readByUsername(signInRequest.getUsername());
 
-			// TODO 쿠키에 토큰 생성
+			tokenService.setTokenAndCookie(memberResponse.getEmail(), request, response);
 
 			return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 		}
 		throw new InvalidValueException(ErrorCode.INVALID_PASSWORD);
 	}
 
-	// TODO 회원가입 요청
-	@ResponseBody
+	@PostMapping("logout")
+	public ResponseEntity<Message> logout(
+		Authentication authentication,
+		HttpServletRequest request,
+		HttpServletResponse response
+	) {
+		String username = authentication.getName();
+		String email = memberService.readByUsername(username).getEmail();
+		tokenService.logout(email,request, response);
+		return new ResponseEntity<>(new Message("로그아웃이 완료되었습니다."), HttpStatus.OK);
+	}
+
 	@PostMapping
 	public ResponseEntity<Message> registration(
 		@RequestBody SignUpRequest request
@@ -100,8 +123,6 @@ public class MemberController {
 		return new ResponseEntity<>(new Message("이메일 인증을 완료하세요."), HttpStatus.OK);
 	}
 
-	// TODO email 인증
-	@ResponseBody
 	@PostMapping("email")
 	public ResponseEntity<Message> emailAuth(
 		@RequestBody MailAuthenticationRequest request
@@ -133,7 +154,6 @@ public class MemberController {
 		}
 	}
 
-	// TODO 회원 정보 수정
 	@PutMapping
 	public ResponseEntity<MemberResponse> updateInfo(
 		@RequestBody UpdateRequest request,
@@ -145,7 +165,6 @@ public class MemberController {
 		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 	}
 
-	// TODO 회원 삭제 요청
 	@DeleteMapping
 	public ResponseEntity<Message> deleteMember(
 		Authentication authentication

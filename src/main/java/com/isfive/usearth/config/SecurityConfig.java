@@ -20,7 +20,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 
 @Slf4j
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -34,7 +34,6 @@ public class SecurityConfig {
                 .requestMatchers(toH2Console());
     }
 
-
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
@@ -45,25 +44,12 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/projects", "GET"),
                                 new AntPathRequestMatcher("/projects/{projectId}", "GET"),
                                 new AntPathRequestMatcher("/members", "POST"),
-                                new AntPathRequestMatcher("/members", "GET"),
                                 new AntPathRequestMatcher("/members/email", "POST"),
                                 new AntPathRequestMatcher("/makers/{makerId}", "GET"),
                                 new AntPathRequestMatcher("/makers/{makerId}", "PUT"),
+                                new AntPathRequestMatcher("/members/login", "GET"),
                                 new AntPathRequestMatcher("/makers/{makerId}", "DELETE")
                         ).permitAll()
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/members/**"),
-                                new AntPathRequestMatcher("/projects", "POST"),
-                                new AntPathRequestMatcher("/boards/{boardId}/posts", "POST"),
-                                new AntPathRequestMatcher("/boards/{boardId}/posts", "GET"),
-                                new AntPathRequestMatcher("/posts/{postId}", "GET"),
-                                new AntPathRequestMatcher("/posts/{postId}/like", "POST"),
-                                new AntPathRequestMatcher("/makers/individual", "POST"),
-                                new AntPathRequestMatcher("/makers/personal-business", "POST"),
-                                new AntPathRequestMatcher("/makers/corporate-business", "POST")
-
-                        )
-                        .hasRole("USER")
                         .anyRequest()
                         .authenticated()
                 )
@@ -78,7 +64,6 @@ public class SecurityConfig {
                         sessionManagement -> sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtTokenFilter, AuthorizationFilter.class);
-
         return http.build();
     }
 

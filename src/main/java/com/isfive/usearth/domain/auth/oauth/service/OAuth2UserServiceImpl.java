@@ -21,10 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
-	private final MemberRepository memberRepository;
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-		log.info("loadUser 진입했나?");
+		log.info("loadUser 진입");
 		OAuth2User oAuth2User = super.loadUser(userRequest); // 가져온 유저 정보가 담겨있음
 
 		Map<String, Object> additionalParameters = userRequest.getAdditionalParameters();
