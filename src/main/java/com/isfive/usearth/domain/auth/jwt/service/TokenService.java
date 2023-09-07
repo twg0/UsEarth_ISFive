@@ -41,10 +41,10 @@ public class TokenService {
 	public String setTokenAndCookie(String email, HttpServletRequest request, HttpServletResponse response) {
 
 		// 쿠키 비우기
-		if (CookieUtils.getCookie(request,"serialAT").isEmpty()) {
+		if (CookieUtils.getCookie(request,"serialAT").isPresent()) {
 			CookieUtils.deleteCookie(request,response,"serialAT");
 		}
-		if (CookieUtils.getCookie(request,"serialRT").isEmpty()) {
+		if (CookieUtils.getCookie(request,"serialRT").isPresent()) {
 			CookieUtils.deleteCookie(request,response,"serialRT");
 		}
 
