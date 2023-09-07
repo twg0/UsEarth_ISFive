@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -43,11 +43,13 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(authHttp -> authHttp
 				.requestMatchers(
-					new AntPathRequestMatcher("/login/**"),
+					new AntPathRequestMatcher("/login"),
 					new AntPathRequestMatcher("/projects", "GET"),
 					new AntPathRequestMatcher("/projects/{projectId}", "GET"),
 					new AntPathRequestMatcher("/members","POST"),
 					new AntPathRequestMatcher("/members","GET"),
+					new AntPathRequestMatcher("/members/login","GET"),
+					new AntPathRequestMatcher("/members/logout","GET"),
 					new AntPathRequestMatcher("/members/email","POST")
 				).permitAll()
 				.requestMatchers(
