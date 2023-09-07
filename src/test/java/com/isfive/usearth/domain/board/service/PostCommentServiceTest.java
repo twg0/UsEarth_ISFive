@@ -9,7 +9,6 @@ import com.isfive.usearth.domain.board.repository.PostCommentRepository;
 import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -52,7 +52,7 @@ class PostCommentServiceTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = createPost(writer, board, "제목1", "내용1");
+        Post post = createPost(writer, board, "제목1", "내용1", new ArrayList<>());
         postRepository.save(post);
 
         ExecutorService executorService = Executors.newFixedThreadPool(32);
@@ -92,7 +92,7 @@ class PostCommentServiceTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = createPost(writer, board, "제목1", "내용1");
+        Post post = createPost(writer, board, "제목1", "내용1", new ArrayList<>());
         postRepository.save(post);
 
         PostComment postComment = PostComment.createPostComment(writer, post, "댓글입니다.");
@@ -119,7 +119,7 @@ class PostCommentServiceTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = createPost(writer, board, "제목1", "내용1");
+        Post post = createPost(writer, board, "제목1", "내용1", new ArrayList<>());
         postRepository.save(post);
 
         PostComment postComment = PostComment.createPostComment(writer, post, "댓글입니다.");
@@ -145,7 +145,7 @@ class PostCommentServiceTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = createPost(writer, board, "제목1", "내용1");
+        Post post = createPost(writer, board, "제목1", "내용1", new ArrayList<>());
         postRepository.save(post);
 
         PostComment postComment = PostComment.builder()
@@ -172,7 +172,7 @@ class PostCommentServiceTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = createPost(writer, board, "제목1", "내용1");
+        Post post = createPost(writer, board, "제목1", "내용1", new ArrayList<>());
         postRepository.save(post);
 
         PostComment postComment1 = PostComment.createPostComment(writer, post, "댓글1");

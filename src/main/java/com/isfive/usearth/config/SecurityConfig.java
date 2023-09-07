@@ -20,6 +20,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 
 @Slf4j
 @Configuration
+@EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -47,7 +48,9 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/makers/{makerId}", "GET"),
 					new AntPathRequestMatcher("/makers/{makerId}", "PUT"),
 					new AntPathRequestMatcher("/members/login", "GET"),
-					new AntPathRequestMatcher("/makers/{makerId}", "DELETE")
+					new AntPathRequestMatcher("/makers/{makerId}", "DELETE"),
+					new AntPathRequestMatcher("/boards/{boardId}/posts", "GET"),
+					new AntPathRequestMatcher("/posts/{postId}", "GET")
 				).permitAll()
 				.anyRequest()
 				.authenticated()

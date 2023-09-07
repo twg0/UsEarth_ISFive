@@ -7,18 +7,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.isfive.usearth.domain.board.entity.PostComment;
-import com.isfive.usearth.domain.board.entity.PostLike;
-import com.isfive.usearth.domain.board.repository.PostCommentRepository;
-import com.isfive.usearth.domain.board.repository.PostLikeRepository;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -30,11 +27,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isfive.usearth.domain.board.entity.Board;
 import com.isfive.usearth.domain.board.entity.Post;
+import com.isfive.usearth.domain.board.entity.PostComment;
+import com.isfive.usearth.domain.board.entity.PostFileImage;
+import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.BoardRepository;
+import com.isfive.usearth.domain.board.repository.PostCommentRepository;
+import com.isfive.usearth.domain.board.repository.PostLikeRepository;
 import com.isfive.usearth.domain.board.repository.post.PostRepository;
+import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.web.board.dto.PostCreateRequest;
+import com.isfive.usearth.web.board.dto.PostUpdateRequest;
+
+import jakarta.persistence.EntityManager;
 
 @SpringBootTest
 @Transactional
@@ -70,8 +76,8 @@ class PostControllerTest {
 				.build();
 
 		MockMultipartFile requestDTO = new MockMultipartFile("request", "request",
-				"application/json",
-				objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
+			"application/json",
+			objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
 
 		//when   //then
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/boards/{boardId}/posts", board.getId())
@@ -85,7 +91,6 @@ class PostControllerTest {
 		assertThat(all.size()).isEqualTo(1);
 	}
 
-	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 페이징 조회 할 수 있다.")
 	@Test
 	void findPosts() throws Exception {
@@ -100,7 +105,7 @@ class PostControllerTest {
 		boardRepository.save(board);
 
 		for (int i = 1; i <= 20; i++) {
-			Post post = Post.createPost(member, board, "title" + i, "content" + i);
+			Post post = Post.createPost(member, board, "title" + i, "content" + i, new ArrayList<>());
 			postRepository.save(post);
 		}
 
@@ -117,7 +122,6 @@ class PostControllerTest {
 				.andDo(print());
 	}
 
-	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 조회 할 수 있다.")
 	@Test
 	void findPost() throws Exception {
@@ -132,7 +136,7 @@ class PostControllerTest {
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(member, board, "title", "content");
+		Post post = Post.createPost(member, board, "title", "content", new ArrayList<>());
 		postRepository.save(post);
 
 		PostComment postComment1 = PostComment.createPostComment(member, post, "댓글1");
@@ -180,7 +184,7 @@ class PostControllerTest {
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(member, board, "title", "content");
+		Post post = Post.createPost(member, board, "title", "content", new ArrayList<>());
 		postRepository.save(post);
 
 		//when //then
@@ -190,6 +194,45 @@ class PostControllerTest {
 
 		List<Post> all = postRepository.findAll();
 		assertThat(all).isEmpty();
+	}
+
+	@WithMockUser(username = "member")
+	@DisplayName("사용자는 게시글을 수정할 수 있다.")
+	@Test
+	void updatePost() throws Exception {
+	    //given
+		Member member = Member.builder().username("member").build();
+		memberRepository.save(member);
+
+		Board board = Board.createBoard("게시판 제목", "게시판 요약");
+		boardRepository.save(board);
+
+		Post post = Post.createPost(member, board,
+				"title",
+				"content",
+				new ArrayList<>(List.of(new PostFileImage(new FileImage("name1", "name2")))));
+		postRepository.save(post);
+
+		PostUpdateRequest request = PostUpdateRequest.builder()
+				.title("수정 제목")
+				.content("수정 내용")
+				.build();
+
+		MockMultipartFile requestDTO = new MockMultipartFile("request", "request",
+				"application/json",
+				objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
+
+		//when   //then
+		mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/posts/{postId}", post.getId())
+						.file(requestDTO)
+						.contentType(MediaType.MULTIPART_FORM_DATA)
+				)
+				.andExpect(status().isOk())
+				.andDo(print());
+
+		Post findPost = postRepository.findById(post.getId()).orElseThrow();
+		assertThat(findPost.getTitle()).isEqualTo("수정 제목");
+		assertThat(findPost.getContent()).isEqualTo("수정 내용");
 	}
 
 	@WithMockUser(username = "member")
@@ -208,7 +251,7 @@ class PostControllerTest {
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(writer, board, "title", "content");
+		Post post = Post.createPost(writer, board, "title", "content", new ArrayList<>());
 		postRepository.save(post);
 
 		//when //then
@@ -240,7 +283,7 @@ class PostControllerTest {
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(writer, board, "title", "content");
+		Post post = Post.createPost(writer, board, "title", "content", new ArrayList<>());
 		postRepository.save(post);
 
 		PostLike postLike = new PostLike(member, post);

@@ -84,16 +84,25 @@ public class Post extends BaseEntity {
 		this.commentCount = 0;
 	}
 
-	public static Post createPost(Member member, Board board, String title, String content) {
-		return Post.builder()
-			.member(member)
-			.board(board)
-			.title(title)
-			.content(content)
-			.build();
+	public static Post createPost(Member member, Board board, String title, String content, List<PostFileImage> postFileImages) {
+		Post post = Post.builder()
+				.member(member)
+				.board(board)
+				.title(title)
+				.content(content)
+				.build();
+		postFileImages.forEach(post::addImage);
+		return post;
 	}
 
-	public void addImage(PostFileImage postFileImage) {
+	public void update(String title, String content, List<PostFileImage> postFileImages) {
+		this.title = title;
+		this.content = content;
+		this.postFileImages.clear();
+		postFileImages.forEach(this::addImage);
+	}
+
+	private void addImage(PostFileImage postFileImage) {
 		postFileImages.add(postFileImage);
 		postFileImage.setPost(this);
 	}

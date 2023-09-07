@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -56,7 +57,7 @@ class PostCommentControllerTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = Post.createPost(postWriter, board, "title", "content");
+        Post post = Post.createPost(postWriter, board, "title", "content", new ArrayList<>());
         postRepository.save(post);
         PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
         //when //then
@@ -90,7 +91,7 @@ class PostCommentControllerTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = Post.createPost(postWriter, board, "title", "content");
+        Post post = Post.createPost(postWriter, board, "title", "content", new ArrayList<>());
         postRepository.save(post);
 
         PostComment postComment = PostComment.createPostComment(postWriter, post, "댓글입니다.");
@@ -128,7 +129,7 @@ class PostCommentControllerTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = Post.createPost(postWriter, board, "title", "content");
+        Post post = Post.createPost(postWriter, board, "title", "content", new ArrayList<>());
         postRepository.save(post);
 
         PostComment postComment = PostComment.createPostComment(commentWriter, post, "댓글입니다.");
