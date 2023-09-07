@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtTokenUtils {
 	private final Key signingKey;
 	private final Key refreshKey;
+	private final StringRedisTemplate redisTemplate;
 	private final JwtParser jwtParser;
 	private final JpaUserDetailsManager userDetailsManager;
 	public final Long ACCESS_TOKEN_EXPIRATION_TIME;
@@ -34,7 +36,8 @@ public class JwtTokenUtils {
 		String refreshSecret,
 		@Value("${security.jwt.access-expiration-time}") Long accessExpirationTime,
 		@Value("${security.jwt.refresh-expiration-time}") Long refreshExpirationTime,
-		JpaUserDetailsManager userDetailsManager
+		JpaUserDetailsManager userDetailsManager,
+		StringRedisTemplate redisTemplate
 	) {
 		this.signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 		// jwt 번역기 만들기
@@ -45,31 +48,17 @@ public class JwtTokenUtils {
 		this.REFRESH_TOKEN_EXPIRATION_TIME = refreshExpirationTime;
 		this.userDetailsManager = userDetailsManager;
 		this.refreshKey = Keys.hmacShaKeyFor(refreshSecret.getBytes());
+		this.redisTemplate = redisTemplate;
 	}
 
-	// 1. JWT가 유효한지 판단하는 메소드
-	//    jjwt 라이브러리에서는 JWT를 해석하는 과정에서
-	//    유효하지 않으면 예외가 발생
-	public boolean validate(String token) {
-		try {
-			// 정당한 JWT면 true,
-			// parseClaimsJws: 암호화된 JWT를 해석하기 위한 메소드
-			jwtParser.parseClaimsJws(token);
-			return true;
-			// 정당하지 않은 JWT면 false
-		} catch (Exception e) {
-			log.warn("invalid jwt: {}", e.getClass());
-			return false;
-		}
-	}
 	public String validateAccessToken(String token) {
 		try {
 			// 검증
 			Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
 
-			// access 토큰의 만료시간이 지났을경우
+			// access 토큰의 만료시간이 지났을경우 재발급을 위한 email 반환
 			if (!claims.getBody().getExpiration().after(new Date())) {
-				return "need refresh";
+				return claims.getBody().getSubject();
 			}
 			return "ok";
 		} catch (Exception e) {
@@ -82,12 +71,18 @@ public class JwtTokenUtils {
 		try {
 			// 검증
 			Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(refreshKey).build().parseClaimsJws(token);
+			String email = claims.getBody().getSubject();
 
-			// refresh 토큰의 만료시간이 지나지 않았을 경우, 새로운 access 토큰을 생성
-			if (!claims.getBody().getExpiration().before(new Date())) {
-				return createAccessToken((CustomUserDetails)getUserDetails(token));
+			// Redis에 저장한 refresh token 과 동일한가?
+			if(!redisTemplate.opsForHash().get("refresh",email).equals(token))
+				return null;
+
+			// refresh 토큰의 만료시간이 지나지 않았을 경우 재발급을 위한 email 반환
+			if (claims.getBody().getExpiration().after(new Date())) {
+				return email;
 			}
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return null;
 		}
 		return null;
@@ -102,6 +97,7 @@ public class JwtTokenUtils {
 	}
 
 	public UserDetails getUserDetails(String token) {
+		log.info("this.parseClaims(token).getSubject() = {}", this.parseClaims(token).getSubject());
 		return userDetailsManager.loadUserByUsername(this.parseClaims(token).getSubject());
 	}
 
