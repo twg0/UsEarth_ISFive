@@ -1,23 +1,22 @@
 package com.isfive.usearth.web.board;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.springframework.http.MediaType.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import com.isfive.usearth.domain.board.entity.PostComment;
-import com.isfive.usearth.domain.board.entity.PostLike;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.isfive.usearth.domain.board.entity.*;
+import com.isfive.usearth.domain.board.repository.BoardRepository;
 import com.isfive.usearth.domain.board.repository.PostCommentRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
+import com.isfive.usearth.domain.board.repository.post.PostRepository;
+import com.isfive.usearth.domain.common.FileImage;
+import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.domain.member.repository.MemberRepository;
+import com.isfive.usearth.web.board.dto.PostCreateRequest;
+import com.isfive.usearth.web.board.dto.PostUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -26,14 +25,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.isfive.usearth.domain.board.entity.Board;
-import com.isfive.usearth.domain.board.entity.Post;
-import com.isfive.usearth.domain.board.repository.BoardRepository;
-import com.isfive.usearth.domain.board.repository.post.PostRepository;
-import com.isfive.usearth.domain.member.entity.Member;
-import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.web.board.dto.PostCreateRequest;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -72,17 +74,6 @@ class PostControllerTest {
 			"application/json",
 			objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
 
-		// mockMvc.perform(MockMvcRequestBuilders.multipart("/projects")
-		// 		.file(new MockMultipartFile("repImage", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData".getBytes()))
-		// 		.file(new MockMultipartFile("projectImageList", "project_image1.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData1".getBytes()))
-		// 		.file(new MockMultipartFile("projectImageList", "project_image2.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData2".getBytes()))
-		// 		.file(projectDTO)
-		// 		.file(rewardDTO)
-		// 		.contentType(MediaType.MULTIPART_FORM_DATA)
-		// 	)
-		// 	.andDo(print())
-		// 	.andExpect(status().isCreated());
-
 		//when   //then
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/boards/{boardId}/posts", board.getId())
 				.file(requestDTO)
@@ -110,7 +101,7 @@ class PostControllerTest {
 		boardRepository.save(board);
 
 		for (int i = 1; i <= 20; i++) {
-			Post post = Post.createPost(member, board, "title" + i, "content" + i);
+			Post post = Post.createPost(member, board, "title" + i, "content" + i, new ArrayList<>());
 			postRepository.save(post);
 		}
 
@@ -142,7 +133,7 @@ class PostControllerTest {
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(member, board, "title", "content");
+		Post post = Post.createPost(member, board, "title", "content", new ArrayList<>());
 		postRepository.save(post);
 
 		PostComment postComment1 = PostComment.createPostComment(member, post, "댓글1");
@@ -178,6 +169,45 @@ class PostControllerTest {
 	}
 
 	@WithMockUser(username = "member")
+	@DisplayName("사용자는 게시글을 수정할 수 있다.")
+	@Test
+	void updatePost() throws Exception {
+	    //given
+		Member member = Member.builder().username("member").build();
+		memberRepository.save(member);
+
+		Board board = Board.createBoard("게시판 제목", "게시판 요약");
+		boardRepository.save(board);
+
+		Post post = Post.createPost(member, board,
+				"title",
+				"content",
+				new ArrayList<>(List.of(new PostFileImage(new FileImage("name1", "name2")))));
+		postRepository.save(post);
+
+		PostUpdateRequest request = PostUpdateRequest.builder()
+				.title("수정 제목")
+				.content("수정 내용")
+				.build();
+
+		MockMultipartFile requestDTO = new MockMultipartFile("request", "request",
+				"application/json",
+				objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
+
+		//when   //then
+		mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/posts/{postId}", post.getId())
+						.file(requestDTO)
+						.contentType(MediaType.MULTIPART_FORM_DATA)
+				)
+				.andExpect(status().isOk())
+				.andDo(print());
+
+		Post findPost = postRepository.findById(post.getId()).orElseThrow();
+		assertThat(findPost.getTitle()).isEqualTo("수정 제목");
+		assertThat(findPost.getContent()).isEqualTo("수정 내용");
+	}
+
+	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 좋아요 할 수 있다.")
 	@Test
 	void like() throws Exception {
@@ -193,7 +223,7 @@ class PostControllerTest {
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(writer, board, "title", "content");
+		Post post = Post.createPost(writer, board, "title", "content", new ArrayList<>());
 		postRepository.save(post);
 
 		//when //then
@@ -225,7 +255,7 @@ class PostControllerTest {
 		Board board = Board.createBoard("게시판 제목", "게시판 요약");
 		boardRepository.save(board);
 
-		Post post = Post.createPost(writer, board, "title", "content");
+		Post post = Post.createPost(writer, board, "title", "content", new ArrayList<>());
 		postRepository.save(post);
 
 		PostLike postLike = new PostLike(member, post);
