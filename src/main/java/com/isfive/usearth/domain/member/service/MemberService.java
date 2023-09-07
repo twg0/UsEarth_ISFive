@@ -12,6 +12,7 @@ import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
 import com.isfive.usearth.domain.utils.mail.MailService;
 import com.isfive.usearth.exception.BusinessException;
 import com.isfive.usearth.exception.ErrorCode;
@@ -29,6 +30,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final MailService mailService;
+	private final JwtTokenUtils jwtTokenUtils;
 
 	@Transactional
 	public MemberResponse createBy(SignUpRegister signUpRegister) {
@@ -50,20 +52,6 @@ public class MemberService {
 		member.encodePassword(passwordEncoder);
 		Member save = memberRepository.save(member);
 		return MemberResponse.fromEntity(save);
-	}
-
-	@Transactional
-	public MemberResponse updateRefreshToken(String username, String refreshToken) {
-		Member member = memberRepository.findByUsernameOrThrow(username);
-		member.updateRefreshToken(refreshToken);
-		return MemberResponse.fromEntity(member);
-	}
-
-	@Transactional
-	public MemberResponse updateRefreshTokenByEmail(String email, String refreshToken) {
-		Member member = memberRepository.findByEmailOrThrow(email);
-		member.updateRefreshToken(refreshToken);
-		return MemberResponse.fromEntity(member);
 	}
 
 	@Transactional
