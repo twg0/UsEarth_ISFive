@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -54,9 +55,9 @@ class PostServiceTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post1 = createPost(writer, board, "제목1", "내용1");
-        Post post2 = createPost(writer, board, "제목2", "내용2");
-        Post post3 = createPost(writer, board, "제목3", "내용3");
+        Post post1 = createPost(writer, board, "제목1", "내용1", new ArrayList<>());
+        Post post2 = createPost(writer, board, "제목2", "내용2", new ArrayList<>());
+        Post post3 = createPost(writer, board, "제목3", "내용3", new ArrayList<>());
 
         postRepository.save(post1);
         postRepository.save(post2);
@@ -110,7 +111,7 @@ class PostServiceTest {
         Board board = Board.createBoard("게시판 제목", "게시판 요약");
         boardRepository.save(board);
 
-        Post post = createPost(writer, board, "제목1", "내용1");
+        Post post = createPost(writer, board, "제목1", "내용1", new ArrayList<>());
         postRepository.save(post);
 
         ExecutorService executorService = Executors.newFixedThreadPool(32);
