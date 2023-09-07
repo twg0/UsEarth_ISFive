@@ -41,14 +41,8 @@ public class Member extends BaseEntity {
     private String password;
     private String phone;
     private String email;
-    private String refreshToken;
     private String provider;
     private String providerId;
-
-    public Member updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-        return this;
-    }
 
     public Member updatePassword(String password) {
         this.password = password;
