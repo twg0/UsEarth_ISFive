@@ -13,6 +13,7 @@ import com.isfive.usearth.domain.board.entity.PostComment;
 import com.isfive.usearth.domain.board.entity.PostLike;
 import com.isfive.usearth.domain.board.repository.PostCommentRepository;
 import com.isfive.usearth.domain.board.repository.PostLikeRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +56,8 @@ class PostControllerTest {
 	void writePost() throws Exception {
 		//given
 		Member member = Member.builder()
-			.username("writer")
-			.build();
+				.username("writer")
+				.build();
 
 		memberRepository.save(member);
 
@@ -64,32 +65,21 @@ class PostControllerTest {
 		boardRepository.save(board);
 
 		PostCreateRequest request = PostCreateRequest.builder()
-			.title("제목")
-			.content("내용")
-			.build();
+				.title("제목")
+				.content("내용")
+				.build();
 
 		MockMultipartFile requestDTO = new MockMultipartFile("request", "request",
-			"application/json",
-			objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
-
-		// mockMvc.perform(MockMvcRequestBuilders.multipart("/projects")
-		// 		.file(new MockMultipartFile("repImage", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData".getBytes()))
-		// 		.file(new MockMultipartFile("projectImageList", "project_image1.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData1".getBytes()))
-		// 		.file(new MockMultipartFile("projectImageList", "project_image2.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData2".getBytes()))
-		// 		.file(projectDTO)
-		// 		.file(rewardDTO)
-		// 		.contentType(MediaType.MULTIPART_FORM_DATA)
-		// 	)
-		// 	.andDo(print())
-		// 	.andExpect(status().isCreated());
+				"application/json",
+				objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
 
 		//when   //then
 		mockMvc.perform(MockMvcRequestBuilders.multipart("/boards/{boardId}/posts", board.getId())
-				.file(requestDTO)
-				.contentType(MediaType.MULTIPART_FORM_DATA)
-			)
-			.andExpect(status().isCreated())
-			.andDo(print());
+						.file(requestDTO)
+						.contentType(MediaType.MULTIPART_FORM_DATA)
+				)
+				.andExpect(status().isCreated())
+				.andDo(print());
 
 		List<Post> all = postRepository.findAll();
 		assertThat(all.size()).isEqualTo(1);
@@ -101,8 +91,8 @@ class PostControllerTest {
 	void findPosts() throws Exception {
 		//given
 		Member member = Member.builder()
-			.username("member")
-			.build();
+				.username("member")
+				.build();
 
 		memberRepository.save(member);
 
@@ -116,15 +106,15 @@ class PostControllerTest {
 
 		//when //then
 		mockMvc.perform(get("/boards/{boardId}/posts", board.getId())
-				.contentType(APPLICATION_JSON)
-				.param("page", "1")
-			)
-			.andExpect(jsonPath("$.content").isArray())
-			.andExpect(jsonPath("$.content.size()").value(10))
-			.andExpect(jsonPath("$.content[0].title").value("title20"))
-			.andExpect(jsonPath("$.content[9].title").value("title11"))
-			.andExpect(status().isOk())
-			.andDo(print());
+						.contentType(APPLICATION_JSON)
+						.param("page", "1")
+				)
+				.andExpect(jsonPath("$.content").isArray())
+				.andExpect(jsonPath("$.content.size()").value(10))
+				.andExpect(jsonPath("$.content[0].title").value("title20"))
+				.andExpect(jsonPath("$.content[9].title").value("title11"))
+				.andExpect(status().isOk())
+				.andDo(print());
 	}
 
 	@WithMockUser(username = "member")
@@ -175,6 +165,31 @@ class PostControllerTest {
 				.andExpect(jsonPath("$.postCommentResponse.content[1].postCommentResponses.size()").value(2))
 				.andExpect(status().isOk())
 				.andDo(print());
+	}
+
+	@Autowired EntityManager em;
+
+	@WithMockUser(username = "member")
+	@DisplayName("사용자는 게시글을 삭제 할 수 있다.")
+	@Test
+	void deletePost() throws Exception {
+		//given
+		Member member = Member.builder().username("member").build();
+		memberRepository.save(member);
+
+		Board board = Board.createBoard("게시판 제목", "게시판 요약");
+		boardRepository.save(board);
+
+		Post post = Post.createPost(member, board, "title", "content");
+		postRepository.save(post);
+
+		//when //then
+		mockMvc.perform(delete("/posts/{postId}", post.getId()))
+				.andExpect(status().isOk())
+				.andDo(print());
+
+		List<Post> all = postRepository.findAll();
+		assertThat(all).isEmpty();
 	}
 
 	@WithMockUser(username = "member")
