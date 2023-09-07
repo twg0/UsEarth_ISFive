@@ -86,7 +86,6 @@ class PostControllerTest {
 		assertThat(all.size()).isEqualTo(1);
 	}
 
-	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 페이징 조회 할 수 있다.")
 	@Test
 	void findPosts() throws Exception {
@@ -118,7 +117,6 @@ class PostControllerTest {
 			.andDo(print());
 	}
 
-	@WithMockUser(username = "member")
 	@DisplayName("사용자는 게시글을 조회 할 수 있다.")
 	@Test
 	void findPost() throws Exception {

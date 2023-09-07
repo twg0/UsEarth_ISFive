@@ -42,15 +42,17 @@ public class PostController {
 
 	@GetMapping("/boards/{boardId}/posts")
 	public ResponseEntity<Page<PostsResponse>> findPosts(Authentication auth,
-		@PathVariable Long boardId,
-		@RequestParam(defaultValue = "1") Integer page) {
-		Page<PostsResponse> postsResponses = postService.readPosts(boardId, page, auth.getName());
+														 @PathVariable Long boardId,
+														 @RequestParam(defaultValue = "1") Integer page) {
+		String username = auth == null ? "" : auth.getName();
+		Page<PostsResponse> postsResponses = postService.readPosts(boardId, page, username);
 		return new ResponseEntity<>(postsResponses, HttpStatus.OK);
 	}
 
 	@GetMapping("/posts/{postId}")
 	public ResponseEntity<PostResponse> findPost(Authentication auth, @PathVariable Long postId) {
-		PostResponse response = postService.readPost(postId, auth.getName());
+		String username = auth == null ? "" : auth.getName();
+		PostResponse response = postService.readPost(postId, username);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
