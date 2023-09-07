@@ -48,8 +48,8 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/members", "GET"),
                                 new AntPathRequestMatcher("/members/email", "POST"),
                                 new AntPathRequestMatcher("/makers/{makerId}", "GET"),
-                                new AntPathRequestMatcher("/members/{makerId}", "PUT"),
-                                new AntPathRequestMatcher("/members/{makerId}", "DELETE")
+                                new AntPathRequestMatcher("/makers/{makerId}", "PUT"),
+                                new AntPathRequestMatcher("/makers/{makerId}", "DELETE")
                         ).permitAll()
                         .requestMatchers(
                                 new AntPathRequestMatcher("/members/**"),
