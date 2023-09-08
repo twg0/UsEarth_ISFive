@@ -33,14 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -324,16 +322,8 @@ class ProjectControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        // 프로젝트 삭제 후 deletedAt 필드 확인
-        Project pro = projectRepository.findById(project.getId()).orElse(null);
-        assertNotNull(pro); // 프로젝트가 존재해야 함
-
-        // LocalDateTime deletedAt = pro.getDeletedAt();
-        // assertNotNull(deletedAt); // deletedAt 필드는 null이 아니어야 함
-        //
-        // // 특정 조건을 만족하는지 확인 (예: deletedAt 필드가 현재 시간 이전인지 확인)
-        // LocalDateTime currentDateTime = LocalDateTime.now();
-        // assertTrue(deletedAt.isBefore(currentDateTime));
+        List<Project> all = projectRepository.findAll();
+        assertThat(all).isEmpty();
     }
 
 }
