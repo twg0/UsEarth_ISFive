@@ -1,30 +1,26 @@
 package com.isfive.usearth.domain.project.service;
 
+import com.isfive.usearth.annotation.FilesDelete;
+import com.isfive.usearth.annotation.Retry;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.project.dto.*;
-import com.isfive.usearth.domain.project.entity.Project;
-import com.isfive.usearth.domain.project.entity.ProjectFileImage;
-import com.isfive.usearth.domain.project.entity.Reward;
-import com.isfive.usearth.domain.project.entity.Tag;
+import com.isfive.usearth.domain.project.entity.*;
 import com.isfive.usearth.domain.project.repository.ProjectFileImageRepository;
+import com.isfive.usearth.domain.project.repository.ProjectLikeRepository;
 import com.isfive.usearth.domain.project.repository.ProjectRepository;
 import com.isfive.usearth.domain.project.repository.TagRepository;
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,9 +32,12 @@ public class ProjectService {
 	private final MakerRepository makerRepository;
 	private final TagRepository tagRepository;
 	private final ProjectFileImageRepository projectFileImageRepository;
+	private final ProjectLikeRepository projectLikeRepository;
 	private final RewardService rewardService;
 	private final TagService tagService;
+	private final ProjectCommentService projectCommentService;
 
+	@FilesDelete
 	@Transactional
 	public ProjectResponse createProject(String username, ProjectCreate projectCreate,
 		List<RewardCreate> rewardCreateList, List<FileImage> fileList) {
@@ -75,15 +74,13 @@ public class ProjectService {
 		return new ProjectResponse(project);
 	}
 
+	@FilesDelete
 	@Transactional
-	public ProjectResponse updateProject(String username, Long projectId, ProjectUpdate projectUpdate,
-		List<FileImage> fileList) {
+	public ProjectResponse updateProject(String username, Long projectId, ProjectUpdate projectUpdate, List<FileImage> fileList) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
 
 		Project project = projectRepository.findByIdOrElseThrow(projectId);
-
-		if (!member.equals(project.getMember()))
-			throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+		project.verifyWriter(username);
 
 		// 프로젝트 정보 수정
 		project.update(projectUpdate.toEntity());
@@ -107,27 +104,56 @@ public class ProjectService {
 	}
 
 	@Transactional
-	public void deleteProject(
-		Authentication auth, Long projectId) {
-		String username = auth.getName();
+	public void deleteProject(String username, Long projectId) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
 		Project project = projectRepository.findByIdOrElseThrow(projectId);
-
-		if (!member.equals(project.getMember()))
-			throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+		project.verifyNotDeleted();
+		project.verifyWriter(username);
 
 		projectRepository.delete(project);
 	}
 
-	public Page<ProjectsResponse> readProjects(Pageable pageable) {
-		Page<Project> projects = projectRepository.findAll(pageable);
-		return createProjectResponsePage(pageable, projects);
+	public Page<ProjectsResponse> readProjects(Integer page, String username) {
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
+		Page<Project> projects = projectRepository.findAll(pageRequest);
+		List<ProjectsResponse> projectsResponses = createProjectResponse(projects);
+		List<ProjectLike> projectLikes = projectLikeRepository.findByMember_UsernameAndProjectIn(username, projects.getContent());
+		Set<Long> projectIdSet = createProjectIdSetBy(projectLikes);
+		setLikedByUser(projectsResponses, projectIdSet);
+
+		return new PageImpl<>(projectsResponses, pageRequest, projects.getTotalElements());
 	}
 
-	public ProjectResponse readProject(Long projectId) {
-		Project project = projectRepository.findByIdWithRewards(projectId)
-			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
-		return new ProjectResponse(project);
+	@Transactional
+	public ProjectResponse readProject(Long projectId, String username) {
+		Project project = projectRepository.findByIdOrElseThrow(projectId);
+		project.increaseView();
+
+		ProjectResponse projectResponse = new ProjectResponse(project);
+
+		boolean likedByUser = projectLikeRepository.existsByProject_IdAndMember_Username(projectId, username);
+		projectResponse.setLikedByUser(likedByUser);
+
+		Page<ProjectCommentResponse> projectCommentResponses = projectCommentService.findComments(projectId, 1);
+		projectResponse.setProjectCommentResponses(projectCommentResponses);
+
+		return projectResponse;
+	}
+
+	@Retry
+	@Transactional
+	public void like(Long projectId, String username) {
+		Project project = projectRepository.findByIdOrElseThrow(projectId);
+		project.verifyNotWriter(username);
+
+		Member member = memberRepository.findByUsernameOrThrow(username);
+		Optional<ProjectLike> optionalProjectLike = projectLikeRepository.findByProjectAndMember(project, member);
+
+		if (optionalProjectLike.isPresent()) {
+			cancelLike(project, optionalProjectLike.get());
+		} else {
+			like(project, member);
+		}
 	}
 
 	private List<ProjectFileImage> createProjectFileImageList(List<FileImage> fileImageList) {
@@ -147,10 +173,35 @@ public class ProjectService {
 		return projectFileImage;
 	}
 
-	private Page<ProjectsResponse> createProjectResponsePage(Pageable pageable, Page<Project> projects) {
-		List<ProjectsResponse> list = projects.stream()
+	private List<ProjectsResponse> createProjectResponse(Page<Project> projects) {
+		return projects.stream()
 			.map(ProjectsResponse::new)
 			.toList();
-		return new PageImpl<>(list, pageable, projects.getTotalElements());
+	}
+
+	private Set<Long> createProjectIdSetBy(List<ProjectLike> projectLikes) {
+		Set<Long> projectIdSet = new HashSet<>();
+		projectLikes.forEach(projectLike ->
+				projectIdSet.add(projectLike.getProject().getId()));
+		return projectIdSet;
+	}
+
+	private void setLikedByUser(List<ProjectsResponse> projectsResponses, Set<Long> projectIdSet) {
+		projectsResponses.forEach(projectsResponse -> {
+			if (projectIdSet.contains(projectsResponse.getId())) {
+				projectsResponse.setLikedByUser(true);
+			}
+		});
+	}
+
+	private void cancelLike(Project project, ProjectLike projectLike) {
+		projectLikeRepository.delete(projectLike);
+		project.cancelLike();
+	}
+
+	private void like(Project project, Member member) {
+		ProjectLike projectLike = new ProjectLike(member, project);
+		projectLikeRepository.save(projectLike);
+		project.increaseLikeCount();
 	}
 }
