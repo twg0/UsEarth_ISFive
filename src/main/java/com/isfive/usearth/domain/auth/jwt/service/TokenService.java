@@ -36,14 +36,9 @@ public class TokenService {
 
 	// TODO 토큰 생성 후 쿠키 전송
 	public String setTokenAndCookie(String email, HttpServletRequest request, HttpServletResponse response) {
+		log.info("request 쿠키 수 = {}", request.getCookies().length);
 
-		// 쿠키 비우기
-		if (CookieUtils.getCookie(request, "serialAT").isPresent()) {
-			CookieUtils.deleteCookie(request, response, "serialAT");
-		}
-		if (CookieUtils.getCookie(request, "serialRT").isPresent()) {
-			CookieUtils.deleteCookie(request, response, "serialRT");
-		}
+		CookieUtils.deleteAll(request, response);
 
 		Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
@@ -59,19 +54,16 @@ public class TokenService {
 
 		redisTemplate.opsForHash().put(key, email, refreshToken);
 
-		String serialAT = CookieUtils.serialize(accessToken);
-		String serialRT = CookieUtils.serialize(refreshToken);
-
-		CookieUtils.addCookie(response, "serialAT", serialAT, AT_COOKIE_EXPIRE_SECONDS);
-		CookieUtils.addCookie(response, "serialRT", serialRT, RT_COOKIE_EXPIRE_SECONDS);
+		CookieUtils.addCookie(response, "accessToken", accessToken, AT_COOKIE_EXPIRE_SECONDS);
+		CookieUtils.addCookie(response, "refreshToken", refreshToken, RT_COOKIE_EXPIRE_SECONDS);
 
 		return accessToken;
 	}
 
 	// TODO 로그아웃
 	public void logout(String email, HttpServletRequest request, HttpServletResponse response) {
-		CookieUtils.deleteCookie(request, response, "serialAT");
-		CookieUtils.deleteCookie(request, response, "serialRT");
+		CookieUtils.deleteCookie(request, response, "accessToken");
+		CookieUtils.deleteCookie(request, response, "refreshToken");
 		redisTemplate.opsForHash().delete(key, email);
 	}
 }
