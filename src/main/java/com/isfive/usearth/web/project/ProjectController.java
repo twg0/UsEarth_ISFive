@@ -10,7 +10,6 @@ import com.isfive.usearth.web.project.dto.RewardRegister;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -48,15 +47,17 @@ public class ProjectController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Page<ProjectsResponse>> findProjects(Pageable pageable) {
-		Page<ProjectsResponse> projectsResponses = projectService.readProjects(pageable);
+	public ResponseEntity<Page<ProjectsResponse>> findProjects(Authentication auth, @RequestParam(defaultValue = "1") Integer page) {
+		String username = auth == null ? "" : auth.getName();
+		Page<ProjectsResponse> projectsResponses = projectService.readProjects(page, username);
 		return new ResponseEntity<>(projectsResponses, HttpStatus.OK);
 	}
 
 	@GetMapping("/{projectId}")
-	public ResponseEntity<ProjectResponse> findProject(@PathVariable Long projectId) {
-		ProjectResponse projectResponse = projectService.readProject(projectId);
-		return new ResponseEntity<>(projectResponse, HttpStatus.OK);
+	public ResponseEntity<ProjectResponse> findProject(Authentication auth, @PathVariable Long projectId) {
+		String username = auth == null ? "" : auth.getName();
+		ProjectResponse response = projectService.readProject(projectId, username);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PatchMapping("/{projectId}")
@@ -76,11 +77,14 @@ public class ProjectController {
 	}
 
 	@DeleteMapping("/{projectId}")
-	public ResponseEntity<Void> deleteProject(
-		Authentication auth,
-		@PathVariable Long projectId
-	) {
-		projectService.deleteProject(auth, projectId);
+	public ResponseEntity<Void> deleteProject(Authentication auth, @PathVariable Long projectId) {
+		projectService.deleteProject(auth.getName(), projectId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PostMapping("/{projectId}/like")
+	public ResponseEntity<Void> like(Authentication auth, @PathVariable Long projectId) {
+		projectService.like(projectId, auth.getName());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

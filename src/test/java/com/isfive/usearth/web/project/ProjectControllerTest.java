@@ -7,7 +7,9 @@ import com.isfive.usearth.domain.maker.repository.MakerRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.project.entity.Project;
+import com.isfive.usearth.domain.project.entity.ProjectLike;
 import com.isfive.usearth.domain.project.entity.Reward;
+import com.isfive.usearth.domain.project.repository.ProjectLikeRepository;
 import com.isfive.usearth.domain.project.repository.ProjectRepository;
 import com.isfive.usearth.domain.project.repository.RewardRepository;
 import com.isfive.usearth.domain.project.service.ProjectService;
@@ -33,17 +35,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,6 +59,7 @@ class ProjectControllerTest {
     @Autowired MemberRepository memberRepository;
     @Autowired MakerRepository makerRepository;
     @Autowired RewardRepository rewardRepository;
+    @Autowired ProjectLikeRepository projectLikeRepository;
 
     @Autowired
     ProjectService projectService;
@@ -207,7 +207,7 @@ class ProjectControllerTest {
 
         //when //then
         mockMvc.perform(get("/projects")
-                        .param("page", "0")
+                        .param("page", "1")
                         .param("size", "10"))
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.numberOfElements").value("10"))
@@ -224,7 +224,11 @@ class ProjectControllerTest {
         Individual individual = Individual.builder().name("개인").build();
         makerRepository.save(individual);
 
-        Project project = Project.builder().maker(individual).title("프로젝트").build();
+        Project project = Project.builder()
+                .maker(individual)
+                .title("프로젝트")
+                .views(0)
+                .build();
         Reward reward1 = Reward.builder().project(project).title("리워드1").build();
         Reward reward2 = Reward.builder().project(project).title("리워드2").build();
         projectRepository.save(project);
@@ -324,16 +328,84 @@ class ProjectControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        // 프로젝트 삭제 후 deletedAt 필드 확인
-        // Project pro = projectRepository.findById(project.getId()).orElse(null);
-        // assertNotNull(pro); // 프로젝트가 존재해야 함
-
-        // LocalDateTime deletedAt = pro.getDeletedAt();
-        // assertNotNull(deletedAt); // deletedAt 필드는 null이 아니어야 함
-        //
-        // // 특정 조건을 만족하는지 확인 (예: deletedAt 필드가 현재 시간 이전인지 확인)
-        // LocalDateTime currentDateTime = LocalDateTime.now();
-        // assertTrue(deletedAt.isBefore(currentDateTime));
+        List<Project> all = projectRepository.findAll();
+        assertThat(all).isEmpty();
     }
 
+    @WithMockUser(username = "user")
+    @DisplayName("사용자는 프로젝트를 좋아요 할 수 있다.")
+    @Test
+    void like() throws Exception {
+        //given
+        Member projectWriter = Member.builder()
+                .username("project writer")
+                .build();
+        Member user = Member.builder()
+                .username("user")
+                .build();
+        memberRepository.saveAll(List.of(projectWriter, user));
+
+        Individual individual = Individual.builder().name("개인사업").build();
+        individual.setMember(projectWriter);
+        makerRepository.save(individual);
+
+        Project project = Project.builder()
+                .member(projectWriter)
+                .maker(individual)
+                .title("프로젝트")
+                .likeCount(0)
+                .build();
+
+        projectRepository.save(project);
+
+        //when //then
+        mockMvc.perform(post("/projects/{projectId}/like", project.getId()))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        List<ProjectLike> all = projectLikeRepository.findAll();
+        assertThat(all).isNotEmpty();
+
+        ProjectLike projectLike = all.get(0);
+        assertThat(projectLike.getProject()).isEqualTo(project);
+        assertThat(projectLike.getMember()).isEqualTo(user);
+    }
+
+    @WithMockUser(username = "user")
+    @DisplayName("사용자는 프로젝트 좋아요를 취소 할 수 있다.")
+    @Test
+    void cancelLike() throws Exception {
+        //given
+        Member projectWriter = Member.builder()
+                .username("project writer")
+                .build();
+        Member user = Member.builder()
+                .username("user")
+                .build();
+        memberRepository.saveAll(List.of(projectWriter, user));
+
+        Individual individual = Individual.builder().name("개인사업").build();
+        individual.setMember(projectWriter);
+        makerRepository.save(individual);
+
+        Project project = Project.builder()
+                .member(projectWriter)
+                .maker(individual)
+                .title("프로젝트")
+                .likeCount(0)
+                .build();
+
+        projectRepository.save(project);
+
+        ProjectLike projectLike = new ProjectLike(user, project);
+        projectLikeRepository.save(projectLike);
+
+        //when //then
+        mockMvc.perform(post("/projects/{projectId}/like", project.getId()))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        List<ProjectLike> all = projectLikeRepository.findAll();
+        assertThat(all).isEmpty();
+    }
 }

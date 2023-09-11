@@ -26,12 +26,15 @@ public class ProjectCreate {
 
 	public Project toEntity(Member member) {
 		return Project.builder()
-			.member(member)
-			.title(title)
-			.summary(summary)
-			.story(story)
-			.targetAmount(targetAmount)
-			.fundingDate(fundingDate)
-			.build();
+				.member(member)
+				.title(title)
+				.summary(summary)
+				.story(story)
+				.targetAmount(targetAmount)
+				.fundingDate(fundingDate)
+				.likeCount(0)
+				.commentCount(0)
+				.views(0)
+				.build();
 	}
 }

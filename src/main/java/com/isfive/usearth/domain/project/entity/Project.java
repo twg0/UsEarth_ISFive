@@ -5,6 +5,8 @@ import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.exception.BusinessException;
+import com.isfive.usearth.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -18,7 +20,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE project SET deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE project SET deleted = true WHERE id = ? and version = ?")
 @Where(clause = "deleted = false")
 public class Project extends BaseEntity {
 
@@ -51,6 +53,15 @@ public class Project extends BaseEntity {
 	private Period fundingDate;
 
 	private boolean deleted = false;
+
+	private Integer views;
+
+	private Integer likeCount;
+
+	private Integer commentCount;
+
+	@Version
+	private Long version;
 
 	@OneToMany(mappedBy = "project")
 	@Builder.Default
@@ -118,5 +129,45 @@ public class Project extends BaseEntity {
 
 	public Integer getProjectLikeCount() {
 		return likes == null ? 0 : likes.size();
+	}
+
+	public void verifyWriter(String username) {
+		if (!member.isEqualsUsername(username)) {
+			throw new BusinessException(ErrorCode.PROJECT_WRITER_ALLOW);
+		}
+	}
+
+	public void verifyNotWriter(String username) {
+		if (member.isEqualsUsername(username)) {
+			throw new BusinessException(ErrorCode.PROJECT_WRITER_NOT_ALLOW);
+		}
+	}
+
+	public void verifyNotDeleted() {
+		if (deleted) {
+			throw new BusinessException(ErrorCode.ALREADY_DELETED_PROJECT);
+		}
+	}
+
+	public void increaseView() {
+		views++;
+	}
+
+	public void increaseLikeCount() {
+		likeCount++;
+	}
+
+	public void increaseCommentCount() {
+		commentCount++;
+	}
+
+	public void decreaseCommentCount() {
+		commentCount--;
+	}
+
+	public void cancelLike() {
+		if (likeCount > 0) {
+			likeCount--;
+		}
 	}
 }
