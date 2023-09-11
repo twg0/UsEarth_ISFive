@@ -17,10 +17,6 @@ cache:
 script: "./gradlew clean build"
 
 before_deploy:
-  - zip -r UsEarth_ISFive *
-  - mkdir -p deploy
-  - mv UsEarth_ISFive.zip deploy/UsEarth_ISFive.zip
-
   - mkdir -p before-deploy # zip에 포함시킬 파일들을 담을 디렉토리 생성
   - cp scripts/*.sh before-deploy/
   - cp Dockerfile before-deploy/     # Dockerfile 복사하기
@@ -42,19 +38,14 @@ deploy:
     wait_until_deployed: true
     on:
       branch: main
-
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY        # Travis CI 에서 IAM 사용자 엑세스 키
-
     secret_access_key: $AWS_SECRET_KEY    # Travis CI 에서 IAM 사용자 비밀 엑세스 키
-
     bucket: usearth-springboot-build         # S3 Bucket 이름
     key: usearth-springboot3-webservice.zip
     bundle_type: zip
     application: usearth-springboot3-webservice          # CodeDeploy 애플리케이션 이름
-
     deployment_group: usearth-springboot3-webservice-group   # CodeDeploy 배포 그룹 이름
-
     region: ap-northeast-2
     wait_until_deployed: true
 
