@@ -32,7 +32,7 @@ deploy:
     secret_access_key: $AWS_SECRET_KEY
     bucket: usearth-springboot-build
     region: ap-northeast-2
-    skip_cleanup: true
+    cleanup: false
     acl: private
     local_dir: deploy
     wait_until_deployed: true
@@ -48,6 +48,7 @@ deploy:
     deployment_group: usearth-springboot3-webservice-group   # CodeDeploy 배포 그룹 이름
     region: ap-northeast-2
     wait_until_deployed: true
+
 
 notifications:
   email:
