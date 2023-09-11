@@ -1,0 +1,123 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(aYIbQMXpQB3T0GudGHm9PvfXKC+7gjXRiSrewgsKuFDiGKPwKDwV5sJl7HY0d/mNtA68YlpWXk43FvCtzYRffDmXJVjKDsj4)
+    username: ENC(JxKEi+iJemgzYelTRs5dyg==)
+    password: ENC(jvyDjv1d0p25Wt0Lle406O3xk0ZT0rt6121uzp8UOtb4N9B3d4mp+XYlyP9G++WJ)
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ENC(Pgsn4PZnORI2dcD9Avt7VyM6C+EbpSEGWRZkJcxCHphJ0ufTV4a2uUrs77Lt5Kx/zHBazUuVqXWD8T6lfGqJaim0xEG2RatgqK11tpWNsGuFcyImW1eksw==)
+            client-secret: ENC(KQ6rMO/Da1Kgv7hqc8q2Gvyr4vZKsHo8wobjuzhjSkJRl3LcWMzzqY8yN6Se9S6Y)
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            scope: email, profile
+
+          naver:
+            client-id: ENC(43xl/ULw5o9YYIBXpBB68zQGyEy2gDjn3A0pUxQZKRQ=)
+            client-secret: ENC(u1b2Lknwe2uLCstE9LjDrLD+SszWjWOm)
+            client-authentication-method: client_secret_post
+            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            authorization-grant-type: authorization_code
+            client-name: Naver
+            scope: name, email
+
+          kakao:
+            client-id: ENC(Dqdw3OSgV2mr2l0J8BTheK79WbfDj1ULY/n/Ij69ePkyY057IT7LafMkf0tV02q6)
+            client-secret: ENC(AMBleYJRrAjMz4asoF3i5kozggzt8EsUkJ+Oa7sm5/Hl8+f1STzhzHWO3V1Q+u2j)
+            client-authentication-method: client_secret_post
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            scope: profile_nickname, profile_image, account_email
+            client-name: Kakao
+
+        provider:
+          naver:
+            authorization-uri: https://nid.naver.com/oauth2.0/authorize
+            token-uri: https://nid.naver.com/oauth2.0/token
+            user-info-uri: https://openapi.naver.com/v1/nid/me
+            user-name-attribute: response
+
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      email-key: ${US_EARTH_JASYPT}
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ${NAVER_ID}
+    password: ${NAVER_PW}
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+
+security:
+  jwt:
+    base-64-secret: ENC(TnrZl1n8V9qR+cc0a1qz5y4pRgBVpsOVyVRizPXH6YYV/iA44i0QhgyYgm5BXc+p7VAMs/+px7g6HZa+IZxryKvLCqS2LWkB/ERyALzdhGDkX29mjd2WvPvFvSNKbkbcRYVEjRD8u3JuItBSB2Gs62hqkIzrB63UrStpTu95rqiaG/CnwIf3G2PcR/0IgXcNZ6hnwGVxugf5qDwKrJx9dOYmp/XpTmJgVcQ0OF7aGs8=)
+    refresh-secret: ENC(R8okHmeU81hCCRA/HBa+d8GjmRHhn1KXCzWRIqwdq/QOpe7s+G70DtyBDdg7eAN3Joe1IM2fLKlUDPQ1AX7qzk78fMgFYDQtdmJtF5zXH2SeGkhi36mkLDK/Wi1T18npmrsAEbHRlxLjrsX54qCQFPEiJQs+oF+sCa17iqJYhFCe5SFSYF/zbmpyByMP2mu5TaBkc3b/Ng8=)
+    refresh-expiration-time: 600000
+    access-expiration-time: 3600000
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    password: ${US_EARTH_JASYPT}
+    property:
+      prefix: ENC(
+      suffix: )
+
+file:
+  upload-dir: ./static/
+
+iamport:
+  api:
+    key: ENC(81cFe7ewiNQJsghEEIB8llXXrscxr4ymHV/1ln05hG8=)
+    secret: ENC(6zIRG9non9JNzi/dqRDIbYwSO8v8Zox/JZSlQJT6xfYhzDuOCOdd244K00d5a3qnd75vv5+xYiKJ2N678p8tma9tdu0kzh1gnO2wyiU0Ng4rwOnphftKJmFAyfp+o3rs)
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        create_empty_composites:
+          enabled: true
+  h2:
+    console:
+      enabled: true
+  sql:
+    init:
+      mode: never
