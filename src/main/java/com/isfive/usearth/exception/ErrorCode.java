@@ -10,6 +10,7 @@ public enum ErrorCode {
 	BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "B_001", "게시판을 찾을 수 없습니다."),
 	POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P_001", "게시글을 찾을 수 없습니다."),
 	PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PR_001", "프로젝트를 찾을 수 없습니다."),
+	PROJECT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRC_001", "프로젝트 댓글을 찾을 수 없습니다."),
 	FUNDING_NOT_FOUND(HttpStatus.NOT_FOUND, "F_001", "펀딩을 찾을 수 없습니다."),
 
 	POST_WRITER_NOT_ALLOW(HttpStatus.BAD_REQUEST, "PW_001", "작성자는 해당 기능을 사용할 수 없습니다."),

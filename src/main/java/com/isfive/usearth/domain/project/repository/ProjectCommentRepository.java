@@ -13,7 +13,7 @@ public interface ProjectCommentRepository extends JpaRepository<ProjectComment, 
 
     default ProjectComment findByIdOrElseThrow(Long id) {
         return findById(id).orElseThrow(
-                () -> new EntityNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
+                () -> new EntityNotFoundException(ErrorCode.PROJECT_COMMENT_NOT_FOUND));
     }
 
     @Query("select pc from ProjectComment pc join fetch pc.member where pc.project.id = :projectId")

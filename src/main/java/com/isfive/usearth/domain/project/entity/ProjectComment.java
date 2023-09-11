@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE project_comment SET deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE project_comment SET deleted = true WHERE id = ? and version = ?")
 @Where(clause = "deleted = false")
 public class ProjectComment extends BaseEntity {
 
@@ -43,6 +43,9 @@ public class ProjectComment extends BaseEntity {
 
 	private boolean deleted = false;
 
+	@Version
+	private Long version;
+
 	public void addReply(ProjectComment reply) {
 		if (getProjectComment() != null) {
 			throw new RuntimeException("대댓글에는 대댓글을 작성 할 수 없습니다.");
@@ -58,7 +61,6 @@ public class ProjectComment extends BaseEntity {
 	public void setProjectComment(ProjectComment projectComment) {
 		this.projectComment = projectComment;
 	}
-
 	public void verifyWriter(String username) {
 		if (!member.isEqualsUsername(username)) {
 			throw new BusinessException(ErrorCode.PROJECT_WRITER_ALLOW);

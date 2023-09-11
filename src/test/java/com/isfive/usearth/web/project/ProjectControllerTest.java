@@ -205,7 +205,7 @@ class ProjectControllerTest {
 
         //when //then
         mockMvc.perform(get("/projects")
-                        .param("page", "0")
+                        .param("page", "1")
                         .param("size", "10"))
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.numberOfElements").value("10"))
@@ -222,7 +222,11 @@ class ProjectControllerTest {
         Individual individual = Individual.builder().name("개인").build();
         makerRepository.save(individual);
 
-        Project project = Project.builder().maker(individual).title("프로젝트").build();
+        Project project = Project.builder()
+                .maker(individual)
+                .title("프로젝트")
+                .views(0)
+                .build();
         Reward reward1 = Reward.builder().project(project).title("리워드1").build();
         Reward reward2 = Reward.builder().project(project).title("리워드2").build();
         projectRepository.save(project);
