@@ -44,7 +44,7 @@ deploy:
     bucket: usearth-springboot-build         # S3 Bucket 이름
     key: usearth-springboot3-webservice.zip
     bundle_type: zip
-    application: usearth-springboot3-webservice          # CodeDeploy 애플리케이션 이름
+    application: usearth-springboot3-webservice         # CodeDeploy 애플리케이션 이름
     deployment_group: usearth-springboot3-webservice-group   # CodeDeploy 배포 그룹 이름
     region: ap-northeast-2
     wait_until_deployed: true
