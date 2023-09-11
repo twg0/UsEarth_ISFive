@@ -1,52 +1,16 @@
-#!/bin/bash
+echo "> 현재 실행 중인 Docker 컨테이너 pid 확인" >> /home/ec2-user/deploy.log
+CURRENT_PID=$(sudo docker container ls -q)
 
-REPOSITORY=/home/ec2-user/app/step2
-PROJECT_NAME=springboot-webservice
-
-echo "> Build 파일 복사"
-
-cp $REPOSITORY/zip/*.jar $REPOSITORY/
-
-echo "> 현재 구동중인 애플리케이션 pid 확인"
-
-CURRENT_PID=$(pgrep -fl $PROJECT_NAME | grep jar | awk '{print $1}')
-
-echo "현재 구동 중인 애플리케이션 pid: $CURRENT_PID"
-
-if [ -z "$CURRENT_PID" ]; then
-   echo "> 현재 구동 중인 애플리케이션이 없으므로 종료하지 않습니다."
-else
-   echo "> kill -15 $CURRENT_PID"
-   kill -15 $CURRENT_PID
-   sleep 5
-fi
-
-echo "> 새 어플리케이션 배포"
-
-JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
-
-echo "> JAR Name: $JAR_NAME"
-
-echo "> $JAR_NAME 에 실행권한 추가"
-
-chmod +x $JAR_NAME
-
-echo "> $JAR_NAME 실행"
-
-nohup java -jar \
-  -Dspring.config.location=classpath:/application.properties,classpath:/application-real.properties,/home/ec2-user/app/application-oauth.properties,/home/ec2-user/app/application-real-db.properties \
-  -Dspring.profiles.active=real \
-  $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 if [ -z $CURRENT_PID ]
 then
-  echo "> 현재 구동중인 Docker 컨테이너가 없으므로 종료하지 않습니다." >> /home/ubuntu/deploy.log
+  echo "> 현재 구동중인 Docker 컨테이너가 없으므로 종료하지 않습니다." >> /home/ec2-user/deploy.log
 else
   echo "> sudo docker stop $CURRENT_PID"   # 현재 구동중인 Docker 컨테이너가 있다면 모두 중지
   sudo docker stop $CURRENT_PID
   sleep 5
 fi
 
-cd /home/ubuntu/app/step2/zip/        # 해당 디렉토리로 이동 (Dockerfile 을 해당 디렉토리에 옮겼기 때문에)
-sudo docker build -t UsEarth ./          # Docker Image 생성
-sudo docker run -d -p 8080:8080 UsEarth  # Docker Container 생성
-sudo docker run -d -p 8081:8080 UsEarth  # Docker Container 생성
+cd /home/ec2-user/app/step2/zip/        # 해당 디렉토리로 이동 (Dockerfile 을 해당 디렉토리에 옮겼기 때문에)
+sudo docker build -t gyunny ./          # Docker Image 생성
+sudo docker run -d -p 8080:8080 gyunny  # Docker Container 생성
+sudo docker run -d -p 8081:8080 gyunny  # Docker Container 생성
