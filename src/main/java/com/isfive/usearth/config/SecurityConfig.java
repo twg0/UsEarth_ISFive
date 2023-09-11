@@ -41,6 +41,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests(authHttp -> authHttp
 				.requestMatchers(
 					new AntPathRequestMatcher("/login/**"),
+					new AntPathRequestMatcher("/favicon.ico"),
 					new AntPathRequestMatcher("/projects", "GET"),
 					new AntPathRequestMatcher("/projects/{projectId}", "GET"),
 					new AntPathRequestMatcher("/members", "POST"),
