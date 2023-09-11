@@ -1,22 +1,20 @@
 package com.isfive.usearth.domain.utils.jwt;
 
-import java.security.Key;
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.auth.jwt.service.JpaUserDetailsManager;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
 
 @Slf4j
 @Component
@@ -101,27 +99,27 @@ public class JwtTokenUtils {
 		return userDetailsManager.loadUserByUsername(this.parseClaims(token).getSubject());
 	}
 
-	// 주어진 사용자 정보를 바탕으로 JWT를 문자열로 생성
-	public String generateToken(CustomUserDetails userDetails, long expirationTime, Key key) {
-		// Claims: JWT에 담기는 정보의 단위를 Claim이라 부른다.
-		//         Claims는 Claim들을 담기위한 Map의 상속 interface
-		Claims jwtClaims = Jwts.claims()
-			// 사용자 정보 등록
-			.setSubject(userDetails.getEmail())
-			.setIssuedAt(new Date(System.currentTimeMillis()))
-			.setExpiration(new Date(System.currentTimeMillis() + expirationTime));
-
-		return Jwts.builder()
-			.setClaims(jwtClaims)
-			.signWith(key)
-			.compact();
-	}
-
 	public String createAccessToken(CustomUserDetails userDetails) {
 		return generateToken(userDetails, ACCESS_TOKEN_EXPIRATION_TIME, signingKey);
 	}
 
 	public String createRefreshToken(CustomUserDetails userDetails) {
 		return generateToken(userDetails, REFRESH_TOKEN_EXPIRATION_TIME, refreshKey);
+	}
+
+	// 주어진 사용자 정보를 바탕으로 JWT를 문자열로 생성
+	private String generateToken(CustomUserDetails userDetails, long expirationTime, Key key) {
+		// Claims: JWT에 담기는 정보의 단위를 Claim이라 부른다.
+		//         Claims는 Claim들을 담기위한 Map의 상속 interface
+		Claims jwtClaims = Jwts.claims()
+				// 사용자 정보 등록
+				.setSubject(userDetails.getEmail())
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + expirationTime));
+
+		return Jwts.builder()
+				.setClaims(jwtClaims)
+				.signWith(key)
+				.compact();
 	}
 }

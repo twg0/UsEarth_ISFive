@@ -48,7 +48,7 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/members/email", "POST"),
 					new AntPathRequestMatcher("/makers/{makerId}", "GET"),
 					new AntPathRequestMatcher("/makers/{makerId}", "PUT"),
-					new AntPathRequestMatcher("/members/login", "GET"),
+					new AntPathRequestMatcher("/members/login", "POST"),
 					new AntPathRequestMatcher("/makers/{makerId}", "DELETE"),
 					new AntPathRequestMatcher("/boards/{boardId}/posts", "GET"),
 					new AntPathRequestMatcher("/posts/{postId}", "GET"),
