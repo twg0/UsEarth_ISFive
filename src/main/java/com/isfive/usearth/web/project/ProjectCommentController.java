@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/projects/{projectId}/comments")
 public class ProjectCommentController {
 
     private final ProjectCommentService projectCommentService;
 
-    @PostMapping
+    @PostMapping("/projects/{projectId}/comments")
     public ResponseEntity<Void> writeComment(Authentication auth,
                                              @PathVariable Long projectId,
                                              @RequestBody @Valid ProjectCommentCreateRegister request) {
@@ -24,18 +23,16 @@ public class ProjectCommentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/{commentId}/reply")
+    @PostMapping("/project-comments/{commentId}/reply")
     public ResponseEntity<Void> writeReply(Authentication auth,
-                                           @PathVariable Long projectId,
                                            @PathVariable Long commentId,
                                            @RequestBody @Valid ProjectCommentCreateRegister request) {
         projectCommentService.createReply(commentId, request.getContent(), auth.getName());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/project-comments/{commentId}")
     public ResponseEntity<Void> deleteComment(Authentication auth,
-                                              @PathVariable Long projectId,
                                               @PathVariable Long commentId) {
         projectCommentService.deleteComment(commentId, auth.getName());
         return new ResponseEntity<>(HttpStatus.OK);

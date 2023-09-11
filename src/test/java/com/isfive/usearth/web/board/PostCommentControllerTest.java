@@ -100,7 +100,7 @@ class PostCommentControllerTest {
         PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
         //when //then
 
-        mockMvc.perform(post("/comments/{commentId}/reply", postComment.getId())
+        mockMvc.perform(post("/post-comments/{commentId}/reply", postComment.getId())
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                 )
@@ -138,7 +138,7 @@ class PostCommentControllerTest {
         PostCommentCreateRequest request = new PostCommentCreateRequest("댓글입니다.");
         //when //then
 
-        mockMvc.perform(delete("/comments/{commentId}", postComment.getId())
+        mockMvc.perform(delete("/post-comments/{commentId}", postComment.getId())
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                 )

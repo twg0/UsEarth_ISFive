@@ -29,7 +29,7 @@ public class PostCommentController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@PostMapping("/comments/{commentId}/reply")
+	@PostMapping("/post-comments/{commentId}/reply")
 	public ResponseEntity<Void> writeReply(Authentication auth,
 		@PathVariable Long commentId,
 		@RequestBody @Valid PostCommentCreateRequest request) {
@@ -37,7 +37,7 @@ public class PostCommentController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/comments/{commentId}")
+	@DeleteMapping("/post-comments/{commentId}")
 	public ResponseEntity<Void> deleteComment(Authentication auth, @PathVariable Long commentId) {
 		postCommentService.deleteComment(commentId, auth.getName());
 		return new ResponseEntity<>(HttpStatus.OK);

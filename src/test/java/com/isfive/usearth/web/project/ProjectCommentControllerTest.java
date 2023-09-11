@@ -126,7 +126,7 @@ public class ProjectCommentControllerTest {
         ProjectCommentCreateRegister request = new ProjectCommentCreateRegister("대댓글!");
 
         //when //then
-        mockMvc.perform(post("/projects/{projectId}/comments/{commentId}/reply", project.getId(), projectComment.getId())
+        mockMvc.perform(post("/project-comments/{commentId}/reply", projectComment.getId())
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                 )
@@ -171,7 +171,7 @@ public class ProjectCommentControllerTest {
         projectCommentRepository.save(projectComment);
 
         //when //then
-        mockMvc.perform(delete("/projects/{projectId}/comments/{commentId}", project.getId(), projectComment.getId()))
+        mockMvc.perform(delete("/project-comments/{commentId}",  projectComment.getId()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
 
