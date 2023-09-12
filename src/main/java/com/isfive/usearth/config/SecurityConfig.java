@@ -51,7 +51,9 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/members/login", "GET"),
 					new AntPathRequestMatcher("/makers/{makerId}", "DELETE"),
 					new AntPathRequestMatcher("/boards/{boardId}/posts", "GET"),
-					new AntPathRequestMatcher("/posts/{postId}", "GET")
+					new AntPathRequestMatcher("/posts/{postId}", "GET"),
+					new AntPathRequestMatcher("/swagger-ui/**", "GET"),
+					new AntPathRequestMatcher("/v3/api-docs/**", "GET")
 				).permitAll()
 				.anyRequest()
 				.authenticated()

@@ -9,8 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProjectLike {
@@ -24,4 +26,9 @@ public class ProjectLike {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Project project;
+
+	public ProjectLike(Member member, Project project) {
+		this.member = member;
+		this.project = project;
+	}
 }
