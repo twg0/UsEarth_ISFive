@@ -9,10 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
 
 @Entity
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom {
 
@@ -25,10 +27,25 @@ public class ChatRoom {
 
 	@Column(nullable = false)
 	private String description;
-
+	@Setter
+	@ColumnDefault("0")
 	private Integer memberCount;
 
 	@OneToMany(mappedBy = "chatRoom")
 	private List<ChatRoomAppend> chatRoomAppends = new ArrayList<>();
+
+	@Builder
+	public ChatRoom (String roomName,String description) {
+		this.roomName = roomName;
+		this.description = description;
+		this.memberCount = 0;
+	}
+
+	public void plusMemberCount(){
+		this.memberCount++;
+	}
+	public void minusMemberCount(){this.memberCount--;}
+
+
 
 }

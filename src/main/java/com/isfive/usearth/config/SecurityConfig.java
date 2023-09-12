@@ -53,7 +53,8 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/boards/{boardId}/posts", "GET"),
 					new AntPathRequestMatcher("/posts/{postId}", "GET"),
 					new AntPathRequestMatcher("/swagger-ui/**", "GET"),
-					new AntPathRequestMatcher("/v3/api-docs/**", "GET")
+					new AntPathRequestMatcher("/v3/api-docs/**", "GET"),
+					new AntPathRequestMatcher("/ws-stomp/**")
 				).permitAll()
 				.anyRequest()
 				.authenticated()
