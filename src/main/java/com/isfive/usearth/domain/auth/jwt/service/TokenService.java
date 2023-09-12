@@ -1,21 +1,19 @@
 package com.isfive.usearth.domain.auth.jwt.service;
 
-import java.time.Duration;
-import java.util.Optional;
-
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
-
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.utils.cookie.CookieUtils;
 import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.util.Optional;
 
 @Slf4j
 @Service

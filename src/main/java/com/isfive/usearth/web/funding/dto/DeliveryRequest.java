@@ -3,6 +3,7 @@ package com.isfive.usearth.web.funding.dto;
 import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
 import com.isfive.usearth.domain.funding.entity.Address;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,12 +16,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeliveryRequest {
 
+	@Schema(example = "홍길동")
 	@NotBlank(message = "이름 입력해야 합니다.")
 	private String name;
 
+	@Schema(example = "010-1234-5678")
 	@Pattern(regexp = "\\d{3}-\\d{4}-\\d{4}", message = "전화 번호는 000-0000-0000 형식이어야 합니다.")
 	private String phone;
 
+	@Schema(example = "서울특별시 종로구 종로3길 17 D1동 16층, 17층 (우)03155")
 	@NotNull(message = "주소를 입력해야 합니다.")
 	private Address address;
 
