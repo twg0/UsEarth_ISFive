@@ -12,7 +12,7 @@ import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
+import com.isfive.usearth.web.common.jwt.JwtTokenUtils;
 import com.isfive.usearth.domain.utils.mail.MailService;
 import com.isfive.usearth.exception.BusinessException;
 import com.isfive.usearth.exception.ErrorCode;

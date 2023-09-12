@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.utils.cookie;
+package com.isfive.usearth.web.common.cookie;
 
 import java.util.Base64;
 import java.util.Optional;

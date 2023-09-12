@@ -1,7 +1,7 @@
 package com.isfive.usearth.config;
 
 import com.isfive.usearth.domain.auth.oauth.service.OAuth2UserServiceImpl;
-import com.isfive.usearth.domain.utils.jwt.JwtTokenFilter;
+import com.isfive.usearth.web.common.jwt.JwtTokenFilter;
 import com.isfive.usearth.web.auth.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
