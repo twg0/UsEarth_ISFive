@@ -33,21 +33,21 @@ public class MakerController {
 	@Operation(summary = "메이커(개인) 등록")
 	@PostMapping(path = "/individual", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> createIndividual(
-		Authentication auth,
-		@RequestPart("MakerRegisterRequest") MakerRegisterRequest request,
-		@RequestPart("profileImage") MultipartFile profileImage,
-		@RequestPart("submitFile") MultipartFile submitFile,
-		@RequestPart("idCard") MultipartFile idCard
+			Authentication auth,
+			@RequestPart("MakerRegisterRequest") MakerRegisterRequest request,
+			@RequestPart("profileImage") MultipartFile profileImage,
+			@RequestPart("submitFile") MultipartFile submitFile,
+			@RequestPart("idCard") MultipartFile idCard
 	) {
 		FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
 		FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
 		FileImage savedIdCard = fileImageService.createFileImage(idCard);
 
 		IndividualRegister register = IndividualRegister.createIndividualRegister(
-			request,
-			savedprofileImage,
-			savedSubmitFile,
-			savedIdCard);
+				request,
+				savedprofileImage,
+				savedSubmitFile,
+				savedIdCard);
 
 		makerService.createIndividualBy(auth.getName(), register);
 
@@ -57,21 +57,21 @@ public class MakerController {
 	@Operation(summary = "메이커(개인 사업자) 등록")
 	@PostMapping(path = "/personal-business", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> createPersonalBusiness(
-		Authentication auth,
-		@RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
-		@RequestPart("profileImage") MultipartFile profileImage,
-		@RequestPart("submitFile") MultipartFile submitFile,
-		@RequestPart("registration") MultipartFile registration
+			Authentication auth,
+			@RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
+			@RequestPart("profileImage") MultipartFile profileImage,
+			@RequestPart("submitFile") MultipartFile submitFile,
+			@RequestPart("registration") MultipartFile registration
 	) {
 		FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
 		FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
 		FileImage savedRegistration = fileImageService.createFileImage(registration);
 
 		PersonalRegister register = PersonalRegister.createPersonalRegister(
-			request,
-			savedprofileImage,
-			savedSubmitFile,
-			savedRegistration);
+				request,
+				savedprofileImage,
+				savedSubmitFile,
+				savedRegistration);
 		makerService.createPersonalBusinessBy(auth.getName(), register);
 
 		return new ResponseEntity<>("메이커 신청이 완료되었습니다.", HttpStatus.CREATED);
@@ -80,12 +80,12 @@ public class MakerController {
 	@Operation(summary = "메이커(법인 사업자) 등록")
 	@PostMapping(path = "/corporate-business", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> createCorporateBusiness(
-		Authentication auth,
-		@RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
-		@RequestPart("profileImage") MultipartFile profileImage,
-		@RequestPart("submitFile") MultipartFile submitFile,
-		@RequestPart("registration") MultipartFile registration,
-		@RequestPart("corporateSealCertificate") MultipartFile corporateSealCertificate
+			Authentication auth,
+			@RequestPart("BusinessMakerRequest") BusinessMakerRequest request,
+			@RequestPart("profileImage") MultipartFile profileImage,
+			@RequestPart("submitFile") MultipartFile submitFile,
+			@RequestPart("registration") MultipartFile registration,
+			@RequestPart("corporateSealCertificate") MultipartFile corporateSealCertificate
 	) {
 		FileImage savedprofileImage = fileImageService.createFileImage(profileImage);
 		FileImage savedSubmitFile = fileImageService.createFileImage(submitFile);
@@ -93,11 +93,11 @@ public class MakerController {
 		FileImage savedCorporateSealCertificate = fileImageService.createFileImage(corporateSealCertificate);
 
 		CorporateRegister register = CorporateRegister.createCorporateRegister(
-			request,
-			savedprofileImage,
-			savedSubmitFile,
-			savedRegistration,
-			savedCorporateSealCertificate);
+				request,
+				savedprofileImage,
+				savedSubmitFile,
+				savedRegistration,
+				savedCorporateSealCertificate);
 		makerService.createCorporateBusinessBy(auth.getName(), register);
 
 		return new ResponseEntity<>("메이커 신청이 완료되었습니다.", HttpStatus.CREATED);
@@ -106,7 +106,7 @@ public class MakerController {
 	@Operation(summary = "메이커 정보 확인")
 	@GetMapping("/{makerId}")
 	public ResponseEntity<MakerResponse> getMaker(
-		@PathVariable("makerId") Long id
+			@PathVariable("makerId") Long id
 	) {
 		MakerResponse response = makerService.readMakerById(id);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -115,20 +115,22 @@ public class MakerController {
 	@Operation(summary = "메이커 수정")
 	@PutMapping("/{makerId}")
 	public ResponseEntity<MakerResponse> updateMaker(
-		@PathVariable("makerId") Long id,
-		@RequestBody MakerUpdateRequest request
+			Authentication auth,
+			@PathVariable("makerId") Long id,
+			@RequestBody MakerUpdateRequest request
 	) {
 		MakerUpdate makerUpdate = MakerUpdate.toMakerUpdate(request);
-		MakerResponse response = makerService.updateMakerById(id, makerUpdate);
+		MakerResponse response = makerService.updateMakerById(auth.getName(), id, makerUpdate);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Operation(summary = "메이커 삭제")
 	@DeleteMapping("/{makerId}")
 	public ResponseEntity<String> deleteMaker(
-		@PathVariable("makerId") Long id
+			Authentication auth,
+			@PathVariable("makerId") Long id
 	) {
-		makerService.removeMakerById(id);
+		makerService.removeMakerById(auth.getName(), id);
 		return new ResponseEntity<>("메이커가 삭제되었습니다.", HttpStatus.CREATED);
 	}
 

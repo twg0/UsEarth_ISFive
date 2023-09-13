@@ -1,5 +1,8 @@
 package com.isfive.usearth.domain.maker.service;
 
+import com.isfive.usearth.exception.BusinessException;
+import com.isfive.usearth.exception.ErrorCode;
+
 import com.isfive.usearth.domain.maker.dto.MakerResponse;
 import com.isfive.usearth.domain.maker.entity.Maker;
 import com.isfive.usearth.domain.maker.repository.MakerRepository;
@@ -47,15 +50,19 @@ public class MakerService {
 	}
 
 	@Transactional
-	public MakerResponse updateMakerById(Long id, MakerUpdate makerUpdate) {
+	public MakerResponse updateMakerById(String username, Long id, MakerUpdate makerUpdate) {
 		Maker maker = makerRepository.findByIdOrThrow(id);
+		if (!maker.getName().equals(username))
+			throw new BusinessException(ErrorCode.AUTHENTICATION_FAILED);
 		maker.update(makerUpdate);
 		return MakerResponse.fromEntity(makerRepository.save(maker));
 	}
 
 	@Transactional
-	public void removeMakerById(Long id) {
+	public void removeMakerById(String username, Long id) {
 		Maker maker = makerRepository.findByIdOrThrow(id);
+		if (!maker.getName().equals(username))
+			throw new BusinessException(ErrorCode.AUTHENTICATION_FAILED);
 		maker.delete();
 	}
 }
