@@ -1,14 +1,13 @@
 package com.isfive.usearth.domain.project.dto;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.project.entity.Project;
-
+import com.isfive.usearth.domain.project.entity.Reward;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 @Data
 public class ProjectResponse {
@@ -51,5 +50,28 @@ public class ProjectResponse {
 
 	public void setProjectCommentResponses(Page<ProjectCommentResponse> projectCommentResponses) {
 		this.projectCommentResponses = projectCommentResponses;
+	}
+
+	@Data
+	private static class RewardsResponse {
+		private Long id;
+		private String title;
+		private String description;
+		private Integer price;
+		private String expectedSendDate;
+		private Integer deliveryFee;
+		private Integer stock;
+		private Integer initStock;
+
+		private RewardsResponse(Reward reward) {
+			this.id = reward.getId();
+			this.title = reward.getTitle();
+			this.description = reward.getDescription();
+			this.price = reward.getPrice();
+			this.expectedSendDate = reward.getExpectedSendDate();
+			this.deliveryFee = reward.getDeliveryFee();
+			this.stock = reward.getStock();
+			this.initStock = reward.getInitStock();
+		}
 	}
 }
