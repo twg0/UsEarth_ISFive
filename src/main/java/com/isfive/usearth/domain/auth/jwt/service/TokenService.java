@@ -34,7 +34,6 @@ public class TokenService {
 
 	// TODO 토큰 생성 후 쿠키 전송
 	public String setTokenAndCookie(String email, HttpServletRequest request, HttpServletResponse response) {
-		log.info("request 쿠키 수 = {}", request.getCookies().length);
 
 		CookieUtils.deleteAll(request, response);
 
