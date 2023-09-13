@@ -38,8 +38,6 @@ public class ProjectController {
 			@RequestPart("projectRegister") @Valid ProjectRegister projectRegister,           // 프로젝트 정보
 			@RequestPart("repImage") MultipartFile repImage,                    // 대표 이미지
 			@RequestPart("projectImageList") List<MultipartFile> projectImageList      // 프로젝트 첨부 이미지 리스트
-//			@Parameter(description = "")
-//			@RequestPart("rewardRegisterList") @Valid List<RewardRegister> rewardRegisterList
 	) {
 		FileImage fileImage = fileImageService.createFileImage(repImage);
 		List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
