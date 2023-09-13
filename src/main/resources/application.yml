@@ -60,7 +60,7 @@ spring:
   data:
     redis:
       port: 6379
-      host: 192.168.99.100
+      host: redis
       email-key: ${US_EARTH_JASYPT}
   mail:
     host: smtp.naver.com
