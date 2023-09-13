@@ -35,7 +35,7 @@ public class ProjectController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ProjectResponse> createProject(
 			Authentication auth,
-			@RequestPart("ProjectRegister") @Valid ProjectRegister projectRegister,           // 프로젝트 정보
+			@RequestPart("projectRegister") @Valid ProjectRegister projectRegister,           // 프로젝트 정보
 			@RequestPart("repImage") MultipartFile repImage,                    // 대표 이미지
 			@RequestPart("projectImageList") List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
 			@RequestPart("rewardRegisterList") @Valid List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트

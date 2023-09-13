@@ -1,4 +1,4 @@
-package com.isfive.usearth.domain.utils.jwt;
+package com.isfive.usearth.web.common.jwt;
 
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.auth.jwt.service.JpaUserDetailsManager;

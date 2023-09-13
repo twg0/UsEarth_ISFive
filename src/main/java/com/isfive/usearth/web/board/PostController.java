@@ -36,7 +36,7 @@ public class PostController {
 	@PostMapping(path = "/boards/{boardId}/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> writePost(Authentication auth,
 										  @PathVariable("boardId") Long boardId,
-										  @RequestPart("PostCreateRequest") @Valid PostCreateRequest request,
+										  @RequestPart("request") @Valid PostCreateRequest request,
 										  @RequestPart(name = "postImages", required = false) List<MultipartFile> postImages) {
 		List<FileImage> fileImages = createFileImageList(postImages);
 
@@ -67,7 +67,7 @@ public class PostController {
 	@PutMapping(path = "/posts/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> updatePost(Authentication auth,
 										   @PathVariable("postId") Long postId,
-										   @RequestPart("PostCreateRequest") @Valid PostCreateRequest request,
+										   @RequestPart("request") @Valid PostCreateRequest request,
 										   @RequestPart(name = "postImages", required = false) List<MultipartFile> postImages) {
 
 		List<PostFileImage> postFileImages = postFileImageRepository.findAllByPost_Id(postId);

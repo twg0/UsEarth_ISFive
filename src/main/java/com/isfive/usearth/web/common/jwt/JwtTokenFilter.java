@@ -1,8 +1,9 @@
-package com.isfive.usearth.domain.utils.jwt;
+package com.isfive.usearth.web.common.jwt;
 
 import java.io.IOException;
 import java.util.Optional;
 
+import com.isfive.usearth.web.common.cookie.CookieUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.auth.jwt.service.TokenService;
-import com.isfive.usearth.domain.utils.cookie.CookieUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

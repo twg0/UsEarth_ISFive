@@ -2,8 +2,8 @@ package com.isfive.usearth.domain.auth.jwt.service;
 
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.domain.utils.cookie.CookieUtils;
-import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
+import com.isfive.usearth.web.common.cookie.CookieUtils;
+import com.isfive.usearth.web.common.jwt.JwtTokenUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
