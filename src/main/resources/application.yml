@@ -13,14 +13,14 @@ spring:
           google:
             client-id: ENC(Pgsn4PZnORI2dcD9Avt7VyM6C+EbpSEGWRZkJcxCHphJ0ufTV4a2uUrs77Lt5Kx/zHBazUuVqXWD8T6lfGqJaim0xEG2RatgqK11tpWNsGuFcyImW1eksw==)
             client-secret: ENC(KQ6rMO/Da1Kgv7hqc8q2Gvyr4vZKsHo8wobjuzhjSkJRl3LcWMzzqY8yN6Se9S6Y)
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: http://ec2-15-164-221-239.ap-northeast-2.compute.amazonaws.com/login/oauth2/code/google
             scope: email, profile
 
           naver:
             client-id: ENC(43xl/ULw5o9YYIBXpBB68zQGyEy2gDjn3A0pUxQZKRQ=)
             client-secret: ENC(u1b2Lknwe2uLCstE9LjDrLD+SszWjWOm)
             client-authentication-method: client_secret_post
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: http://ec2-15-164-221-239.ap-northeast-2.compute.amazonaws.com/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             client-name: Naver
             scope: name, email
@@ -29,7 +29,7 @@ spring:
             client-id: ENC(Dqdw3OSgV2mr2l0J8BTheK79WbfDj1ULY/n/Ij69ePkyY057IT7LafMkf0tV02q6)
             client-secret: ENC(AMBleYJRrAjMz4asoF3i5kozggzt8EsUkJ+Oa7sm5/Hl8+f1STzhzHWO3V1Q+u2j)
             client-authentication-method: client_secret_post
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: http://ec2-15-164-221-239.ap-northeast-2.compute.amazonaws.com/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             scope: profile_nickname, profile_image, account_email
             client-name: Kakao
@@ -111,6 +111,10 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+  data:
+    redis:
+      port: 6379
+      host: localhost
   h2:
     console:
       enabled: true
