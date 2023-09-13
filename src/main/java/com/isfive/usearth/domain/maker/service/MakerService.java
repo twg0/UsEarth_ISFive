@@ -2,8 +2,6 @@ package com.isfive.usearth.domain.maker.service;
 
 import com.isfive.usearth.exception.BusinessException;
 import com.isfive.usearth.exception.ErrorCode;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.isfive.usearth.domain.maker.dto.MakerResponse;
 import com.isfive.usearth.domain.maker.entity.Maker;
@@ -14,8 +12,9 @@ import com.isfive.usearth.web.maker.dto.MakerUpdate;
 import com.isfive.usearth.web.maker.dto.register.CorporateRegister;
 import com.isfive.usearth.web.maker.dto.register.IndividualRegister;
 import com.isfive.usearth.web.maker.dto.register.PersonalRegister;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

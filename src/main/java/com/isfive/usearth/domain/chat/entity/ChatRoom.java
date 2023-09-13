@@ -12,6 +12,8 @@ import jakarta.persistence.OneToMany;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
