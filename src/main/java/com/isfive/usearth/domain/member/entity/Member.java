@@ -8,9 +8,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@SQLDelete(sql = "UPDATE member SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Entity
 @Getter
 @Table(
@@ -31,6 +35,9 @@ public class Member extends BaseEntity {
 	private String email;
 	private String provider;
 	private String providerId;
+
+	@Column(nullable = false)
+	private boolean deleted = false;
 
 	public Member updateInfo(UserDetails userDetails) {
 		CustomUserDetails customUserDetails = (CustomUserDetails)userDetails;
@@ -63,7 +70,6 @@ public class Member extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	// PR 넣을 때 의논
 	@Builder
 	private Member(String email, String username, String password, String nickname, String phone, String provider, Role role, String providerId) {
 		this.email = email;
