@@ -1,40 +1,26 @@
 package com.isfive.usearth.web.project;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.isfive.usearth.domain.common.FileImage;
+import com.isfive.usearth.domain.common.FileImageService;
+import com.isfive.usearth.domain.project.dto.*;
+import com.isfive.usearth.domain.project.service.ProjectService;
+import com.isfive.usearth.web.project.dto.ProjectModify;
+import com.isfive.usearth.web.project.dto.ProjectRegister;
+import com.isfive.usearth.web.project.dto.RewardRegister;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.isfive.usearth.domain.common.FileImage;
-import com.isfive.usearth.domain.common.FileImageService;
-import com.isfive.usearth.domain.project.dto.ProjectCreate;
-import com.isfive.usearth.domain.project.dto.ProjectResponse;
-import com.isfive.usearth.domain.project.dto.ProjectUpdate;
-import com.isfive.usearth.domain.project.dto.ProjectsResponse;
-import com.isfive.usearth.domain.project.dto.RewardCreate;
-import com.isfive.usearth.domain.project.service.ProjectService;
-import com.isfive.usearth.web.project.dto.ProjectModify;
-import com.isfive.usearth.web.project.dto.ProjectRegister;
-import com.isfive.usearth.web.project.dto.RewardRegister;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,12 +37,13 @@ public class ProjectController {
 			Authentication auth,
 			@RequestPart("projectRegister") @Valid ProjectRegister projectRegister,           // 프로젝트 정보
 			@RequestPart("repImage") MultipartFile repImage,                    // 대표 이미지
-			@RequestPart("projectImageList") List<MultipartFile> projectImageList,      // 프로젝트 첨부 이미지 리스트
-			@RequestPart("rewardRegisterList") @Valid List<RewardRegister> rewardRegisterList    // 리워드 정보 리스트
+			@RequestPart("projectImageList") List<MultipartFile> projectImageList      // 프로젝트 첨부 이미지 리스트
+//			@Parameter(description = "")
+//			@RequestPart("rewardRegisterList") @Valid List<RewardRegister> rewardRegisterList
 	) {
 		FileImage fileImage = fileImageService.createFileImage(repImage);
 		List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
-		List<RewardCreate> rewardCreateList = rewardRegisterList.stream()
+		List<RewardCreate> rewardCreateList = projectRegister.getRewardRegisterList().stream()
 			.map(RewardRegister::toService).collect(Collectors.toList());
 		ProjectCreate projectCreate = projectRegister.toService(fileImage);
 		ProjectResponse projectResponse = projectService.createProject(auth.getName(), projectCreate, rewardCreateList,
@@ -86,9 +73,9 @@ public class ProjectController {
 	public ResponseEntity<ProjectResponse> updateProject(
 		Authentication auth,
 		@PathVariable("projectId") Long projectId,
-		@RequestPart("projectModify") @Valid ProjectModify projectModify,
-		@RequestPart("repImage") MultipartFile repImage,
-		@RequestPart("projectImageList") List<MultipartFile> projectImageList
+		@RequestPart(name = "projectModify", required = false) @Valid ProjectModify projectModify,
+		@RequestPart(name = "repImage", required = false) MultipartFile repImage,
+		@RequestPart(name = "projectImageList", required = false) List<MultipartFile> projectImageList
 	) {
 		FileImage fileImage = fileImageService.createFileImage(repImage);
 		List<FileImage> fileImageList = fileImageService.createFileImageList(projectImageList);
