@@ -10,7 +10,7 @@ import com.isfive.usearth.domain.chat.repository.ChatRoomAppendRepository;
 import com.isfive.usearth.domain.chat.repository.ChatRoomRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
+import com.isfive.usearth.web.common.jwt.JwtTokenUtils;
 import com.isfive.usearth.web.chat.dto.ChatMessageDto;
 import com.isfive.usearth.web.chat.dto.ChatRoomDto;
 import lombok.RequiredArgsConstructor;
