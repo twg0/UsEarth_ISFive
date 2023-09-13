@@ -76,23 +76,11 @@ class ProjectControllerTest {
         Member member = Member.builder()
                 .username("member")
                 .build();
-
         memberRepository.save(member);
 
         Individual individual = Individual.builder().name("abc마트").build();
         individual.setMember(member);
         makerRepository.save(individual);
-
-        ProjectRegister projectRegister = ProjectRegister.builder()
-                .title("신발")
-                .summary("본인에게 맞는 신발을 찾아보세요.")
-                .story("슬리퍼, 구두, 운동화 등 다양한 종류와 옵션들을 준비했습니다.")
-                .targetAmount(1000000)
-                .startDate("2023-08-30")
-                .endDate("2023-09-30")
-                .makerName("abc마트")
-                .hashTag("#신발 #슬리퍼 #구두 #운동화")
-                .build();
 
         MockMultipartFile repImage = new MockMultipartFile(
                 "repImage", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData".getBytes()
@@ -172,13 +160,22 @@ class ProjectControllerTest {
         rewardRegisterList.add(rewardRegister1);
         rewardRegisterList.add(rewardRegister2);
 
+        ProjectRegister projectRegister = ProjectRegister.builder()
+                .title("신발")
+                .summary("본인에게 맞는 신발을 찾아보세요.")
+                .story("슬리퍼, 구두, 운동화 등 다양한 종류와 옵션들을 준비했습니다.")
+                .targetAmount(1000000)
+                .startDate("2023-08-30")
+                .endDate("2023-09-30")
+                .makerName("abc마트")
+                .hashTag("#신발 #슬리퍼 #구두 #운동화")
+                .rewardRegisterList(rewardRegisterList)
+                .build();
+
+
         MockMultipartFile projectDTO = new MockMultipartFile("projectRegister", "projectRegister",
                 "application/json",
                 objectMapper.writeValueAsString(projectRegister).getBytes(StandardCharsets.UTF_8));
-
-        MockMultipartFile rewardDTO = new MockMultipartFile("rewardRegisterList", "rewardRegisterList",
-                "application/json",
-                objectMapper.writeValueAsString(rewardRegisterList).getBytes(StandardCharsets.UTF_8));
 
         // when // then
         mockMvc.perform(MockMvcRequestBuilders.multipart("/projects")
@@ -186,7 +183,6 @@ class ProjectControllerTest {
                         .file(new MockMultipartFile("projectImageList", "project_image1.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData1".getBytes()))
                         .file(new MockMultipartFile("projectImageList", "project_image2.jpg", MediaType.IMAGE_JPEG_VALUE, "ImageData2".getBytes()))
                         .file(projectDTO)
-                        .file(rewardDTO)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                 )
                 .andDo(print())
