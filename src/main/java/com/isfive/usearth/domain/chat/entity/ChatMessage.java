@@ -2,6 +2,7 @@ package com.isfive.usearth.domain.chat.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -20,4 +21,10 @@ public class ChatMessage {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "chatRoomAppend_id")
 	private ChatRoomAppend chatRoomAppend;
+
+	@Builder
+	public ChatMessage(String nickname, String message) {
+		this.nickname = nickname;
+		this.message = message;
+	}
 }
