@@ -37,8 +37,8 @@ public class SecurityConfig {
 				.requestMatchers(
 						new AntPathRequestMatcher("/favicon.ico"),
 						new AntPathRequestMatcher("/error/**")
-				)
-				.requestMatchers(toH2Console());
+				);
+				// .requestMatchers(toH2Console())
 	}
 
 	@Bean
