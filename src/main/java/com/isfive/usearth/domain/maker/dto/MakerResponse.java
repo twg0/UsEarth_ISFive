@@ -1,11 +1,6 @@
 package com.isfive.usearth.domain.maker.dto;
 
-import com.isfive.usearth.domain.maker.entity.BusinessInformation;
-import com.isfive.usearth.domain.maker.entity.CorporateBusiness;
-import com.isfive.usearth.domain.maker.entity.Individual;
-import com.isfive.usearth.domain.maker.entity.Maker;
-import com.isfive.usearth.domain.maker.entity.PersonalBusiness;
-
+import com.isfive.usearth.domain.maker.entity.*;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -1,34 +1,21 @@
 package com.isfive.usearth.domain.member.entity;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.isfive.usearth.domain.auth.jwt.service.CustomUserDetails;
 import com.isfive.usearth.domain.common.BaseEntity;
 import com.isfive.usearth.web.member.dto.UpdateRegister;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
-@Builder
 @Table(
 	indexes = @Index(name = "idx_member_username", columnList = "username")
 )
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
@@ -44,11 +31,6 @@ public class Member extends BaseEntity {
 	private String email;
 	private String provider;
 	private String providerId;
-
-	public Member updatePassword(String password) {
-		this.password = password;
-		return this;
-	}
 
 	public Member updateInfo(UserDetails userDetails) {
 		CustomUserDetails customUserDetails = (CustomUserDetails)userDetails;
@@ -83,13 +65,15 @@ public class Member extends BaseEntity {
 
 	// PR 넣을 때 의논
 	@Builder
-	private Member(String email, String username, String nickname, String phone, String provider, Role role) {
+	private Member(String email, String username, String password, String nickname, String phone, String provider, Role role, String providerId) {
 		this.email = email;
 		this.username = username;
+		this.password = password;
 		this.nickname = nickname;
 		this.phone = phone;
 		this.provider = provider;
 		this.role = role;
+		this.providerId = providerId;
 	}
 
 	/* 로직 */

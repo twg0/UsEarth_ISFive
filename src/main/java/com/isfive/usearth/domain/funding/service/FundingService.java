@@ -1,14 +1,5 @@
 package com.isfive.usearth.domain.funding.service;
 
-import static com.isfive.usearth.exception.ErrorCode.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
 import com.isfive.usearth.domain.funding.dto.PaymentRegister;
 import com.isfive.usearth.domain.funding.dto.RewardSkuRegister;
@@ -22,8 +13,15 @@ import com.isfive.usearth.domain.member.repository.MemberRepository;
 import com.isfive.usearth.domain.project.entity.RewardSku;
 import com.isfive.usearth.domain.project.repository.RewardSkuRepository;
 import com.isfive.usearth.exception.EntityNotFoundException;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.isfive.usearth.exception.ErrorCode.FUNDING_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)

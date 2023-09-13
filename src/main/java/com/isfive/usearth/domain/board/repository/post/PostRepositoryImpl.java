@@ -1,22 +1,20 @@
 package com.isfive.usearth.domain.board.repository.post;
 
-import static com.isfive.usearth.domain.board.entity.QPost.*;
-import static com.isfive.usearth.domain.member.entity.QMember.*;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.isfive.usearth.domain.board.entity.Post;
+import com.isfive.usearth.exception.EntityNotFoundException;
+import com.isfive.usearth.exception.ErrorCode;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.isfive.usearth.domain.board.entity.Post;
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import java.util.Optional;
 
-import lombok.RequiredArgsConstructor;
+import static com.isfive.usearth.domain.board.entity.QPost.post;
+import static com.isfive.usearth.domain.member.entity.QMember.member;
 
 @Repository
 @RequiredArgsConstructor

@@ -1,23 +1,16 @@
 package com.isfive.usearth.domain.funding.entity;
 
-import static com.isfive.usearth.domain.funding.entity.DeliveryStatus.*;
-import static com.isfive.usearth.exception.ErrorCode.*;
-
 import com.isfive.usearth.domain.funding.dto.DeliveryRegister;
 import com.isfive.usearth.exception.BusinessException;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.isfive.usearth.domain.funding.entity.DeliveryStatus.*;
+import static com.isfive.usearth.exception.ErrorCode.ALREADY_DELIVERY_COMPLETED;
+import static com.isfive.usearth.exception.ErrorCode.ALREADY_START_DELIVERY;
 
 @Entity
 @Getter
