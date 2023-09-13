@@ -31,6 +31,8 @@ import com.isfive.usearth.web.common.dto.Message;
 import com.isfive.usearth.web.member.dto.MailAuthenticationRequest;
 import com.isfive.usearth.web.member.dto.UpdateRequest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@Tag(name = "1. Member", description = "Member API")
 public class MemberController {
 	private final MemberService memberService;
 	private final StringRedisTemplate redisTemplate;
@@ -59,6 +62,7 @@ public class MemberController {
 		redisTemplate.expire(key, Duration.ofMinutes(5)); // 5분만 저장
 	}
 
+	@Operation(summary = "내 정보 확인")
 	@GetMapping
 	public ResponseEntity<MemberResponse> getMemberInfo(
 		Authentication authentication
@@ -67,22 +71,22 @@ public class MemberController {
 		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 	}
 
-	@GetMapping("login")
-	public ResponseEntity<MemberResponse> login(
+	@Operation(summary = "로그인")
+	@PostMapping("login")
+	public ResponseEntity<String> login(
 		@RequestBody SignInRequest signInRequest,
 		HttpServletRequest request,
 		HttpServletResponse response
 	) {
 		if (memberService.checkUser(signInRequest.getUsername(), signInRequest.getPassword())) {
 			MemberResponse memberResponse = memberService.readByUsername(signInRequest.getUsername());
-
-			tokenService.setTokenAndCookie(memberResponse.getEmail(), request, response);
-
-			return new ResponseEntity<>(memberResponse, HttpStatus.OK);
+			String token = tokenService.setTokenAndCookie(memberResponse.getEmail(), request, response);
+			return new ResponseEntity<>(token, HttpStatus.OK);
 		}
 		throw new InvalidValueException(ErrorCode.INVALID_PASSWORD);
 	}
 
+	@Operation(summary = "로그아웃")
 	@PostMapping("logout")
 	public ResponseEntity<Message> logout(
 		Authentication authentication,
@@ -95,6 +99,7 @@ public class MemberController {
 		return new ResponseEntity<>(new Message("로그아웃이 완료되었습니다."), HttpStatus.OK);
 	}
 
+	@Operation(summary = "회원가입")
 	@PostMapping
 	public ResponseEntity<Message> registration(
 		@RequestBody SignUpRequest request
@@ -118,6 +123,7 @@ public class MemberController {
 		return new ResponseEntity<>(new Message("이메일 인증을 완료하세요."), HttpStatus.OK);
 	}
 
+	@Operation(summary = "이메일 인증")
 	@PostMapping("email")
 	public ResponseEntity<Message> emailAuth(
 		@RequestBody MailAuthenticationRequest request
@@ -148,6 +154,7 @@ public class MemberController {
 		}
 	}
 
+	@Operation(summary = "내 정보 수정")
 	@PutMapping
 	public ResponseEntity<MemberResponse> updateInfo(
 		@RequestBody UpdateRequest request,
@@ -159,6 +166,7 @@ public class MemberController {
 		return new ResponseEntity<>(memberResponse, HttpStatus.OK);
 	}
 
+	@Operation(summary = "회원탈퇴")
 	@DeleteMapping
 	public ResponseEntity<Message> deleteMember(
 		Authentication authentication

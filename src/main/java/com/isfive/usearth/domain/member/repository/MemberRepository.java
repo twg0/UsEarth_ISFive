@@ -16,8 +16,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	Optional<Member> findByEmail(String email);
 
-	Optional<Member> findByUsernameAndPassword(String username, String password);
-
 	default Member findByUsernameOrThrow(String username) {
 		return findByUsername(username).orElseThrow(
 			() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
@@ -25,11 +23,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	default Member findByEmailOrThrow(String email) {
 		return findByEmail(email).orElseThrow(
-			() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-	}
-
-	default Member findByUsernameAndPasswordOrThrow(String username, String password) {
-		return findByUsernameAndPassword(username, password).orElseThrow(
 			() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 	}
 

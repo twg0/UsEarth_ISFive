@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.domain.utils.cookie.CookieUtils;
-import com.isfive.usearth.domain.utils.jwt.JwtTokenUtils;
+import com.isfive.usearth.web.common.cookie.CookieUtils;
+import com.isfive.usearth.web.common.jwt.JwtTokenUtils;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +36,6 @@ public class TokenService {
 
 	// TODO 토큰 생성 후 쿠키 전송
 	public String setTokenAndCookie(String email, HttpServletRequest request, HttpServletResponse response) {
-		log.info("request 쿠키 수 = {}", request.getCookies().length);
 
 		CookieUtils.deleteAll(request, response);
 

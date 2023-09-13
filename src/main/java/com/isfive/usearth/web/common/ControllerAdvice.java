@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.isfive.usearth.exception.AuthException;
+import com.isfive.usearth.exception.BusinessException;
 import com.isfive.usearth.exception.ConflictException;
 import com.isfive.usearth.exception.CookieProcessingException;
 import com.isfive.usearth.exception.EntityNotFoundException;
@@ -36,7 +37,7 @@ public class ControllerAdvice {
 	 * FileControl 에러
 	 */
 	@ExceptionHandler(FileProcessingException.class)
-	public ResponseEntity<Message> fildProcessingException(final FileProcessingException exception) {
+	public ResponseEntity<Message> fileProcessingException(final FileProcessingException exception) {
 
 		return new ResponseEntity<>(new Message(exception.getLocalizedMessage()), exception.getStatus());
 	}
@@ -72,7 +73,16 @@ public class ControllerAdvice {
 	 * Cookie 에러
 	 */
 	@ExceptionHandler(CookieProcessingException.class)
-	public ResponseEntity<Message> invalidValueException(final CookieProcessingException exception) {
+	public ResponseEntity<Message> cookieProcessingException(final CookieProcessingException exception) {
+
+		return new ResponseEntity<>(new Message(exception.getLocalizedMessage()), exception.getStatus());
+	}
+
+	/**
+	 * Business 에러
+	 */
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<Message> businessException(final BusinessException exception) {
 
 		return new ResponseEntity<>(new Message(exception.getLocalizedMessage()), exception.getStatus());
 	}

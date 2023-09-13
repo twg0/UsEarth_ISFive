@@ -3,6 +3,9 @@ package com.isfive.usearth.domain.board.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.isfive.usearth.domain.common.BaseEntity;
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.member.entity.Member;
@@ -25,8 +28,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Getter

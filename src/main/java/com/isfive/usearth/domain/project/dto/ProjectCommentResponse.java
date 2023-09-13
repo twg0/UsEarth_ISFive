@@ -1,11 +1,12 @@
 package com.isfive.usearth.domain.project.dto;
 
-import com.isfive.usearth.domain.project.entity.ProjectComment;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.isfive.usearth.domain.project.entity.ProjectComment;
+
+import lombok.Data;
 
 @Data
 public class ProjectCommentResponse {
