@@ -12,5 +12,5 @@ fi
 
 cd /home/ubuntu/app/step2/zip/        # 해당 디렉토리로 이동 (Dockerfile 을 해당 디렉토리에 옮겼기 때문에)
 sudo docker build -t usearth ./          # Docker Image 생성
-sudo docker run -d -p 8080:8080 usearth  # Docker Container 생성
-sudo docker run -d -p 8081:8080 usearth  # Docker Container 생성
+sudo docker-compose build
+sudo docker-compose up
