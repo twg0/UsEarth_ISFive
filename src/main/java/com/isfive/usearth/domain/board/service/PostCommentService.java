@@ -1,5 +1,17 @@
 package com.isfive.usearth.domain.board.service;
 
+import static java.util.stream.Collectors.*;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.isfive.usearth.annotation.Retry;
 import com.isfive.usearth.domain.board.dto.PostCommentResponse;
 import com.isfive.usearth.domain.board.entity.Post;
@@ -8,19 +20,8 @@ import com.isfive.usearth.domain.board.repository.PostCommentRepository;
 import com.isfive.usearth.domain.board.repository.post.PostRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 @Service
 @Transactional(readOnly = true)

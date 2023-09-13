@@ -2,6 +2,7 @@ package com.isfive.usearth.web.maker.dto.register;
 
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.web.maker.dto.register_request.MakerRegisterRequest;
+
 import lombok.Getter;
 
 @Getter

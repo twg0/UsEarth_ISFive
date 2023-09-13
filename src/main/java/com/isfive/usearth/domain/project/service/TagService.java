@@ -1,16 +1,18 @@
 package com.isfive.usearth.domain.project.service;
 
-import com.isfive.usearth.domain.project.entity.Tag;
-import com.isfive.usearth.domain.project.repository.ProjectRepository;
-import com.isfive.usearth.domain.project.repository.TagRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.isfive.usearth.domain.project.entity.Tag;
+import com.isfive.usearth.domain.project.repository.ProjectRepository;
+import com.isfive.usearth.domain.project.repository.TagRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

@@ -1,12 +1,13 @@
 package com.isfive.usearth.domain.project.repository;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.project.entity.Project;
 import com.isfive.usearth.domain.project.entity.ProjectLike;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface ProjectLikeRepository extends JpaRepository<ProjectLike, Long> {
 

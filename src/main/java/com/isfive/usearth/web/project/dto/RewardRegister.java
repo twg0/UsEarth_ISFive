@@ -1,6 +1,9 @@
 package com.isfive.usearth.web.project.dto;
 
+import java.util.Map;
+
 import com.isfive.usearth.domain.project.dto.RewardCreate;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @Getter
 @Builder

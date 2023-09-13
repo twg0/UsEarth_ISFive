@@ -1,9 +1,11 @@
 package com.isfive.usearth.domain.chat.repository;
 
-import com.isfive.usearth.domain.chat.entity.ChatRoom;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.isfive.usearth.domain.chat.entity.ChatRoom;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {

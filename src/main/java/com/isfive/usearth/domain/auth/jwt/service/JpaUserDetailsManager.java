@@ -1,11 +1,7 @@
 package com.isfive.usearth.domain.auth.jwt.service;
 
-import com.isfive.usearth.domain.member.entity.Member;
-import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.exception.ConflictException;
-import com.isfive.usearth.exception.ErrorCode;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
+import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.domain.member.repository.MemberRepository;
+import com.isfive.usearth.exception.ConflictException;
+import com.isfive.usearth.exception.ErrorCode;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service

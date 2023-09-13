@@ -1,13 +1,12 @@
 package com.isfive.usearth.web.chat.dto;
 
-import com.isfive.usearth.domain.chat.entity.ChatMessage;
-import com.isfive.usearth.domain.chat.enums.MessageType;
-import com.isfive.usearth.domain.common.BaseEntity;
-import lombok.Data;
-import lombok.Setter;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.isfive.usearth.domain.chat.entity.ChatMessage;
+import com.isfive.usearth.domain.chat.enums.MessageType;
+
+import lombok.Data;
 
 
 @Data

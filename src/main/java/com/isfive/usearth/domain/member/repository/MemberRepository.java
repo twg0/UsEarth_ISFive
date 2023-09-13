@@ -1,12 +1,13 @@
 package com.isfive.usearth.domain.member.repository;
 
-import com.isfive.usearth.domain.member.entity.Member;
-import com.isfive.usearth.exception.EntityNotFoundException;
-import com.isfive.usearth.exception.ErrorCode;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.isfive.usearth.domain.member.entity.Member;
+import com.isfive.usearth.exception.EntityNotFoundException;
+import com.isfive.usearth.exception.ErrorCode;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {

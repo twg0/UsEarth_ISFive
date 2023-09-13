@@ -1,16 +1,24 @@
 package com.isfive.usearth.web.chat.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.isfive.usearth.domain.chat.dto.ChatRoomResponse;
 import com.isfive.usearth.domain.chat.service.ChatService;
 import com.isfive.usearth.web.chat.dto.ChatMessageDto;
 import com.isfive.usearth.web.chat.dto.ChatRoomDto;
 import com.isfive.usearth.web.chat.dto.ChatRoomRequest;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/chat")

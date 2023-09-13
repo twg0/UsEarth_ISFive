@@ -1,5 +1,17 @@
 package com.isfive.usearth.domain.chat.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isfive.usearth.domain.chat.dto.ChatRoomResponse;
@@ -10,22 +22,12 @@ import com.isfive.usearth.domain.chat.repository.ChatRoomAppendRepository;
 import com.isfive.usearth.domain.chat.repository.ChatRoomRepository;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.web.common.jwt.JwtTokenUtils;
 import com.isfive.usearth.web.chat.dto.ChatMessageDto;
 import com.isfive.usearth.web.chat.dto.ChatRoomDto;
+import com.isfive.usearth.web.common.jwt.JwtTokenUtils;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor

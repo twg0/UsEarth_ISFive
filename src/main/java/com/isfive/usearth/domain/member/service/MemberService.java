@@ -1,5 +1,12 @@
 package com.isfive.usearth.domain.member.service;
 
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
@@ -9,14 +16,9 @@ import com.isfive.usearth.exception.BusinessException;
 import com.isfive.usearth.exception.ErrorCode;
 import com.isfive.usearth.web.auth.dto.SignUpRegister;
 import com.isfive.usearth.web.member.dto.UpdateRegister;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @Service

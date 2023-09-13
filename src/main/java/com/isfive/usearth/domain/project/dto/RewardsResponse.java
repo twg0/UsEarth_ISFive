@@ -1,10 +1,11 @@
 package com.isfive.usearth.domain.project.dto;
 
-import com.isfive.usearth.domain.project.entity.Reward;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.isfive.usearth.domain.project.entity.Reward;
+
+import lombok.Data;
 
 @Data
 public class RewardsResponse {

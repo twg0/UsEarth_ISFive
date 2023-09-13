@@ -1,10 +1,11 @@
 package com.isfive.usearth.web.chat.dto;
 
+import java.io.Serializable;
+
 import com.isfive.usearth.domain.chat.entity.ChatRoom;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.io.Serializable;
 
 @Getter
 @AllArgsConstructor

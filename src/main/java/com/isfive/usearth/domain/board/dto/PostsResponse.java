@@ -1,9 +1,10 @@
 package com.isfive.usearth.domain.board.dto;
 
-import com.isfive.usearth.domain.board.entity.Post;
-import lombok.Data;
-
 import java.time.LocalDateTime;
+
+import com.isfive.usearth.domain.board.entity.Post;
+
+import lombok.Data;
 
 @Data
 public class PostsResponse {

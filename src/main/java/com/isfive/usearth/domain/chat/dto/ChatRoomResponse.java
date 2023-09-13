@@ -1,7 +1,7 @@
 package com.isfive.usearth.domain.chat.dto;
 
-
 import com.isfive.usearth.domain.chat.entity.ChatRoom;
+
 import lombok.Builder;
 import lombok.Getter;
 
