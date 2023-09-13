@@ -74,7 +74,7 @@ public class PostCommentService {
 
 		Map<Long, PostCommentResponse> map = createResponseMap(postComments);
 
-		insertReply(map, postComments);
+		insertReply(map);
 
 		List<PostCommentResponse> list = createCommentList(map);
 		return new PageImpl<>(list, pageRequest, list.size());
@@ -86,19 +86,18 @@ public class PostCommentService {
 			.collect(toMap(PostComment::getId, PostCommentResponse::new));
 	}
 
-	private void insertReply(Map<Long, PostCommentResponse> map, Page<PostComment> postComments) {
-		postComments.forEach(postComment -> {
-			PostComment parentPostComment = postComment.getPostComment();
-			if (parentPostComment != null) {
-				PostCommentResponse postCommentResponse = map.get(parentPostComment.getId());
-				postCommentResponse.addPostCommentResponses(new PostCommentResponse(postComment));
+	private void insertReply(Map<Long, PostCommentResponse> map) {
+		map.values().forEach(postCommentResponse -> {
+			if (postCommentResponse.getParentId() != null) {
+				PostCommentResponse parent = map.get(postCommentResponse.getParentId());
+				parent.addPostCommentResponses(postCommentResponse);
 			}
 		});
 	}
 
 	private List<PostCommentResponse> createCommentList(Map<Long, PostCommentResponse> map) {
 		return map.values().stream()
-			.filter(postCommentResponse -> !postCommentResponse.getPostCommentResponses().isEmpty())
+			.filter(postCommentResponse -> !postCommentResponse.isReply())
 			.sorted(Comparator.comparingLong(PostCommentResponse::getId).reversed())
 			.collect(toList());
 	}
