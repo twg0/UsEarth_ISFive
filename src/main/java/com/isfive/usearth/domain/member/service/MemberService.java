@@ -1,26 +1,22 @@
 package com.isfive.usearth.domain.member.service;
 
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.isfive.usearth.domain.member.dto.MemberResponse;
 import com.isfive.usearth.domain.member.entity.Member;
 import com.isfive.usearth.domain.member.entity.Role;
 import com.isfive.usearth.domain.member.repository.MemberRepository;
-import com.isfive.usearth.web.common.jwt.JwtTokenUtils;
 import com.isfive.usearth.domain.utils.mail.MailService;
 import com.isfive.usearth.exception.BusinessException;
 import com.isfive.usearth.exception.ErrorCode;
 import com.isfive.usearth.web.auth.dto.SignUpRegister;
 import com.isfive.usearth.web.member.dto.UpdateRegister;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,7 +26,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final MailService mailService;
-	private final JwtTokenUtils jwtTokenUtils;
 
 	@Transactional
 	public MemberResponse createBy(SignUpRegister signUpRegister) {
@@ -55,13 +50,6 @@ public class MemberService {
 	}
 
 	@Transactional
-	public MemberResponse updateUserInfo(String username, UserDetails userDetails) {
-		Member member = memberRepository.findByUsernameOrThrow(username);
-		member.updateInfo(userDetails);
-		return MemberResponse.fromEntity(member);
-	}
-
-	@Transactional
 	public MemberResponse updateUserInfoByUpdateRegister(String username, UpdateRegister updateRegister) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
 		member.updateInfoByUpdateRegister(updateRegister);
@@ -78,18 +66,9 @@ public class MemberService {
 		return MemberResponse.fromEntity(member);
 	}
 
-	public MemberResponse readByEmail(String email) {
-		Member member = memberRepository.findByEmailOrThrow(email);
-		return MemberResponse.fromEntity(member);
-	}
-
 	public boolean checkUser(String username, String password) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
 		return passwordEncoder.matches(password, member.getPassword());
-	}
-
-	public boolean existBy(String username) {
-		return memberRepository.existsByUsername(username);
 	}
 
 	public boolean existByEmail(String email) {

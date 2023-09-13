@@ -1,7 +1,6 @@
 package com.isfive.usearth.web.funding.dto;
 
 import com.isfive.usearth.domain.funding.dto.PaymentRegister;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

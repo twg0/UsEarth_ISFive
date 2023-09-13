@@ -1,14 +1,13 @@
 package com.isfive.usearth.domain.board.repository;
 
-import java.util.Optional;
-
+import com.isfive.usearth.domain.board.entity.PostComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.isfive.usearth.domain.board.entity.PostComment;
+import java.util.Optional;
 
 public interface PostCommentRepository extends JpaRepository<PostComment, Long> {
 
