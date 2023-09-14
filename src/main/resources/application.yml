@@ -101,6 +101,10 @@ iamport:
     key: ENC(81cFe7ewiNQJsghEEIB8llXXrscxr4ymHV/1ln05hG8=)
     secret: ENC(6zIRG9non9JNzi/dqRDIbYwSO8v8Zox/JZSlQJT6xfYhzDuOCOdd244K00d5a3qnd75vv5+xYiKJ2N678p8tma9tdu0kzh1gnO2wyiU0Ng4rwOnphftKJmFAyfp+o3rs)
 
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
 ---
 spring:
   config:
