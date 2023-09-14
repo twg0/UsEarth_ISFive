@@ -62,13 +62,13 @@ public class Funding {
 	}
 
 	public static Funding createFunding(Member member, Delivery delivery, Payment payment,
-		List<FundingRewardSku> fundingRewardSkus) {
+										List<FundingRewardSku> fundingRewardSkus) {
 		Funding funding = Funding.builder()
-			.member(member)
-			.delivery(delivery)
-			.payment(payment)
-			.status(ORDER)
-			.build();
+				.member(member)
+				.delivery(delivery)
+				.payment(payment)
+				.status(ORDER)
+				.build();
 		fundingRewardSkus.forEach(funding::addFundingRewardSku);
 		return funding;
 	}
@@ -99,5 +99,11 @@ public class Funding {
 
 		fundingRewardSkus.forEach(FundingRewardSku::cancel);
 
+	}
+
+	public Integer getTotalAmount() {
+		return fundingRewardSkus.stream()
+				.map(fundingRewardSku -> fundingRewardSku.getAmount().intValue())
+				.reduce(0, Integer::sum);
 	}
 }
