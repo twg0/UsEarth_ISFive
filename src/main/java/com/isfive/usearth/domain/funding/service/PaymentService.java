@@ -66,8 +66,9 @@ public class PaymentService {
 		List<Project> projects = projectRepository.findAll();
 		for (Project project : projects) {
 			LocalDate nextDay = project.getFundingDate().getDueDate().plus(1, ChronoUnit.DAYS);
-			if (LocalDate.now().isEqual(nextDay))
+			if (LocalDate.now().isEqual(nextDay) && project.isAchieve()) {
 				createPayment(project);
+			}
 		}
 	}
 
@@ -110,9 +111,9 @@ public class PaymentService {
 
 		Double amount = funding.getFundingRewardSkus().stream().mapToDouble(FundingRewardSku::getAmount).sum();
 		String name = funding.getFundingRewardSkus()
-			.stream()
-			.map(FundingRewardSku::getRewardName)
-			.collect(Collectors.joining(", "));
+				.stream()
+				.map(FundingRewardSku::getRewardName)
+				.collect(Collectors.joining(", "));
 
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("merchant_uid", "FUNDING_ID_" + LocalDateTime.now());
@@ -128,8 +129,7 @@ public class PaymentService {
 		String jsonRequest = gson.toJson(jsonObject);
 		HttpEntity<String> entity = new HttpEntity<>(jsonRequest, headers);
 
-		Response result = restTemplate.postForObject(paymentURL, entity, Response.class);
-		return result;
+		return restTemplate.postForObject(paymentURL, entity, Response.class);
 	}
 
 	@Data
