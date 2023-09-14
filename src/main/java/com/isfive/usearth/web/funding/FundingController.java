@@ -25,17 +25,21 @@ public class FundingController {
 	private final FundingService fundingService;
 
 	@Operation(summary = "펀딩 결제 예약")
-	@PostMapping("/funding")
-	public ResponseEntity<Void> funding(Authentication auth, @RequestBody @Valid FundingRequest request) {
-		fundingService.funding(auth.getName(), request.toDeliveryRegister(), request.toPaymentRegister(),
-			request.toRewardSkuRegisters());
+	@PostMapping("/projects/{projectId}/funding")
+	public ResponseEntity<Void> funding(Authentication auth, @PathVariable("projectId") Long projectId, @RequestBody @Valid FundingRequest request) {
+		fundingService.funding(
+				auth.getName(),
+				projectId,
+				request.toDeliveryRegister(),
+				request.toPaymentRegister(),
+				request.toRewardSkuRegisters());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Operation(summary = "펀딩 결제 예약 취소")
-	@DeleteMapping("/funding/{fundingId}")
-	public ResponseEntity<Void> cancel(Authentication auth, @PathVariable("fundingId") Long fundingId) {
-		fundingService.cancel(auth.getName(), fundingId);
+	@DeleteMapping("/projects/{projectId}/funding/{fundingId}")
+	public ResponseEntity<Void> cancel(Authentication auth, @PathVariable("projectId") Long projectId, @PathVariable("fundingId") Long fundingId) {
+		fundingService.cancel(auth.getName(), projectId, fundingId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

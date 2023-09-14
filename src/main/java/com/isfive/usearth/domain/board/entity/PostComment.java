@@ -67,6 +67,13 @@ public class PostComment extends BaseEntity {
 			.build();
 	}
 
+	public Long getParentId() {
+		if (getPostComment() == null) {
+			return null;
+		}
+		return getPostComment().getId();
+	}
+
 	public void addReply(PostComment reply) {
 		if (getPostComment() != null) {
 			throw new RuntimeException("대댓글에는 대댓글을 작성 할 수 없습니다.");

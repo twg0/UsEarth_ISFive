@@ -1,19 +1,20 @@
 package com.isfive.usearth.web.project.dto;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import com.isfive.usearth.domain.common.FileImage;
 import com.isfive.usearth.domain.common.Period;
 import com.isfive.usearth.domain.project.dto.ProjectCreate;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @Builder
@@ -52,6 +53,9 @@ public class ProjectRegister {
 	@Schema(example = "#상의 #하의 #반팔")
 	@NotBlank(message = "프로젝트 해시태그를 입력해야 합니다. 예시) #상의 #하의 #반팔")
 	private String hashTag;
+
+	@Valid
+	private List<RewardRegister> rewardRegisterList;
 
 	public ProjectCreate toService(FileImage file) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

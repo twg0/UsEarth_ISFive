@@ -61,7 +61,11 @@ class FundingControllerTest {
     void funding() throws Exception {
         //given
         memberRepository.save(Member.builder().username("member").build());
-        Reward reward = Reward.builder().price(10000).build();
+
+        Project project = Project.builder().title("프로젝트").totalFundingAmount(0).targetAmount(1000).build();
+        projectRepository.save(project);
+
+        Reward reward = Reward.builder().price(10000).project(project).build();
         rewardRepository.save(reward);
         RewardSku rewardSku1 = RewardSku.builder().reward(reward).stock(5).initStock(5).build();
         RewardSku rewardSku2 = RewardSku.builder().reward(reward).stock(10).initStock(10).build();
@@ -75,7 +79,7 @@ class FundingControllerTest {
         FundingRequest fundingRequest = new FundingRequest(deliveryRequest, paymentRequest, List.of(rewardSkuRequest1, rewardSkuRequest2));
 
         //when //then
-        mockMvc.perform(post("/funding")
+        mockMvc.perform(post("/projects/{projectsId}/funding", project.getId())
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(fundingRequest))
                 )
@@ -107,6 +111,9 @@ class FundingControllerTest {
         RewardSku findRewardSku2 = rewardSkuRepository.findById(rewardSku2.getId()).orElseThrow();
         assertThat(findRewardSku1.getStock()).isEqualTo(3);
         assertThat(findRewardSku2.getStock()).isEqualTo(5);
+
+        Project findProject = projectRepository.findById(project.getId()).orElseThrow();
+        assertThat(findProject.getTotalFundingAmount()).isEqualTo(70000);
     }
 
     @WithMockUser(username = "member")
@@ -116,7 +123,8 @@ class FundingControllerTest {
         //given
         Member member = Member.builder().username("member").build();
         memberRepository.save(member);
-        Project project = Project.builder().title("프로젝트").build();
+
+        Project project = Project.builder().title("프로젝트").totalFundingAmount(200000).targetAmount(300000).build();
         projectRepository.save(project);
 
         Reward reward1 = Reward.builder().title("리워드1").project(project).build();
@@ -137,7 +145,7 @@ class FundingControllerTest {
         fundingRepository.save(funding);
 
         //when //then
-        mockMvc.perform(delete("/funding/{fundingId}", funding.getId())
+        mockMvc.perform(delete("/projects/{projectsId}/funding/{fundingId}", project.getId(), funding.getId())
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -150,5 +158,8 @@ class FundingControllerTest {
         RewardSku findRewardSku2 = rewardSkuRepository.findById(rewardSku2.getId()).orElseThrow();
         assertThat(findRewardSku1.getStock()).isEqualTo(10);
         assertThat(findRewardSku2.getStock()).isEqualTo(20);
+
+        Project findProject = projectRepository.findById(project.getId()).orElseThrow();
+        assertThat(findProject.getTotalFundingAmount()).isEqualTo(100000);
     }
 }
