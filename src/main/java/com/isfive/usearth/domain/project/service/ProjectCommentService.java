@@ -35,7 +35,6 @@ public class ProjectCommentService {
     @Transactional
     public void createComment(Long projectId, String content, String username) {
         Project project = projectRepository.findByIdOrElseThrow(projectId);
-        project.verifyNotWriter(username);
 
         Member member = memberRepository.findByUsernameOrThrow(username);
 

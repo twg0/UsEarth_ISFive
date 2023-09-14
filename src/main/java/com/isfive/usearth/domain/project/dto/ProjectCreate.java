@@ -32,6 +32,7 @@ public class ProjectCreate {
 				.story(story)
 				.targetAmount(targetAmount)
 				.fundingDate(fundingDate)
+				.totalFundingAmount(0)
 				.likeCount(0)
 				.commentCount(0)
 				.views(0)
