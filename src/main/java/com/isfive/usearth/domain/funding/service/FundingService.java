@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.isfive.usearth.domain.project.entity.Project;
+import com.isfive.usearth.domain.project.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,12 +35,13 @@ public class FundingService {
 	private final MemberRepository memberRepository;
 	private final RewardSkuRepository rewardSkuRepository;
 	private final FundingRepository fundingRepository;
+	private final ProjectRepository projectRepository;
 
 	@Transactional
 	public void funding(String username,
-		DeliveryRegister deliveryRegister,
-		PaymentRegister paymentRegister,
-		List<RewardSkuRegister> rewardSkuRegisters) {
+						Long projectId, DeliveryRegister deliveryRegister,
+						PaymentRegister paymentRegister,
+						List<RewardSkuRegister> rewardSkuRegisters) {
 		Member member = memberRepository.findByUsernameOrThrow(username);
 
 		Delivery delivery = Delivery.createDelivery(deliveryRegister);
@@ -53,15 +56,21 @@ public class FundingService {
 
 		Funding funding = Funding.createFunding(member, delivery, payment, fundingRewardSkus);
 		fundingRepository.save(funding);
+
+		Project project = projectRepository.findByIdOrElseThrow(projectId);
+		project.addTotalAmount(funding.getTotalAmount());
 	}
 
 	@Transactional
-	public void cancel(String username, Long fundingId) {
+	public void cancel(String username, Long projectId, Long fundingId) {
 		Funding funding = fundingRepository.findFundingToCancel(fundingId)
 			.orElseThrow(() -> new EntityNotFoundException(FUNDING_NOT_FOUND));
 
 		funding.verify(username);
 		funding.cancel();
+
+		Project project = projectRepository.findByIdOrElseThrow(projectId);
+		project.removeTotalAmount(funding.getTotalAmount());
 	}
 
 	private Map<Long, Integer> createidCountMap(List<RewardSkuRegister> rewardSkuRegisters) {

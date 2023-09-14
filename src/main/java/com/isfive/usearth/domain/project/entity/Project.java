@@ -186,4 +186,19 @@ public class Project extends BaseEntity {
 			likeCount--;
 		}
 	}
+
+	public void addTotalAmount(Integer totalAmount) {
+		totalFundingAmount += totalAmount;
+	}
+
+	public void removeTotalAmount(Integer totalAmount) {
+		if (totalFundingAmount < totalAmount) {
+			throw new RuntimeException("취소 금액이 현재 펀딩 금액 보다 큽니다.");
+		}
+		totalFundingAmount -= totalAmount;
+	}
+
+	public boolean isAchieve() {
+		return totalFundingAmount > targetAmount;
+	}
 }
