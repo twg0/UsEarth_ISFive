@@ -36,7 +36,6 @@ public class PostCommentService {
 	@Transactional
 	public void createComment(Long postId, String content, String username) {
 		Post post = postRepository.findByIdWithMember(postId);
-		post.verifyNotWriter(username);
 
 		Member member = memberRepository.findByUsernameOrThrow(username);
 
