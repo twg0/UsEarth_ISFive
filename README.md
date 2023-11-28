@@ -6,7 +6,6 @@
 2023.08.09 ~ 2023.09.14
 
 # UsEarth 방문하기
-[Swagger](http://ec2-15-164-221-239.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html)
 
 [OAuth2.0 로그인](http://ec2-15-164-221-239.ap-northeast-2.compute.amazonaws.com:8080)
 
