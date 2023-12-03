@@ -7,6 +7,7 @@ build/
 
 application-temp.yml
 data.sql
+**/test/**
 
 ### STS ###
 .apt_generated
